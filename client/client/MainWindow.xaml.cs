@@ -25,11 +25,11 @@ namespace client
             InitializeComponent();
         }
 
-        public void GUI()
+        async public void GUI()
         {
 
         }
-        public void comm()
+        async public void comm()
         {
 
         }
