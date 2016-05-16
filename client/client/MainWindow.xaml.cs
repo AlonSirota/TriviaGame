@@ -24,5 +24,10 @@ namespace client
         {
             InitializeComponent();
         }
+
+        public Guid()
+        {
+
+        }
     }
 }
