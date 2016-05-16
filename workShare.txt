@@ -1,0 +1,14 @@
+client:
+GUI (alon)
+communication (eran)
+game (alon)
+
+server:
+DB (eran)
+question (next time)
+game (next time)
+room (alon)
+recievedMessage (eran)
+user (eran)
+validator (alon)
+triviaServer (eran)
