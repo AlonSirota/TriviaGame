@@ -25,7 +25,11 @@ namespace client
             InitializeComponent();
         }
 
-        public Guid()
+        public void GUI()
+        {
+
+        }
+        public void comm()
         {
 
         }
