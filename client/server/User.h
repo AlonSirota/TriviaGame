@@ -1,19 +1,21 @@
+#pragma once
+
 #include "Game.h"
 #include "Room.h"
 #include <iostream>
-#include 
+#include <boost\asio.hpp>
 using boost::asio::ip::tcp;
 
 class User
 {
-	User(std::string, tcp::socket);
+	User(std::string, tcp::socket*);
 	void send(std::string);
 	std::string getUsername();
-	tcp::socket getSocket();
+	tcp::socket* getSocket();
 	Room* getRoom();
 	Game* getGame();
 	void setGame(Game*);
-	void clearRoom();
+	void clearGame();
 	bool createRoom(int, std::string, int, int, int);
 	bool joinRoom(Room*);
 	void leaveRoom();
@@ -23,5 +25,5 @@ private:
 	std::string _username;
 	Room* _currRoom;
 	Game* _currGame;
-	tcp::socket _socket;
+	tcp::socket* _socket;
 };

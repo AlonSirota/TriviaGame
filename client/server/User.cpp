@@ -1,6 +1,6 @@
 #include "User.h"
 //done
-User::User(std::string username, tcp::socket socket) : _username(username), _socket(socket)
+User::User(std::string username, tcp::socket* socket) : _username(username), _socket(socket)
 {
 	_currGame = nullptr;
 	_currRoom = nullptr;
@@ -16,8 +16,8 @@ void User::setGame(Game* game)
 	_currGame = game;
 	_currRoom = nullptr;
 }
-//check
-void User::clearRoom()
+//done
+void User::clearGame()
 {
 	_currGame = nullptr;
 }
@@ -34,6 +34,10 @@ bool User::joinRoom(Room*)
 
 void User::leaveRoom()
 {
+	if (_currRoom != nullptr)
+	{
+		_currRoom->leaveRoom(this);
+	}
 
 }
 
@@ -55,7 +59,7 @@ std::string User::getUsername()
 	return(_username);
 }
 
-tcp::socket User::getSocket()
+tcp::socket* User::getSocket()
 {
 	return(_socket);
 }

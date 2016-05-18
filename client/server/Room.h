@@ -1,8 +1,12 @@
-#include <vector>
+#pragma once
 
+//#include "User.h"
+#include <vector>
+class User;
 
 class Room
 {
+public:
 	Room(int, User*, std::string, int, int, int);
 	bool joinRoom(User*);
 	void leaveRoom(User*);
@@ -12,6 +16,6 @@ class Room
 	int getQuestionsNo();
 	int getId();
 	std::string getName();
-
+private:
 	//add private functions and variables
 };
