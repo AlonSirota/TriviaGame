@@ -4,14 +4,16 @@ communication (eran)
 game (alon)
 
 server:
-DB (eran)
+DB (eran) - do we need this for this part?
 question (next time)
 game (next time)
 room (alon)
-recievedMessage (eran)
-user (eran)
+recievedMessage (eran) (done)
+user (eran) (done)
 validator (alon)
 triviaServer (eran)
+
+Helper - need to change write to async_write
 
 שונות:
 החלטתי שרירותית שהפורט יהיה 8282
