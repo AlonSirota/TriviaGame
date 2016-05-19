@@ -44,6 +44,7 @@ namespace client
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             requestSignInAsync();
+            lblStatus.Content = "trying to login";
         }
 
         private async void requestSignInAsync()
@@ -53,6 +54,7 @@ namespace client
             if (response == "1020")
             {
                 //open new window.
+                lblStatus.Content = "Login succeeded";
             }
             else if (response == "1021")
             {
@@ -74,6 +76,11 @@ namespace client
                 txtPassword.Text);
 
             return client.myReceive(4);
+        }
+
+        private void btnSignUp_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
