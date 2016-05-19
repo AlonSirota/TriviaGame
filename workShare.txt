@@ -12,3 +12,6 @@ recievedMessage (eran)
 user (eran)
 validator (alon)
 triviaServer (eran)
+
+שונות:
+החלטתי שרירותית שהפורט יהיה 8282

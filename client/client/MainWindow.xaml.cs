@@ -20,9 +20,12 @@ namespace client
     /// </summary>
     public partial class MainWindow : Window
     {
+        myTcpClient client;
+
         public MainWindow()
         {
             InitializeComponent();
+            client = new myTcpClient("127.0.0.1", 8282);
         }
 
         async public void GUI()
@@ -30,6 +33,11 @@ namespace client
 
         }
         async public void comm()
+        {
+
+        }
+
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
 
         }
