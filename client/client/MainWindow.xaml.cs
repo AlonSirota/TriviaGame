@@ -20,12 +20,12 @@ namespace client
     /// </summary>
     public partial class MainWindow : Window
     {
-        myTcpClient client;
+        myTcpClient _client;
 
         public MainWindow()
         {
             InitializeComponent();
-            client = new myTcpClient("127.0.0.1", 8282);
+            _client = new myTcpClient("127.0.0.1", 8282);
         }
 
         async public void GUI()
@@ -64,23 +64,28 @@ namespace client
             {
                 lblStatus.Content = "Login failed: user already logged in";
             }
+            else
+            {
+                lblStatus.Content = "error";
+            }
         }
 
         private string requestSignIn()
         {
-            client.mySend(
+            _client.mySend(
                 "200" +
                 txtUsername.Text.Length.ToString().PadLeft(2, '0') +
                 txtUsername.Text +
                 txtPassword.Text.Length.ToString().PadLeft(2, '0') +
                 txtPassword.Text);
 
-            return client.myReceive(4);
+            return _client.myReceive(4);
         }
 
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
-
+            SignUp s = new SignUp(txtUsername.Text, txtPassword.Text, _client);
+            s.ShowDialog();
         }
     }
 }
