@@ -42,3 +42,16 @@ std::string Room::getName()
 {
 	return std::string();
 }
+
+std::string Room::getUsersAsString(std::vector<User*>, User *)
+{
+	return std::string();
+}
+
+void Room::sendMessage(std::string)
+{
+}
+
+void Room::sendMessage(User *, std::string)
+{
+}

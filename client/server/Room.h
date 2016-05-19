@@ -17,5 +17,14 @@ public:
 	int getId();
 	std::string getName();
 private:
-	//add private functions and variables
+	std::vector<User*> _users;
+	User* _admin;
+	int _maxUsers;
+	int _questionsNo;
+	int _questionTime;
+	std::string _name;
+	int _id;
+	std::string getUsersAsString(std::vector<User*>, User*);
+	void sendMessage(std::string);
+	void sendMessage(User*, std::string);
 };
