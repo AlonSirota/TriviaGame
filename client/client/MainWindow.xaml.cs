@@ -37,9 +37,43 @@ namespace client
 
         }
 
+        /*
+         * tries to sign in.
+         * 200<user length><username><pass length><password>
+        */
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
+            requestSignInAsync();
+        }
 
+        private async void requestSignInAsync()
+        {
+            string response = await Task.Factory.StartNew(() => requestSignIn());
+
+            if (response == "1020")
+            {
+                //open new window.
+            }
+            else if (response == "1021")
+            {
+                lblStatus.Content = "Login failed: wrong username or password";
+            }
+            else if (response == "1022")
+            {
+                lblStatus.Content = "Login failed: user already logged in";
+            }
+        }
+
+        private string requestSignIn()
+        {
+            client.mySend(
+                "200" +
+                txtUsername.Text.Length.ToString().PadLeft(2, '0') +
+                txtUsername.Text +
+                txtPassword.Text.Length.ToString().PadLeft(2, '0') +
+                txtPassword.Text);
+
+            return client.myReceive(4);
         }
     }
 }
