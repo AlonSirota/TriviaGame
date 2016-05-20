@@ -1,4 +1,5 @@
 #include <string>
+#include <regex>
 
 class Validator
 {
