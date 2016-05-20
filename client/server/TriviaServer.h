@@ -52,7 +52,7 @@ private:
 	void handlegetPersonalStatus(recievedMessage*);//not in first section
 
 	void handleRecievedMessages(recievedMessage*);//alon
-	void addRecievedMessage(recievedMessage*);
+	void addRecievedMessage(recievedMessage*);//alon
 	recievedMessage* buildRecievedMessage(tcp::socket,int);
 
 	User* getUserByName(std::string);

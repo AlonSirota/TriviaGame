@@ -83,7 +83,7 @@ bool TriviaServer::handleCreateRoom(recievedMessage* message)
 	}
 	return ans;
 }
-//done
+//done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 bool TriviaServer::handleCloseRoom(recievedMessage* message)
 {
 	User* user = message->getUser();
@@ -111,13 +111,24 @@ bool TriviaServer::handleJoinRoom(recievedMessage* message)
 	Room* room = getRoomById(roomId);
 	if (room == nullptr)
 	{
-		//send failed message to user
+		//send failed message to user code 1102
 	}
-	bool ans = user->joinRoom(room);
+	bool ans = user->joinRoom(room); //message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
 
-bool TriviaServer::handleLeaveRoom(recievedMessage *)
+bool TriviaServer::handleLeaveRoom(recievedMessage* message)
 {
-	return false;
+	User* user = message->getUser();
+	if (user == nullptr)
+	{
+		return(false);
+	}
+	Room* room = user->getRoom();
+	if (room == nullptr)
+	{
+		return(false);
+	}
+	user->leaveRoom();
+	return true;
 }
