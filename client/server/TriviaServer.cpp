@@ -109,7 +109,12 @@ bool TriviaServer::handleJoinRoom(recievedMessage* message)
 	}
 	int roomId = atoi(message->getValues()[0].c_str());
 	Room* room = getRoomById(roomId);
-	return false;
+	if (room == nullptr)
+	{
+		//send failed message to user
+	}
+	bool ans = user->joinRoom(room);
+	return ans;
 }
 
 bool TriviaServer::handleLeaveRoom(recievedMessage *)
