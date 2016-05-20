@@ -15,7 +15,7 @@ class TriviaServer
 public:
 	TriviaServer();
 	~TriviaServer();
-	void Server();
+	void Server();//alon
 
 private:
 	boost::asio::io_service _io_service;
@@ -28,9 +28,9 @@ private:
 	//static int _roomIdSequence; - there is a link error with the word static - do we really need it to be static?
 	int _roomIdSequence;
 
-	void bindAndListen();
-	void accept();
-	void clientHandler(tcp::socket);
+	void bindAndListen();//alon
+	void accept();//alon
+	void clientHandler(tcp::socket);//alon
 	void safeDeleteUser(recievedMessage*);
 
 	User* handleSignin(recievedMessage*);
@@ -51,7 +51,7 @@ private:
 	void handleGetBestScores(recievedMessage*);//not in first section
 	void handlegetPersonalStatus(recievedMessage*);//not in first section
 
-	void handleRecievedMessages(recievedMessage*);
+	void handleRecievedMessages(recievedMessage*);//alon
 	void addRecievedMessage(recievedMessage*);
 	recievedMessage* buildRecievedMessage(tcp::socket,int);
 
