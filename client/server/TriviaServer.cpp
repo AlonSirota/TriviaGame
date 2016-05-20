@@ -5,8 +5,10 @@ TriviaServer::TriviaServer()//:_db() - only in later version
 	_socket = new tcp::socket(_io_service);
 }
 
-
-
+TriviaServer::~TriviaServer()
+{
+	delete _socket;
+}
 
 
 
@@ -52,4 +54,32 @@ Room * TriviaServer::getRoomById(int id)
 		return(it->second);
 	}
 	return(nullptr);
+}
+//done
+void TriviaServer::handleSignout(recievedMessage* message)
+{
+	User* user = getUserBySocket(message->getSocket());
+	if (user != nullptr)
+	{
+		handleCloseRoom(message);
+		handleLeaveRoom(message);
+		//handleLeaveGame - only in later version
+		_connectedUsers.erase(_connectedUsers.find(message->getSocket()));
+	}
+}
+//done
+bool TriviaServer::handleCreateRoom(recievedMessage* message)
+{
+	User* user = getUserBySocket(message->getSocket());
+	if (user == nullptr)
+	{
+		return(false);
+	}
+	_roomIdSequence++;
+	bool ans = user->createRoom(_roomIdSequence, message->getValues()[0], atoi(message->getValues()[1].c_str()), atoi(message->getValues()[2].c_str()), atoi(message->getValues()[3].c_str()));
+	if (ans)
+	{
+		_roomList.insert(std::pair<int, Room*>(_roomIdSequence, user->getRoom()));
+	}
+	return ans;
 }

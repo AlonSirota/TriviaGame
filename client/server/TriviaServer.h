@@ -30,7 +30,7 @@ private:
 	void bindAndListen();
 	void accept();
 	void clientHandler(tcp::socket);
-	void safeDeleteUser(recievedMessage*);//not in first section
+	void safeDeleteUser(recievedMessage*);
 
 	User* handleSignin(recievedMessage*);
 	bool handleSignup(recievedMessage*);
