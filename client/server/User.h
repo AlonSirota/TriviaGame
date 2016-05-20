@@ -1,5 +1,6 @@
 #pragma once
 
+#include "protocol.h"
 #include "Helper.h"
 #include "Game.h"
 #include "Room.h"
@@ -8,8 +9,7 @@
 using boost::asio::ip::tcp;
 
 #define USERERROR -1
-#define CREATEROOMFAILED "1140"
-#define CREATEROOMSUCSESS "1141"
+
 
 class User
 {
