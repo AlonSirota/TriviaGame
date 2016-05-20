@@ -80,6 +80,7 @@
     <ClInclude Include="DB.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Helper.h" />
+    <ClInclude Include="protocol.h" />
     <ClInclude Include="Question.h" />
     <ClInclude Include="RecievdMessage.h" />
     <ClInclude Include="Room.h" />

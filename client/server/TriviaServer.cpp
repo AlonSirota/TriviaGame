@@ -58,7 +58,7 @@ Room * TriviaServer::getRoomById(int id)
 //done
 void TriviaServer::handleSignout(recievedMessage* message)
 {
-	User* user = getUserBySocket(message->getSocket());
+	User* user = message->getUser();
 	if (user != nullptr)
 	{
 		handleCloseRoom(message);
@@ -70,7 +70,7 @@ void TriviaServer::handleSignout(recievedMessage* message)
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage* message)
 {
-	User* user = getUserBySocket(message->getSocket());
+	User* user = message->getUser();
 	if (user == nullptr)
 	{
 		return(false);
@@ -82,4 +82,37 @@ bool TriviaServer::handleCreateRoom(recievedMessage* message)
 		_roomList.insert(std::pair<int, Room*>(_roomIdSequence, user->getRoom()));
 	}
 	return ans;
+}
+//done
+bool TriviaServer::handleCloseRoom(recievedMessage* message)
+{
+	User* user = message->getUser();
+	if (user->getRoom() == nullptr)
+	{
+		return(false);
+	}
+	int ans = user->closeRoom();
+	if (ans == -1)
+	{
+		return(false);
+	}
+	_roomList.erase(ans);
+	return(true);
+}
+
+bool TriviaServer::handleJoinRoom(recievedMessage* message)
+{
+	User* user = message->getUser();
+	if (user == nullptr)
+	{
+		return(false);
+	}
+	int roomId = atoi(message->getValues()[0].c_str());
+	Room* room = getRoomById(roomId);
+	return false;
+}
+
+bool TriviaServer::handleLeaveRoom(recievedMessage *)
+{
+	return false;
 }

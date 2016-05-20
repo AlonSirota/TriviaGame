@@ -25,7 +25,8 @@ private:
 	std::map<int, Room*> _roomList;
 	std::mutex _mtxMessagesRecieved;
 	std::queue<recievedMessage*> queRcvMessages;
-	static int _roomIdSequence;
+	//static int _roomIdSequence; - there is a link error with the word static - do we really need it to be static?
+	int _roomIdSequence;
 
 	void bindAndListen();
 	void accept();
