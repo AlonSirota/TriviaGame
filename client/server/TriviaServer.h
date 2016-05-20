@@ -2,6 +2,13 @@
 
 #include <queue>
 #include <mutex>
+#include <map>
+#include <boost\asio.hpp>
+#include "DB.h"
+#include "User.h"
+#include "Room.h"
+#include "RecievdMessage.h"
+using boost::asio::ip::tcp;
 
 class TriviaServer
 {
@@ -11,6 +18,7 @@ public:
 	void Server();
 
 private:
+	boost::asio::io_service _io_service;
 	std::map<tcp::socket*, User*> _connectedUsers;
 	tcp::socket* _socket;
 	DB _db;
@@ -47,6 +55,6 @@ private:
 	recievedMessage* buildRecievedMessage(tcp::socket,int);
 
 	User* getUserByName(std::string);
-	User* getUserBySocket(tcp::socket);
+	User* getUserBySocket(tcp::socket*);
 	Room* getRoomById(int);
 };

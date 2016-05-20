@@ -13,6 +13,7 @@ using boost::asio::ip::tcp;
 
 class User
 {
+public:
 	User(std::string, tcp::socket*);
 	void send(std::string&);
 	std::string getUsername() { return(_username); }
