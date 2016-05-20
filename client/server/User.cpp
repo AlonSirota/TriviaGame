@@ -15,20 +15,20 @@ bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questi
 {
 	if (_currRoom != nullptr)
 	{
-		std::string message = CREATEROOMFAILED; // may create problems as it may delete itself
+		std::string message = CREATE_ROOM_FAILED ; // may create problems as it may delete itself
 		this->send(message);
 		return(false);
 	}
 	_currRoom = new Room(roomId, this, roomName, maxUsers, questionsNo, questionTime);
 	if (_currRoom == nullptr)
 	{
-		std::string message = CREATEROOMFAILED; // may create problems as it may delete itself
+		std::string message = CREATE_ROOM_FAILED; // may create problems as it may delete itself
 		this->send(message);
 		return(false);
 		//send failed message 1140
 	}
 	//send sucsess message 1141
-	std::string message = CREATEROOMSUCSESS; // may create problems as it may delete itself
+	std::string message = CREATE_ROOM_SUCSESS; // may create problems as it may delete itself
 	this->send(message);
 	return(true);
 	

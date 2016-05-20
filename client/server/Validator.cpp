@@ -2,20 +2,21 @@
 
 static bool isPasswordValid(std::string pass)
 {
-	std::regex reg = std::regex();
-
-	if (pass.length() < 4) //less than 4 chars
+	if (pass.length() < 4 ||
+		pass.find(" ") != -1 ||
+		std::regex_match(pass, std::regex("[0-9]")) == 0 ||
+		std::regex_match(pass, std::regex("[a-z]")) == 0 ||
+		std::regex_match(pass, std::regex("[A-Z]")) == 0 )
 	{
 		return false;
 	}
-
-	if (pass.find(" ") != -1) //contains spaces
+	else
 	{
-		return false;
+		return true;
 	}
 }
 
-static bool isUsernameValid(std::string)
+static bool isUsernameValid(std::string user)
 {
-
+	if (std::regex_match(user, "^[a-z]"))
 }
