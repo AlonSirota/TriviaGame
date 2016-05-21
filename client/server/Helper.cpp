@@ -20,7 +20,7 @@ void Helper::sendData(tcp::socket* socket, std::string bufTemp)
 	//will send exception automaticly
 }
 
-std::string Helper::getMessageTypeCode(tcp::socket* socket)
+int Helper::getMessageTypeCode(tcp::socket* socket)
 {
 	char* s = new char[3];
 	s = getPartFromSocket(socket, 3);
@@ -28,7 +28,7 @@ std::string Helper::getMessageTypeCode(tcp::socket* socket)
 
 	if (msg == "")
 		return 0;
-	return  s;
+	return  atoi(s);
 }
 
 int Helper::getIntPartFromSocket(tcp::socket* socket, int bytesNum)
@@ -59,5 +59,6 @@ char * Helper::getPartFromSocket(tcp::socket * socket, int bytesNum)
 
 		}
 	});
+	data[bytesNum] = NULL;
 	return data;
 }

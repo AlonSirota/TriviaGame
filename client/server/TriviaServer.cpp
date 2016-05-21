@@ -23,11 +23,61 @@ TriviaServer::~TriviaServer()
 
 recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket* socket, int messCode)
 {
-	std::string code = std::to_string(messCode);
+	recievedMessage* message;
+	std::vector<std::string> info;
 	switch (messCode)
 	{
+		case SIGNIN_REQUEST:
+			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, usernameLength));
+			int passLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, passLength));
+			message = new recievedMessage(socket, messCode, info);
+			break;
+		
+			break;
+		case SIGNUP_REQUEST:
+			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, usernameLength));
+			int passLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, passLength));
+			int emailLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, emailLength));
+			message = new recievedMessage(socket, messCode, info);
+			break;
+		case USERS_IN_ROOM_REQUEST:
+		case JOIN_ROOM_REQUEST:
+			info.push_back(Helper::getPartFromSocket(socket, 4));
+			message = new recievedMessage(socket, messCode, info);
+			break;
+		case CREATE_ROOM_REQUEST:
+			int rommNameLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, rommNameLength));
+			info.push_back(Helper::getPartFromSocket(socket, 1));
+			info.push_back(Helper::getPartFromSocket(socket, 2));
+			info.push_back(Helper::getPartFromSocket(socket, 2));
+			message = new recievedMessage(socket, messCode, info);
+			break;
+		case START_GAME_REQUEST://not in current version
+			break;
+		case CLIENT_ANSWER://not in current version
+			break;
+		case LEAVE_GAME_REQUEST://not in current version
+			break;
+		case BEST_SCORE_REQUEST://not in current version
+			break;
+		case PERSONAL_STATE_REQUEST://not in current version
+			break;
+		case EXIT:
+		case CLOSE_ROOM_REQUEST:
+		case LEAVE_ROOM_REQUEST:
+		case EXISTING_ROOM_REQUEST:
+		case SIGNOUT_REQUEST:
+			message = new recievedMessage(socket, messCode);
+		default:
 
 	}
+	return(message);
 }
 
 //done
