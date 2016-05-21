@@ -21,6 +21,15 @@ TriviaServer::~TriviaServer()
 
 
 
+recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket* socket, int messCode)
+{
+	std::string code = std::to_string(messCode);
+	switch (messCode)
+	{
+
+	}
+}
+
 //done
 User * TriviaServer::getUserByName(std::string username)
 {
@@ -116,7 +125,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage* message)
 	bool ans = user->joinRoom(room); //message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
-
+//not done yet
 bool TriviaServer::handleLeaveRoom(recievedMessage* message)
 {
 	User* user = message->getUser();

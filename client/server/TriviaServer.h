@@ -53,7 +53,7 @@ private:
 
 	void handleRecievedMessages(recievedMessage*);//alon
 	void addRecievedMessage(recievedMessage*);//alon
-	recievedMessage* buildRecievedMessage(tcp::socket,int);
+	recievedMessage* buildRecievedMessage(tcp::socket*,int);
 
 	User* getUserByName(std::string);
 	User* getUserBySocket(tcp::socket*);
