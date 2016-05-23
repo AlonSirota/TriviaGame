@@ -9,6 +9,6 @@ public:
 	static int getMessageTypeCode(tcp::socket*);
 	static int getIntPartFromSocket(tcp::socket*, int);
 	static std::string getStringPartFromSocket(tcp::socket*, int);
-	static std::string getPaddedNumber(int, int);//not sure we'll need this one
+	static std::string getPaddedNumber(int, int);//CREATE THIS FUNCTION
 	static char* Helper::getPartFromSocket(tcp::socket*, int);
 };

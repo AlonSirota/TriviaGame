@@ -8,13 +8,14 @@
 #include "User.h"
 #include "Room.h"
 #include "RecievdMessage.h"
+#include "Validator.h"
 using boost::asio::ip::tcp;
 
 class TriviaServer
 {
 public:
-	TriviaServer();
-	~TriviaServer();
+	TriviaServer();//done
+	~TriviaServer();//done
 	void Server();//alon
 
 private:
@@ -33,18 +34,18 @@ private:
 	void clientHandler(tcp::socket);//alon
 	void safeDeleteUser(recievedMessage*);
 
-	User* handleSignin(recievedMessage*);
-	bool handleSignup(recievedMessage*);
-	void handleSignout(recievedMessage*);
+	User* handleSignin(recievedMessage*);//done
+	bool handleSignup(recievedMessage*);//done for first stage
+	void handleSignout(recievedMessage*);//done
 
 	void handleLeaveGame(recievedMessage*);//not in first section
 	void handleStartGame(recievedMessage*);//not in first section
 	void handleUserAnswer(recievedMessage*);//not in first section
 
-	bool handleCreateRoom(recievedMessage*);
-	bool handleCloseRoom(recievedMessage*);
-	bool handleJoinRoom(recievedMessage*);
-	bool handleLeaveRoom(recievedMessage*);
+	bool handleCreateRoom(recievedMessage*);//done
+	bool handleCloseRoom(recievedMessage*);//done - CHECK IF NEED TO SEND NOTICE TO CLIENT
+	bool handleJoinRoom(recievedMessage*);//done
+	bool handleLeaveRoom(recievedMessage*);//NOT FINISHED YET
 	void handleGetUsersInRoom(recievedMessage*);
 	void handleGetRooms(recievedMessage*);
 
@@ -53,9 +54,9 @@ private:
 
 	void handleRecievedMessages(recievedMessage*);//alon
 	void addRecievedMessage(recievedMessage*);//alon
-	recievedMessage* buildRecievedMessage(tcp::socket*,int);
+	recievedMessage* buildRecievedMessage(tcp::socket*,int);//done
 
-	User* getUserByName(std::string);
-	User* getUserBySocket(tcp::socket*);
-	Room* getRoomById(int);
+	User* getUserByName(std::string);//done
+	User* getUserBySocket(tcp::socket*);//done
+	Room* getRoomById(int);//done
 };
