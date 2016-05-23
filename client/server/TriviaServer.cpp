@@ -227,7 +227,7 @@ bool TriviaServer::handleLeaveRoom(recievedMessage* message)
 	user->leaveRoom();
 	return true;
 }
-
+//done
 void TriviaServer::handleGetRooms(recievedMessage* message)
 {
 	std::string sendString = std::to_string(EXISTING_ROOM_REPLY);

@@ -47,7 +47,7 @@ private:
 	bool handleJoinRoom(recievedMessage*);//done
 	bool handleLeaveRoom(recievedMessage*);//NOT FINISHED YET
 	void handleGetUsersInRoom(recievedMessage*);
-	void handleGetRooms(recievedMessage*);
+	void handleGetRooms(recievedMessage*);//done
 
 	void handleGetBestScores(recievedMessage*);//not in first section
 	void handlegetPersonalStatus(recievedMessage*);//not in first section
