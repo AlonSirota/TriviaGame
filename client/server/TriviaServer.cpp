@@ -1,24 +1,14 @@
 #include "TriviaServer.h"
-
+//done
 TriviaServer::TriviaServer()//:_db() - only in later version
 {
 	_socket = new tcp::socket(_io_service);
 }
-
+//done
 TriviaServer::~TriviaServer()
 {
 	delete _socket;
 }
-
-
-
-
-
-
-
-
-
-
 
 //done
 recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket* socket, int messCode)
@@ -113,6 +103,20 @@ Room * TriviaServer::getRoomById(int id)
 		return(it->second);
 	}
 	return(nullptr);
+}
+//done
+void TriviaServer::safeDeleteUser(recievedMessage* message)
+{
+	try
+	{
+		tcp::socket* socket = message->getSocket();
+		handleSignout(message);
+		socket->close();
+	}
+	catch ()
+	{
+
+	}
 }
 //done
 User * TriviaServer::handleSignin(recievedMessage* message)
@@ -226,6 +230,20 @@ bool TriviaServer::handleLeaveRoom(recievedMessage* message)
 	}
 	user->leaveRoom();
 	return true;
+}
+//done
+void TriviaServer::handleGetUsersInRoom(recievedMessage* message)
+{
+	Room* room = getRoomById(atoi(message->getValues()[0].c_str()));
+	if (room == nullptr)
+	{
+		//fail - no room has this id
+		Helper::sendData(message->getSocket(), std::to_string(USERS_IN_ROOM_REPLY) + std::to_string(0));
+	}
+	std::string sendString = std::to_string(USERS_IN_ROOM_REPLY);
+	sendString += room->getUsersListMessage();
+	Helper::sendData(message->getSocket(), sendString);
+
 }
 //done
 void TriviaServer::handleGetRooms(recievedMessage* message)

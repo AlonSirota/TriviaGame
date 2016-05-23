@@ -32,7 +32,7 @@ private:
 	void bindAndListen();//alon
 	void accept();//alon
 	void clientHandler(tcp::socket);//alon
-	void safeDeleteUser(recievedMessage*);
+	void safeDeleteUser(recievedMessage*);//done
 
 	User* handleSignin(recievedMessage*);//done
 	bool handleSignup(recievedMessage*);//done for first stage
@@ -46,7 +46,7 @@ private:
 	bool handleCloseRoom(recievedMessage*);//done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 	bool handleJoinRoom(recievedMessage*);//done
 	bool handleLeaveRoom(recievedMessage*);//NOT FINISHED YET
-	void handleGetUsersInRoom(recievedMessage*);
+	void handleGetUsersInRoom(recievedMessage*);//done
 	void handleGetRooms(recievedMessage*);//done
 
 	void handleGetBestScores(recievedMessage*);//not in first section
