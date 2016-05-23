@@ -7,6 +7,7 @@
 #include <memory>
 #include <set>
 #include <utility>
+#include <iomanip>
 
 void Helper::sendData(tcp::socket* socket, std::string bufTemp)
 {
@@ -42,6 +43,13 @@ std::string Helper::getStringPartFromSocket(tcp::socket* socket, int bytesNum)
 	char* s = getPartFromSocket(socket, bytesNum);
 	std::string res(s);
 	return res;
+}
+
+std::string Helper::getPaddedNumber(int num, int digits)
+{
+	std::ostringstream ostr;
+	ostr << std::setw(digits) << std::setfill('0') << num;
+	return ostr.str();
 }
 
 char * Helper::getPartFromSocket(tcp::socket * socket, int bytesNum)
