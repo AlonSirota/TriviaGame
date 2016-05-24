@@ -37,6 +37,7 @@ namespace client
 
         }
 
+        //We might want to use a password box
         /*
          * tries to sign in.
          * 200<user length><username><pass length><password>

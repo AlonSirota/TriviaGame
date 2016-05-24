@@ -69,6 +69,7 @@ namespace client
             }
         }
 
+        //We might want to use a Password Box
         //203##username##password##email
         private string requestSignUp()
         {

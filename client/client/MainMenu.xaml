@@ -1,0 +1,31 @@
+﻿<Window x:Class="client.MainMenu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:client"
+        mc:Ignorable="d"
+        Title="MainMenu" Height="353" Width="740">
+    <Grid>
+        <Button x:Name="btnGetRoomList" Content="Get List of Existing Rooms" HorizontalAlignment="Left" Height="50" Margin="10,10,0,0" VerticalAlignment="Top" Width="160" Click="btnGetRoomList_Click"/>
+        <Button x:Name="btnCreateRoom" Content="Create New Room" HorizontalAlignment="Left" Height="50" Margin="10,65,0,0" VerticalAlignment="Top" Width="160"/>
+        <Button x:Name="btnLeaveRoom" Content="Leave Room" HorizontalAlignment="Left" Height="50" Margin="10,120,0,0" VerticalAlignment="Top" Width="160"/>
+        <Button x:Name="btnCloseRoom" Content="Close Room" HorizontalAlignment="Left" Height="50" Margin="10,175,0,0" VerticalAlignment="Top" Width="160"/>
+        <Button x:Name="btnGetUsersInRoom" Content="Get Users In Room" HorizontalAlignment="Left" Height="50" Margin="10,230,0,0" VerticalAlignment="Top" Width="160"/>
+        <ListView x:Name="listViewRooms" HorizontalAlignment="Left" Height="270" Margin="195,10,0,0" VerticalAlignment="Top" Width="200">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView x:Name="listViewUsersInRoom" HorizontalAlignment="Left" Height="270" Margin="416,10,0,0" VerticalAlignment="Top" Width="200">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Height="270" Margin="635,10,0,0" VerticalAlignment="Top" Width="87"/>
+    </Grid>
+</Window>

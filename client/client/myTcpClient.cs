@@ -31,7 +31,7 @@ namespace client
             client.Connect(serverEndPoint);
             clientStream = client.GetStream();
 
-            client.Close();
+            //client.Close();
         }
 
         public void mySend(string text)
