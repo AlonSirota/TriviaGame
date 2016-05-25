@@ -20,8 +20,14 @@ namespace client
     public partial class MainMenu : Window
     {
         myTcpClient _client;
+        //for getting existing rooms
         Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
         int _roomNo;
+        //for creating new room
+        public string roomName { get; set; }
+        public string playerNo { get; set; }
+        public string questionNo { get; set; }
+        public string questionTime { get; set; }
         public MainMenu()
         {
             InitializeComponent();
@@ -80,6 +86,28 @@ namespace client
                 _roomNametoId.Add(roomName, roomId);
             }
             return code;
+        }
+
+        private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
+        {
+            createRoomAsync();
+
+        }
+        //private string async createRoomAsync()
+        {
+            //get information from createRoom window
+
+            //send create room message
+            string sendString = "213" + roomName.Length.ToString().PadLeft(2, '0');
+            sendString += playerNo + questionNo.ToString().PadLeft(2, '0');
+            sendString += questionTime.ToString().PadLeft(2, '0');
+            _client.mySend(sendString);
+            //get result from server
+
+            //open Room window - lets the user start the game or close it
+
+
+            //return "y";
         }
     }
 }
