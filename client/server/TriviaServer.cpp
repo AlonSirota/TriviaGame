@@ -80,7 +80,7 @@ recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket* socket, int me
 		}
 		default:
 		{
-
+			message = new recievedMessage(socket, messCode);
 		}
 	}
 	return(message);
@@ -129,7 +129,7 @@ void TriviaServer::safeDeleteUser(recievedMessage* message)
 		handleSignout(message);
 		socket->close();
 	}
-	catch ()
+	catch (const std::exception& ex)
 	{
 
 	}
