@@ -19,7 +19,7 @@ TriviaServer::~TriviaServer()
 //done
 recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket* socket, int messCode)
 {
-	recievedMessage* message;
+	recievedMessage* message = nullptr;
 	std::vector<std::string> info;
 	switch (messCode)
 	{
@@ -120,6 +120,12 @@ Room * TriviaServer::getRoomById(int id)
 	}
 	return(nullptr);
 }
+
+void TriviaServer::bindAndListen()
+{
+	
+}
+
 //done
 void TriviaServer::safeDeleteUser(recievedMessage* message)
 {

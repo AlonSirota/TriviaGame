@@ -1,6 +1,6 @@
 #include "Validator.h"
 
-static bool isPasswordValid(std::string pass)
+bool Validator::isPasswordValid(std::string pass)
 {
 	if (pass.length() < 4 ||
 		pass.find(" ") != -1 ||
@@ -16,7 +16,7 @@ static bool isPasswordValid(std::string pass)
 	}
 }
 
-static bool isUsernameValid(std::string user)
+bool Validator::isUsernameValid(std::string user)
 {
 	if (std::regex_match(user, std::regex("^[a-z|A-Z]")) == 0 ||
 		std::regex_match(user, std::regex(" ")) != 0 ||
