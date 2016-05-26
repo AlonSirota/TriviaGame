@@ -1,0 +1,23 @@
+﻿<Window x:Class="client.roomInterface"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:client"
+        mc:Ignorable="d"
+        Title="roomInterface" Height="250" Width="500">
+    <Grid>
+        <Button x:Name="button" Content="Get Users In Room" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="150" Click="button_Click"/>
+        <Button x:Name="button_Copy" Content="Close Room" HorizontalAlignment="Left" Height="50" Margin="0,50,0,0" VerticalAlignment="Top" Width="150"/>
+        <Button x:Name="button_Copy1" Content="Leave Room" HorizontalAlignment="Left" Height="50" Margin="0,100,0,0" VerticalAlignment="Top" Width="150"/>
+        <ListView x:Name="listViewUsers" HorizontalAlignment="Left" Height="160" Margin="150,0,0,0" VerticalAlignment="Top" Width="332">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Height="54" Margin="0,165,0,0" VerticalAlignment="Top" Width="492"/>
+
+    </Grid>
+</Window>

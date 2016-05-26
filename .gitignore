@@ -205,3 +205,4 @@ pip-log.txt
 #others
 *.VC.db
 *.VC.VC.db
+/client/client.VC.VC.opendb
