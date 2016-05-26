@@ -91,9 +91,9 @@ namespace client
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
         {
             createRoomAsync();
-
         }
-        //private string async createRoomAsync()
+        
+        private async void createRoomAsync()
         {
             //get information from createRoom window
 
