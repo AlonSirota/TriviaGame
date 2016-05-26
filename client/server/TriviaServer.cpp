@@ -4,6 +4,12 @@ TriviaServer::TriviaServer()//:_db() - only in later version
 {
 	_socket = new tcp::socket(_io_service);
 }
+
+void TriviaServer::serve()
+{
+
+}
+
 //done
 TriviaServer::~TriviaServer()
 {

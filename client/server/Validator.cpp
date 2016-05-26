@@ -18,5 +18,14 @@ static bool isPasswordValid(std::string pass)
 
 static bool isUsernameValid(std::string user)
 {
-	if (std::regex_match(user, "^[a-z]"))
+	if (std::regex_match(user, std::regex("^[a-z|A-Z]")) == 0 ||
+		std::regex_match(user, std::regex(" ")) != 0 ||
+		user == "")
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
