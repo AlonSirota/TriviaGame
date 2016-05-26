@@ -17,7 +17,8 @@ void Helper::sendData(tcp::socket* socket, std::string bufTemp)
 		{
 
 		}
-	});
+	}); 
+	
 	//will send exception automaticly
 }
 
@@ -59,8 +60,9 @@ char * Helper::getPartFromSocket(tcp::socket * socket, int bytesNum)
 		return "";
 	}
 
-	char* data = new char[bytesNum + 1];
-	socket->async_read_some(data, [](boost::system::error_code ec, std::size_t /*length*/)
+	//char* data = new char[bytesNum + 1];
+	std::vector<char> data(bytesNum + 1);
+	socket->async_read_some(boost::asio::buffer(data.data(), data.size()), [](boost::system::error_code ec, std::size_t /*length*/)
 	{
 		if (!ec)
 		{
@@ -68,5 +70,5 @@ char * Helper::getPartFromSocket(tcp::socket * socket, int bytesNum)
 		}
 	});
 	data[bytesNum] = NULL;
-	return data;
+	return data.data();
 }
