@@ -16,7 +16,7 @@ class TriviaServer
 public:
 	TriviaServer();//done
 	~TriviaServer();//done
-	void Server();//alon
+	void serve();//alon
 
 private:
 	boost::asio::io_service _io_service;

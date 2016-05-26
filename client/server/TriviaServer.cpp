@@ -4,6 +4,12 @@ TriviaServer::TriviaServer()//:_db() - only in later version
 {
 	_socket = new tcp::socket(_io_service);
 }
+
+void TriviaServer::serve()
+{
+
+}
+
 //done
 TriviaServer::~TriviaServer()
 {
@@ -125,7 +131,7 @@ void TriviaServer::safeDeleteUser(recievedMessage* message)
 	}
 	catch (const std::exception& ex)
 	{
-
+		std::cout << "exeption caught in safeDeleteUser:" << ex.what() << std::endl;
 	}
 }
 //done

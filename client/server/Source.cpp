@@ -6,7 +6,7 @@
 #include "User.h"
 #include "Room.h"
 #include "Game.h"
-#include "Validator.h"
+//#include "Validator.h"
 #include "TriviaServer.h"
 #include "RecievdMessage.h"
 #include "Question.h"

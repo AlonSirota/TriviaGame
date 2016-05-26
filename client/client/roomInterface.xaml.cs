@@ -26,6 +26,11 @@ namespace client
         {
             InitializeComponent();
         }
+        public roomInterface(myTcpClient newClient)
+        {
+            InitializeComponent();
+            _client = newClient;
+        }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
