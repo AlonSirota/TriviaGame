@@ -46,6 +46,10 @@ namespace client
             if (response == "1020")
             {
                 //open new window.
+                Hide();
+                MainMenu s = new MainMenu(_client);
+                s.ShowDialog();
+                
                 lblStatus.Content = "Login succeeded";
             }
             else if (response == "1021")

@@ -1,7 +1,7 @@
-follow debugging process
+follow debugging process - not including extreme cases
 client:
 MainWindow -  debugged
-MainMenu -
+MainMenu - getRoomList(debugged),createRoom(NOT debugged),joinRoom(debugged)
 createRoom - 
 roomInterface - 
 SignUp - 

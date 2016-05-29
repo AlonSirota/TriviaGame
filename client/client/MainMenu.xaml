@@ -9,7 +9,7 @@
     <Grid>
         <Button x:Name="btnGetRoomList" Content="Get List of Existing Rooms" HorizontalAlignment="Left" Height="50" Margin="10,0,0,0" VerticalAlignment="Top" Width="211" Click="btnGetRoomList_Click"/>
         <Button x:Name="btnCreateRoom" Content="Create New Room" HorizontalAlignment="Left" Height="50" Margin="10,50,0,0" VerticalAlignment="Top" Width="211" Click="btnCreateRoom_Click"/>
-        <ListView x:Name="listViewRooms" HorizontalAlignment="Left" Height="270" Margin="10,167,0,0" VerticalAlignment="Top" Width="211" RenderTransformOrigin="0.295,0.877">
+        <ListView x:Name="listViewRooms" HorizontalAlignment="Left" Height="270" Margin="10,167,0,0" VerticalAlignment="Top" Width="211" RenderTransformOrigin="0.295,0.877" SelectionChanged="listViewRooms_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
@@ -17,6 +17,6 @@
             </ListView.View>
         </ListView>
         <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Height="122" Margin="10,437,0,0" VerticalAlignment="Top" Width="211"/>
-        <Button x:Name="btnJoinRoom" Content="Join Room" HorizontalAlignment="Left" Height="50" Margin="10,100,0,0" VerticalAlignment="Top" Width="211" Click="btnCreateRoom_Click"/>
+        <Button x:Name="btnJoinRoom" Content="Join Room" HorizontalAlignment="Left" Height="50" Margin="10,100,0,0" VerticalAlignment="Top" Width="211" Click="btnJoinRoom_Click"/>
     </Grid>
 </Window>

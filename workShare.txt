@@ -13,7 +13,7 @@ user (eran) (done)
 validator (alon)
 triviaServer (eran) - need to validate that appropriate messages are sent to user at the correct points 
 
-Helper - need to change write to async_write
+Helper
 
 שונות:
 החלטתי שרירותית שהפורט יהיה 8282
