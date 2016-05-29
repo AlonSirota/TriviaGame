@@ -21,23 +21,14 @@ namespace client
     public partial class MainWindow : Window
     {
         myTcpClient _client;
-
+        string username;
+        string password;
         public MainWindow()
         {
             InitializeComponent();
-            _client = new myTcpClient("127.0.0.1", 8282);
+            _client = new myTcpClient("127.0.0.1", 8820);
         }
 
-        async public void GUI()
-        {
-
-        }
-        async public void comm()
-        {
-
-        }
-
-        //We might want to use a password box
         /*
          * tries to sign in.
          * 200<user length><username><pass length><password>
@@ -73,20 +64,26 @@ namespace client
 
         private string requestSignIn()
         {
-            _client.mySend(
-                "200" +
-                txtUsername.Text.Length.ToString().PadLeft(2, '0') +
-                txtUsername.Text +
-                txtPassword.Text.Length.ToString().PadLeft(2, '0') +
-                txtPassword.Text);
-
+            _client.mySend("200" +
+                username.Length.ToString().PadLeft(2, '0') + username +
+                password.Length.ToString().PadLeft(2, '0') + password);
             return _client.myReceive(4);
         }
 
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
-            SignUp s = new SignUp(txtUsername.Text, txtPassword.Text, _client);
+            SignUp s = new SignUp(username, password, _client);
             s.ShowDialog();
+        }
+
+        private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            username = txtUsername.Text;
+        }
+
+        private void passwordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            password = passBox.Password;
         }
     }
 }

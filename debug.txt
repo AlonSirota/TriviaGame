@@ -1,0 +1,20 @@
+follow debugging process
+client:
+MainWindow -  debugged
+MainMenu -
+createRoom - 
+roomInterface - 
+SignUp - 
+myTcpClient - 
+
+server:
+DB - 
+Game - 
+Helper - 
+protocol - debugged
+Question - 
+RecievedMessage - 
+Room - 
+TriviaServer - 
+User - 
+Validator - 
