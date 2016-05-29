@@ -31,7 +31,7 @@ namespace client
             InitializeComponent();
             _client = newClient;
         }
-
+        /* NEEDS TO BE DONE AUTOMATICLY
         private void button_Click(object sender, RoutedEventArgs e)
         {
             requestGetUserListAsync();
@@ -77,5 +77,6 @@ namespace client
             }
             return code;
         }
+        */
     }
 }

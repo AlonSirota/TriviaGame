@@ -19,10 +19,10 @@ namespace client
     /// </summary>
     public partial class createRoom : Window
     {
-        public string roomName;
-        public string playerNo;
-        public string questionNo;
-        public string questionTime;
+        public string roomName = "";
+        public string playerNo = "";
+        public string questionNo = "";
+        public string questionTime = "";
         public createRoom()
         {
             InitializeComponent();
@@ -51,7 +51,19 @@ namespace client
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
         {
             //move values to Main menu
-    
+            if(roomName == "" || playerNo == "" || questionNo == "" || questionTime == "")
+            {
+                MessageBox.Show("Complete all fields");
+            }
+            else
+            {
+                MainMenu.questionNo = questionNo;
+                MainMenu.questionTime = questionTime;
+                MainMenu.roomName = roomName;
+                MainMenu.playerNo = playerNo;
+                Close();
+            }
         }
+        
     }
 }

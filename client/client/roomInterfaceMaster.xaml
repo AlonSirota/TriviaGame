@@ -1,13 +1,14 @@
-﻿<Window x:Class="client.roomInterface"
+﻿<Window x:Class="client.roomInterfaceMaster"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="roomInterface" Height="250" Width="500">
+        Title="roomInterfaceMaster" Height="250" Width="500">
     <Grid>
-        <Button x:Name="btnLeaveRoom" Content="Leave Room" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="150"/>
+        <Button x:Name="btnCloseRoom" Content="Close Room" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="150"/>
+        <Button x:Name="btnStartGame" Content="Start Game" HorizontalAlignment="Left" Height="50" Margin="0,50,0,0" VerticalAlignment="Top" Width="150"/>
         <ListView x:Name="listViewUsers" HorizontalAlignment="Left" Height="160" Margin="150,0,0,0" VerticalAlignment="Top" Width="332">
             <ListView.View>
                 <GridView>

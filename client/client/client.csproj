@@ -62,6 +62,9 @@
     <Compile Include="roomInterface.xaml.cs">
       <DependentUpon>roomInterface.xaml</DependentUpon>
     </Compile>
+    <Compile Include="roomInterfaceMaster.xaml.cs">
+      <DependentUpon>roomInterfaceMaster.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SignUp.xaml.cs">
       <DependentUpon>SignUp.xaml</DependentUpon>
     </Compile>
@@ -86,6 +89,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="roomInterface.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="roomInterfaceMaster.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

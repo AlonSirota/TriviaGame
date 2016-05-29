@@ -24,16 +24,11 @@ namespace client
         Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
         int _roomNo;
         //for creating new room
-        /*
-        public string roomName { get; set; }
-        public string playerNo { get; set; }
-        public string questionNo { get; set; }
-        public string questionTime { get; set; }
-        */
-        string roomName = "room1";
-        string playerNo = "1";
-        string questionNo = "1";
-        string questionTime = "5";
+        public static string roomName { get; set; }
+        public static string playerNo { get; set; }
+        public static string questionNo { get; set; }
+        public static string questionTime { get; set; }
+        
 
         //joinRoom variables
         string _joinRoomQuestionsNo;
@@ -48,6 +43,11 @@ namespace client
         {
             InitializeComponent();
             _client = newClient;
+            //only for degugging
+            roomName = "room1";
+            playerNo = "1";
+            questionNo = "1";
+            questionTime = "5";
         }
 
         private void btnGetRoomList_Click(object sender, RoutedEventArgs e)
@@ -108,18 +108,47 @@ namespace client
         private async void createRoomAsync()
         {
             //get information from createRoom window
+            Hide();
+            createRoom room = new createRoom();
+            room.ShowDialog();
+            lblStatus.Content = "got input for createRoom";
+            //send create room message and get answer
+            string response = await Task.Factory.StartNew(() => requestCreateRoom());
+            string code = response.Substring(0, 3);
+            if (code == "114")
+            {
+                lblStatus.Content = "Correct code detected";//open roomInterfaceMaster
+                if (response[3] == '0')
+                {
+                    //success
+                    Hide();
+                    roomInterfaceMaster roomIn = new roomInterfaceMaster(_client);
+                    roomIn.ShowDialog();
+                    lblStatus.Content = "success";
+                }
+                else if (response[3] == '1')
+                {
+                    lblStatus.Content = "Error - fail";
+                }
+                else
+                {
+                    lblStatus.Content = "Error - unknown";
+                }
+            }
+            else
+            {
+                lblStatus.Content = "Error - wrong code detected";
+            }
+        }
 
-            //send create room message
-            string sendString = "213" + roomName.Length.ToString().PadLeft(2, '0');
-            sendString += playerNo + questionNo.ToString().PadLeft(2, '0');
-            sendString += questionTime.ToString().PadLeft(2, '0');
+        private string requestCreateRoom()
+        {
+            string sendString = "213" + roomName.Length.ToString().PadLeft(2, '0') +roomName +
+                    playerNo + questionNo.ToString().PadLeft(2, '0') +
+                    questionTime.ToString().PadLeft(2, '0');
             _client.mySend(sendString);
-            //get result from server
-
-            //open Room window - lets the user start the game or close it
-
-
-            //return "y";
+            string ans = _client.myReceive(4);
+            return ans;
         }
 
         private void btnJoinRoom_Click(object sender, RoutedEventArgs e)
