@@ -43,11 +43,6 @@ namespace client
         {
             InitializeComponent();
             _client = newClient;
-            //only for degugging
-            roomName = "room1";
-            playerNo = "1";
-            questionNo = "1";
-            questionTime = "5";
         }
 
         private void btnGetRoomList_Click(object sender, RoutedEventArgs e)
