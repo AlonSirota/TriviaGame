@@ -4,6 +4,7 @@ MainWindow -  DEBUGGED
 MainMenu - DEBUGGED
 createRoom - DEBUGGED
 roomInterface - 
+roomInterfaceMaster -
 SignUp - DEBUGGED
 myTcpClient - DEBUGGED
 
