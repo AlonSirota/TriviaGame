@@ -20,11 +20,16 @@ namespace client
     public partial class SignUp : Window
     {
         myTcpClient _client;
+        string _username = "";
+        string _password = "";
+        string _email = "";
         public SignUp(string username, string password, myTcpClient newClient)
         {
             InitializeComponent();
-            this.txtUsername.Text = username;
-            this.txtPassword.Text = password;
+            txtUsername.Text = username;
+            passBox.Password = password;
+            _username = username;
+            _password = password;
             _client = newClient;
         }
 
@@ -45,6 +50,7 @@ namespace client
 
             if (response == "1040")
             {
+                Close();
                 lblStatus.Content = "sign up succeeded";
             }
             else if (response == "1041")
@@ -73,16 +79,26 @@ namespace client
         //203##username##password##email
         private string requestSignUp()
         {
-            _client.mySend(
-                "203" +
-                txtUsername.Text.Length.ToString().PadLeft(2, '0') +
-                txtUsername.Text +
-                txtPassword.Text.Length.ToString().PadLeft(2, '0') +
-                txtPassword.Text +
-                txtEmail.Text.Length.ToString().PadLeft(2, '0') +
-                txtEmail.Text);
-
+            _client.mySend("203" +
+                _username.Length.ToString().PadLeft(2, '0') + _username +
+                _password.Length.ToString().PadLeft(2, '0') + _password +
+                _email.Length.ToString().PadLeft(2, '0') + _email);
             return _client.myReceive(4);
+        }
+
+        private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _username = txtUsername.Text;
+        }
+
+        private void txtEmail_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _email = txtEmail.Text;
+        }
+
+        private void passBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            _password = passBox.Password;
         }
     }
 }

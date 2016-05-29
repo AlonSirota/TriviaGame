@@ -7,11 +7,11 @@
         <Label x:Name="lblUsername" Content="Username" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" Width="81"/>
         <Label x:Name="lblPassword" Content="Password" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top" Width="76"/>
         <Label x:Name="lblEmail" Content="Email" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="50"/>
-        <TextBox x:Name="txtUsername" HorizontalAlignment="Left" Height="23" Margin="121,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153"/>
-        <TextBox x:Name="txtPassword" HorizontalAlignment="Left" Height="23" Margin="121,96,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153"/>
-        <TextBox x:Name="txtEmail" HorizontalAlignment="Left" Height="23" Margin="121,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153"/>
+        <TextBox x:Name="txtUsername" HorizontalAlignment="Left" Height="23" Margin="121,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" TextChanged="txtUsername_TextChanged"/>
+        <TextBox x:Name="txtEmail" HorizontalAlignment="Left" Height="23" Margin="121,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="153" TextChanged="txtEmail_TextChanged"/>
         <Button x:Name="btnSignUp" Content="Sign Up" HorizontalAlignment="Left" VerticalAlignment="Top" Width="117" Margin="10,161,0,0" Height="45" Click="btnSignUp_Click"/>
         <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="22,10,0,0" VerticalAlignment="Top" Height="47" Width="250" FontSize="15"/>
+        <PasswordBox x:Name="passBox" HorizontalAlignment="Left" Height="23" Margin="121,94,0,0" VerticalAlignment="Top" Width="151" PasswordChanged="passBox_PasswordChanged"/>
 
     </Grid>
 </Window>

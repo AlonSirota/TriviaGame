@@ -49,7 +49,7 @@ namespace client
                 Hide();
                 MainMenu s = new MainMenu(_client);
                 s.ShowDialog();
-                
+                Close();
                 lblStatus.Content = "Login succeeded";
             }
             else if (response == "1021")
@@ -76,8 +76,10 @@ namespace client
 
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
+            Hide();
             SignUp s = new SignUp(username, password, _client);
             s.ShowDialog();
+            Show();
         }
 
         private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)

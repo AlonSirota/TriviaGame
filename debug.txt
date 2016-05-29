@@ -1,10 +1,10 @@
 follow debugging process - not including extreme cases
 client:
-MainWindow -  debugged
-MainMenu - getRoomList(debugged),createRoom(NOT debugged),joinRoom(debugged)
+MainWindow -  DEBUGGED
+MainMenu - getRoomList(DEBUGGED),createRoom(NOT debugged),joinRoom(DEBUGGED)
 createRoom - 
 roomInterface - 
-SignUp - 
+SignUp - DEBUGGED
 myTcpClient - 
 
 server:
