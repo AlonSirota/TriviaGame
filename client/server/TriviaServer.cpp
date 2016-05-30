@@ -86,11 +86,11 @@ User& TriviaServer::getUserByName(std::string username)
 	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
-		if (it->second->getUsername() == username)
+		if (it->second.getUsername() == username)
 			return(it->second);
 		it++;
 	}
-	return _connectedUsers.end();
+	return _connectedUsers.end()->second;
 }
 
 //done
@@ -134,7 +134,7 @@ void TriviaServer::acceptHandler(const boost::system::error_code & ec, tcp::sock
 {
 	if (ec)
 	{
-		std::cout << "async_accept failed: " << ec.value;
+		std::cout << "async_accept failed: " << ec.value();
 	}
 	else
 	{
@@ -260,6 +260,7 @@ bool TriviaServer::handleLeaveRoom(recievedMessage& message)
 	{
 		Room& room = getRoomById(user._currRoomID);
 		user.leaveRoom();
+		room.leaveRoom(user);
 		return true;
 	}
 	else
