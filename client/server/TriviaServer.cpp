@@ -7,7 +7,15 @@ TriviaServer::TriviaServer()//:_db() - only in later version
 
 void TriviaServer::serve()
 {
-
+	tcp::endpoint ep(tcp::v4(), 8820);
+	tcp::acceptor acceptor(_io_service, ep);
+	while (true)
+	{
+		acceptor.listen();
+		//acceptor.async_accept(_socket, acceptHandler);
+		acceptor.async_accept(_socket, acceptHandler); //work
+		_io_service.run();
+	}
 }
 
 //done
@@ -119,6 +127,11 @@ Room * TriviaServer::getRoomById(int id)
 		return(it->second);
 	}
 	return(nullptr);
+}
+
+void TriviaServer::acceptHandler(const boost::system::error_code & ec)
+{
+
 }
 
 //done

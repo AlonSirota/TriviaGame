@@ -9,6 +9,7 @@
 #include "Room.h"
 #include "RecievdMessage.h"
 #include "Validator.h"
+#include <boost\bind.hpp>
 using boost::asio::ip::tcp;
 
 class TriviaServer
@@ -30,6 +31,7 @@ private:
 	int _roomIdSequence;
 
 	void clientHandler(tcp::socket);//alon
+	void acceptHandler(const boost::system::error_code &ec);
 	void safeDeleteUser(recievedMessage*);//done
 
 	User* handleSignin(recievedMessage*);//done
