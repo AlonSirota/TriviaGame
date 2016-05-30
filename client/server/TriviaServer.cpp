@@ -7,15 +7,7 @@ TriviaServer::TriviaServer()//:_db() - only in later version
 
 void TriviaServer::serve()
 {
-	tcp::endpoint ep(tcp::v4(), 8820);
-	tcp::acceptor acceptor(_io_service, ep);
-	while (true)
-	{
-		acceptor.listen();
-		//acceptor.async_accept(_socket, acceptHandler);
-		acceptor.async_accept(_socket, acceptHandler); //work
-		_io_service.run();
-	}
+
 }
 
 //done
@@ -129,9 +121,14 @@ Room * TriviaServer::getRoomById(int id)
 	return(nullptr);
 }
 
-void TriviaServer::acceptHandler(const boost::system::error_code & ec)
+Game& TriviaServer::getGamebyId(int id)
 {
-
+	std::map<int, Game&>::iterator it = _roomList.find(id);
+	if (it != _gameList.end())
+	{
+		return(it->second);
+	}
+	return(_gameList.end());
 }
 
 //done
@@ -245,7 +242,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage* message)
 	bool ans = user->joinRoom(room); //message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
-//not done yet
+//done
 bool TriviaServer::handleLeaveRoom(recievedMessage* message)
 {
 	User* user = message->getUser();

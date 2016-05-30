@@ -9,9 +9,9 @@
 #include <utility>
 #include <iomanip>
 
-void Helper::sendData(tcp::socket* socket, std::string bufTemp)
+void Helper::sendData(tcp::socket& socket, std::string bufTemp)
 {
-	boost::asio::async_write(*socket, boost::asio::buffer(bufTemp.c_str(), bufTemp.length()), [](boost::system::error_code ec, std::size_t /*length*/)
+	boost::asio::async_write(socket, boost::asio::buffer(bufTemp.c_str(), bufTemp.length()), [](boost::system::error_code ec, std::size_t /*length*/)
 	{
 		if (!ec)
 		{
@@ -22,7 +22,7 @@ void Helper::sendData(tcp::socket* socket, std::string bufTemp)
 	//will send exception automaticly
 }
 
-int Helper::getMessageTypeCode(tcp::socket* socket)
+int Helper::getMessageTypeCode(tcp::socket& socket)
 {
 	char* s = new char[3];
 	s = getPartFromSocket(socket, 3);
@@ -33,13 +33,13 @@ int Helper::getMessageTypeCode(tcp::socket* socket)
 	return  atoi(s);
 }
 
-int Helper::getIntPartFromSocket(tcp::socket* socket, int bytesNum)
+int Helper::getIntPartFromSocket(tcp::socket& socket, int bytesNum)
 {
 	char* s = getPartFromSocket(socket, bytesNum);
 	return atoi(s);
 }
 
-std::string Helper::getStringPartFromSocket(tcp::socket* socket, int bytesNum)
+std::string Helper::getStringPartFromSocket(tcp::socket& socket, int bytesNum)
 {
 	char* s = getPartFromSocket(socket, bytesNum);
 	std::string res(s);
@@ -53,7 +53,7 @@ std::string Helper::getPaddedNumber(int num, int digits)
 	return ostr.str();
 }
 
-char * Helper::getPartFromSocket(tcp::socket * socket, int bytesNum)
+char * Helper::getPartFromSocket(tcp::socket& socket, int bytesNum)
 {
 	if (bytesNum == 0)
 	{
@@ -62,7 +62,7 @@ char * Helper::getPartFromSocket(tcp::socket * socket, int bytesNum)
 
 	//char* data = new char[bytesNum + 1];
 	std::vector<char> data(bytesNum + 1);
-	socket->async_read_some(boost::asio::buffer(data.data(), data.size()), [](boost::system::error_code ec, std::size_t /*length*/)
+	socket.async_read_some(boost::asio::buffer(data.data(), data.size()), [](boost::system::error_code ec, std::size_t /*length*/)
 	{
 		if (!ec)
 		{

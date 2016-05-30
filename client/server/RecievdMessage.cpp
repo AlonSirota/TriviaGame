@@ -1,15 +1,13 @@
 #include "RecievdMessage.h"
 
-recievedMessage::recievedMessage(tcp::socket* socket, int messageCode)
+recievedMessage::recievedMessage(tcp::socket& socket, int messageCode, User& user) :_socket(socket), _user(user)
 {
 	_messageCode = messageCode;
-	_socket = socket;
-	
 }
 
-recievedMessage::recievedMessage(tcp::socket* socket, int messageCode, std::vector<std::string> values)
+recievedMessage::recievedMessage(tcp::socket& socket, int messageCode, std::vector<std::string> values, User& user) : _socket(socket), _user(user)
 {
-	_socket = socket;
 	_messageCode = messageCode;
 	_values = values;
 }
+

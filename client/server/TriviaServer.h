@@ -4,6 +4,7 @@
 #include <mutex>
 #include <map>
 #include <boost\asio.hpp>
+#include <boost/lockfree/queue.hpp>
 #include "DB.h"
 #include "User.h"
 #include "Room.h"
@@ -19,16 +20,19 @@ public:
 	~TriviaServer();//done
 	void serve();//alon
 
+	Room& getRoomById(int);//done
+	Game& getGamebyId(int);
 private:
 	boost::asio::io_service _io_service;
-	std::map<tcp::socket*, User*> _connectedUsers;
-	tcp::socket* _socket;
+	std::map<tcp::socket&, User*> _connectedUsers;
+	tcp::socket& _socket;
 	DB _db;
-	std::map<int, Room*> _roomList;
+	std::map<int, Room&> _roomList;
+	std::map<int, Game&> _gameList;
 	std::mutex _mtxMessagesRecieved;
 	std::queue<recievedMessage*> queRcvMessages;
-	//static int _roomIdSequence; - there is a link error with the word static - do we really need it to be static?
 	int _roomIdSequence;
+	int _gameIdSequence;
 
 	void clientHandler(tcp::socket);//alon
 	void acceptHandler(const boost::system::error_code &ec);
@@ -45,7 +49,7 @@ private:
 	bool handleCreateRoom(recievedMessage*);//done
 	bool handleCloseRoom(recievedMessage*);//done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 	bool handleJoinRoom(recievedMessage*);//done
-	bool handleLeaveRoom(recievedMessage*);//NOT FINISHED YET
+	bool handleLeaveRoom(recievedMessage*);//done
 	void handleGetUsersInRoom(recievedMessage*);//done
 	void handleGetRooms(recievedMessage*);//done
 
@@ -58,5 +62,4 @@ private:
 
 	User* getUserByName(std::string);//done
 	User* getUserBySocket(tcp::socket*);//done
-	Room* getRoomById(int);//done
 };
