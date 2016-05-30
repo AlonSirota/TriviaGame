@@ -131,10 +131,15 @@ Game& TriviaServer::getGamebyId(int id)
 	return(_gameList.end());
 }
 
-void TriviaServer::clientHandler(tcp::socket s)
+void TriviaServer::clientHandler(tcp::socket& s)
 {
 	int msgCode = Helper::getMessageTypeCode(s);
-
+	while (msgCode != 0 && msgCode != EXIT)
+	{
+		addRecievedMessage(buildRecievedMessage(s, msgCode));
+		msgCode = Helper::getMessageTypeCode(s);
+	}
+	addRecievedMessage(buildRecievedMessage(s, EXIT));
 }
 
 void TriviaServer::acceptHandler(const boost::system::error_code & ec, tcp::socket& s)
