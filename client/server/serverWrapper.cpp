@@ -5,6 +5,10 @@ serverWrapper::~serverWrapper()
 	//TODO
 }
 
+/*
+starts accepting connection, calls 'acceptHandler()' that will start a basic dialogue.
+//TODO gets a paramater boost::bind() that will be the handler called after accepting a connection.
+*/
 void serverWrapper::run()
 {
 	boost::asio::ip::tcp::socket s(_io);
@@ -14,6 +18,9 @@ void serverWrapper::run()
 	//TODO handle failure
 }
 
+/*fails on the second client.
+starts a dialogue with accepted connection and then starts a new one and calls itself.
+*/
 void serverWrapper::acceptHandler(const boost::system::error_code& e, boost::asio::ip::tcp::socket& s)
 {
 	if (e)

@@ -6,11 +6,10 @@
 class serverWrapper {
 private:
 	boost::asio::io_service _io;
-	boost::asio::ip::tcp::socket _listenSocket;
 	boost::asio::ip::tcp::acceptor _acceptor;
 	int _port;
 public:
-	serverWrapper(int port) : _listenSocket(_io), _acceptor(_io, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+	serverWrapper(int port) : _acceptor(_io, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
 	{
 		_port = port;
 	}
