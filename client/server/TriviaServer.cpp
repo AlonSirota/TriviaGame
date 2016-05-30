@@ -13,8 +13,18 @@ void TriviaServer::serve()
 
 	while (true)
 	{
-		//acceptor.async_accept(_io_service, boost::bind(&TriviaServer::acceptHandler, this, boost::asio::placeholders::error, std::ref(newSocket))); TODO doesn't compile
-
+		acceptor.async_accept(newSocket, [this](boost::system::error_code ec)
+		{
+			if (ec)
+			{
+				std::cout << "async_accept failed: " << ec.value();
+			}
+			else
+			{
+				boost::thread t(&clientHandler);
+				t.detach();
+			}
+		});
 	}
 }
 
@@ -135,19 +145,6 @@ void TriviaServer::clientHandler(tcp::socket& s)
 		msgCode = Helper::getMessageTypeCode(s);
 	}
 	addRecievedMessage(buildRecievedMessage(s, EXIT));
-}
-
-void TriviaServer::acceptHandler(const boost::system::error_code & ec, tcp::socket& s)
-{
-	if (ec)
-	{
-		std::cout << "async_accept failed: " << ec.value;
-	}
-	else
-	{
-		boost::thread t(&clientHandler);
-		t.detach();
-	}
 }
 
 //done

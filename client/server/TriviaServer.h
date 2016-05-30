@@ -35,7 +35,6 @@ private:
 	int _gameIdSequence;
 
 	void clientHandler(tcp::socket&);//done, not debugged
-	void acceptHandler(const boost::system::error_code &ec, tcp::socket&);
 	void safeDeleteUser(recievedMessage&);//done
 	void safeDeleteUser(recievedMessage&);//done
 
