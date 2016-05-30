@@ -121,11 +121,6 @@ Room * TriviaServer::getRoomById(int id)
 	return(nullptr);
 }
 
-void TriviaServer::bindAndListen()
-{
-	
-}
-
 //done
 void TriviaServer::safeDeleteUser(recievedMessage* message)
 {

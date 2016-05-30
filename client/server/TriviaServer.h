@@ -29,8 +29,6 @@ private:
 	//static int _roomIdSequence; - there is a link error with the word static - do we really need it to be static?
 	int _roomIdSequence;
 
-	void bindAndListen();//alon
-	void accept();//alon
 	void clientHandler(tcp::socket);//alon
 	void safeDeleteUser(recievedMessage*);//done
 
