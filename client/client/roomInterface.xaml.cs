@@ -33,12 +33,6 @@ namespace client
             _client = newClient;
             requestGetUserListAsync();
         }
-        /* NEEDS TO BE DONE AUTOMATICLY
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            requestGetUserListAsync();
-        }
-        */
         private async void requestGetUserListAsync()
         {
             string response = await Task.Factory.StartNew(() => requestUserList());

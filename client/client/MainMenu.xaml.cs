@@ -120,6 +120,7 @@ namespace client
                     roomInterfaceMaster roomIn = new roomInterfaceMaster(_client);
                     roomIn.ShowDialog();
                     lblStatus.Content = "success";
+                    Show();
                 }
                 else if (response[3] == '1')
                 {
@@ -195,7 +196,6 @@ namespace client
                 _joinRoomQuestionsNo = _client.myReceive(2);
                 _joinRoomQuestionTime = _client.myReceive(2);
             }
-            //_roomNo = Int32.Parse(_client.myReceive(4));
             return code+ans;
         }
 
