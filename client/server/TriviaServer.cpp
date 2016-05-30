@@ -19,9 +19,8 @@ void TriviaServer::serve()
 }
 
 //done
-recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket& socket, int messCode)
+recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int messCode)
 {
-	recievedMessage* message = nullptr;
 	std::vector<std::string> info;
 	switch (messCode)
 	{
@@ -31,7 +30,6 @@ recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket& socket, int me
 			info.push_back(Helper::getPartFromSocket(socket, usernameLength));
 			int passLength = Helper::getIntPartFromSocket(socket, 2);
 			info.push_back(Helper::getPartFromSocket(socket, passLength));
-			message = new recievedMessage(socket, messCode, info,getUserBySocket(socket));
 			break;
 		}
 		case SIGNUP_REQUEST:
@@ -42,14 +40,12 @@ recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket& socket, int me
 			info.push_back(Helper::getPartFromSocket(socket, passLength));
 			int emailLength = Helper::getIntPartFromSocket(socket, 2);
 			info.push_back(Helper::getPartFromSocket(socket, emailLength));
-			message = new recievedMessage(socket, messCode, info, getUserBySocket(socket));
 			break;
 		}
 		case USERS_IN_ROOM_REQUEST:
 		case JOIN_ROOM_REQUEST:
 		{
 			info.push_back(Helper::getPartFromSocket(socket, 4));
-			message = new recievedMessage(socket, messCode, info, getUserBySocket(socket));
 			break;
 		}
 		case CREATE_ROOM_REQUEST:
@@ -59,7 +55,6 @@ recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket& socket, int me
 			info.push_back(Helper::getPartFromSocket(socket, 1));
 			info.push_back(Helper::getPartFromSocket(socket, 2));
 			info.push_back(Helper::getPartFromSocket(socket, 2));
-			message = new recievedMessage(socket, messCode, info, getUserBySocket(socket));
 			break;
 		}
 		case START_GAME_REQUEST://not in current version
@@ -72,20 +67,18 @@ recievedMessage * TriviaServer::buildRecievedMessage(tcp::socket& socket, int me
 			break;
 		case PERSONAL_STATE_REQUEST://not in current version
 			break;
-		case EXIT:
-		case CLOSE_ROOM_REQUEST:
-		case LEAVE_ROOM_REQUEST:
-		case EXISTING_ROOM_REQUEST:
-		case SIGNOUT_REQUEST:
-		{
-			message = new recievedMessage(socket, messCode, getUserBySocket(socket));
-		}
 		default:
 		{
-			message = new recievedMessage(socket, messCode, getUserBySocket(socket));
 		}
 	}
-	return(message);
+	if (info.empty())
+	{
+		return(recievedMessage(socket, messCode, getUserBySocket(socket)));
+	}
+	else
+	{
+		return(recievedMessage(socket, messCode,info, getUserBySocket(socket)));
+	}
 }
 
 //done
@@ -110,7 +103,7 @@ User& TriviaServer::getUserBySocket(tcp::socket& socket)
 	{
 		return(it->second);
 	}
-	return(nullptr);
+	return(it->second);
 }
 //done
 Room& TriviaServer::getRoomById(int id)
@@ -120,7 +113,7 @@ Room& TriviaServer::getRoomById(int id)
 	{
 		return(it->second);
 	}
-	return(nullptr);
+	return(it->second);
 }
 
 Game& TriviaServer::getGamebyId(int id)
@@ -130,7 +123,7 @@ Game& TriviaServer::getGamebyId(int id)
 	{
 		return(it->second);
 	}
-	return(_gameList.end());
+	return(_gameList.end()->second);
 }
 
 void TriviaServer::clientHandler(tcp::socket& s)
@@ -162,9 +155,9 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 {
 	try
 	{
-		tcp::socket* socket = message->getSocket();
+		tcp::socket& socket = message._socket;
 		handleSignout(message);
-		socket->close();
+		socket.close();
 	}
 	catch (const std::exception& ex)
 	{
@@ -210,13 +203,10 @@ bool TriviaServer::handleSignup(recievedMessage& message)
 void TriviaServer::handleSignout(recievedMessage& message)
 {
 	User& user = message._user;
-	if (user != nullptr)
-	{
-		handleCloseRoom(message);
-		handleLeaveRoom(message);
-		//handleLeaveGame - only in later version
-		_connectedUsers.erase(_connectedUsers.find(message._socket));
-	}
+	handleCloseRoom(message);
+	handleLeaveRoom(message);
+	//handleLeaveGame - only in later version
+	_connectedUsers.erase(_connectedUsers.find(message._socket));
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message)
