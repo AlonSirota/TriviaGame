@@ -190,44 +190,50 @@ void TriviaServer::handleSignout(recievedMessage& message)
 bool TriviaServer::handleCreateRoom(recievedMessage& message)
 {
 	User& user = message._user;
-	if (user == nullptr)
+	if (_roomList.count(user._currRoomID))
 	{
-		return(false);
+		_roomIdSequence++;
+		bool ans = user.createRoom(_roomIdSequence, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
+		if (ans)
+		{
+			_roomList.insert(std::pair<int, Room&>(_roomIdSequence, getRoomById(user._currRoomID)));
+		}
+		return ans;
 	}
-	_roomIdSequence++;
-	bool ans = user->createRoom(_roomIdSequence, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
-	if (ans)
+	else
 	{
-		_roomList.insert(std::pair<int, Room*>(_roomIdSequence, user->getRoom()));
+		return false;
 	}
-	return ans;
 }
 //done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 bool TriviaServer::handleCloseRoom(recievedMessage& message)
 {
-	User* user = message._user;
-	if (user->getRoom() == nullptr)
+	User& user = message._user;
+	if (_roomList.count(user._currRoomID))
 	{
-		return(false);
+		int ans = user.closeRoom();
+		if (ans == -1)
+		{
+			return(false);
+		}
+		_roomList.erase(ans);
+		return(true);
 	}
-	int ans = user->closeRoom();
-	if (ans == -1)
+	else
 	{
-		return(false);
+		return false;
 	}
-	_roomList.erase(ans);
-	return(true);
 }
 //done
 bool TriviaServer::handleJoinRoom(recievedMessage& message)
 {
 	int roomId = atoi(message._values[0].c_str());
-	Room& room = getRoomById(roomId);
-	if (room == _roomList.end()->second)
+	if (!_roomList.count(roomId))
 	{
 		//send failed message to user code 1102
-		Helper::sendData(message->getSocket(), std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
+		Helper::sendData(message._socket, std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
 	}
+	Room& room = getRoomById(roomId);
 	bool ans = message._user.joinRoom(room); //message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
