@@ -34,7 +34,7 @@ bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questi
 	
 }
 //done
-bool User::joinRoom(Room* room)
+bool User::joinRoom(Room& room)
 {
 	if (_currRoomID == 0)
 	{
@@ -53,11 +53,7 @@ bool User::joinRoom(Room* room)
 //done
 void User::leaveRoom()
 {
-	if (_currRoomID != 0)
-	{
-		_currRoom->leaveRoom(this);
-		_currRoom = nullptr;
-	}
+	_currRoomID = 0;
 
 }
 //done
@@ -79,13 +75,16 @@ int User::closeRoom()
 	return(roomId);
 }
 //done
+/*
 bool User::leaveGame()
 {
 	if (_currGameID != 0)
 	{
-		bool ans = _currGame->leaveGame(this);
-		_currGame = nullptr;
+		std::map<int, Game&> gameList = 
+		Game& currGame = 
+		bool ans = currGame.leaveGame(this);
 		return(ans);
 	}
 	return(false);
 }
+*/

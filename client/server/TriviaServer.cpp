@@ -98,11 +98,11 @@ User& TriviaServer::getUserByName(std::string username)
 	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
-		if (it->second->getUsername() == username)
+		if (it->second.getUsername() == username)
 			return(it->second);
 		it++;
 	}
-	return _connectedUsers.end();
+	return _connectedUsers.end()->second;
 }
 
 //done
@@ -264,6 +264,7 @@ bool TriviaServer::handleLeaveRoom(recievedMessage& message)
 	{
 		Room& room = getRoomById(user._currRoomID);
 		user.leaveRoom();
+		room.leaveRoom(user);
 		return true;
 	}
 	else

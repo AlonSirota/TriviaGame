@@ -22,6 +22,8 @@ public:
 
 	Room& getRoomById(int);//done
 	Game& getGamebyId(int);
+
+	std::map<int, Game&> getGameList() { return(_gameList); }
 private:
 	boost::asio::io_service _io_service;
 	std::map<tcp::socket&, User&> _connectedUsers;
