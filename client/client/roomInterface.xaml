@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="roomInterface" Height="250" Width="500">
     <Grid>
-        <Button x:Name="btnLeaveRoom" Content="Leave Room" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="150"/>
+        <Button x:Name="btnLeaveRoom" Content="Leave Room" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="150" Click="btnLeaveRoom_Click"/>
         <ListView x:Name="listViewUsers" HorizontalAlignment="Left" Height="160" Margin="150,0,0,0" VerticalAlignment="Top" Width="332">
             <ListView.View>
                 <GridView>

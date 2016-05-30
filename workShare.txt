@@ -4,16 +4,16 @@ communication (eran)
 game (alon)
 
 server:
-DB (eran) - do we need this for this part?
+DB (next time)
 question (next time)
 game (next time)
 room (alon)
 recievedMessage (eran) (done)
 user (eran) (done)
-validator (alon)
+validator (alon) (done)
 triviaServer (eran) - need to validate that appropriate messages are sent to user at the correct points 
 
-Helper
+Helper (done)
 
 שונות:
 החלטתי שרירותית שהפורט יהיה 8282

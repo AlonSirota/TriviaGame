@@ -165,6 +165,7 @@ namespace client
                     roomInterface room = new roomInterface(_client);
                     room.ShowDialog();
                     lblStatus.Content = "success";
+                    Show();
                 }
                 else if (response[3] == '1')
                 {
@@ -194,7 +195,7 @@ namespace client
                 _joinRoomQuestionsNo = _client.myReceive(2);
                 _joinRoomQuestionTime = _client.myReceive(2);
             }
-            _roomNo = Int32.Parse(_client.myReceive(4));
+            //_roomNo = Int32.Parse(_client.myReceive(4));
             return code+ans;
         }
 

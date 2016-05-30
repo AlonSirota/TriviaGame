@@ -3,7 +3,7 @@ client:
 MainWindow -  DEBUGGED
 MainMenu - DEBUGGED
 createRoom - DEBUGGED
-roomInterface - 
+roomInterface - DEBUGGED
 roomInterfaceMaster -
 SignUp - DEBUGGED
 myTcpClient - DEBUGGED
@@ -12,7 +12,7 @@ server:
 DB - 
 Game - 
 Helper - 
-protocol - debugged
+protocol - DEBUGGED
 Question - 
 RecievedMessage - 
 Room - 
