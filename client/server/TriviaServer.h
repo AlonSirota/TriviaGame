@@ -20,8 +20,8 @@ public:
 
 private:
 	boost::asio::io_service _io_service;
-	std::map<tcp::socket*, User*> _connectedUsers;
-	tcp::socket* _socket;
+	std::map<tcp::socket&, User*> _connectedUsers;
+	tcp::socket& _socket;
 	DB _db;
 	std::map<int, Room*> _roomList;
 	std::mutex _mtxMessagesRecieved;
@@ -43,7 +43,7 @@ private:
 	bool handleCreateRoom(recievedMessage*);//done
 	bool handleCloseRoom(recievedMessage*);//done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 	bool handleJoinRoom(recievedMessage*);//done
-	bool handleLeaveRoom(recievedMessage*);//NOT FINISHED YET
+	bool handleLeaveRoom(recievedMessage*);//done
 	void handleGetUsersInRoom(recievedMessage*);//done
 	void handleGetRooms(recievedMessage*);//done
 

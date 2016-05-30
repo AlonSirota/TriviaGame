@@ -232,7 +232,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage* message)
 	bool ans = user->joinRoom(room); //message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
-//not done yet
+//done
 bool TriviaServer::handleLeaveRoom(recievedMessage* message)
 {
 	User* user = message->getUser();
