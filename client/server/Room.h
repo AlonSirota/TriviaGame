@@ -15,6 +15,7 @@ public:
 	std::string getUsersAsString(std::vector<User&>, User&);
 	void sendMessage(std::string);
 	void sendMessage(User&, std::string);
+	std::string getUsersListMessage();
 
 	User& _admin;
 	int _maxUsers;
