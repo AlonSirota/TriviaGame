@@ -34,21 +34,14 @@ bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questi
 	
 }
 //done
-bool User::joinRoom(Room& room)
+bool User::joinRoom(int roomId)
 {
 	if (_currRoomID == 0)
 	{
 		return(false);
 	}
-	else if (room->joinRoom(this))
-	{
-		_currRoom = room;
-		return(true);
-	}
-	else
-	{
-		return(false);
-	}
+	_currRoomID = roomId;
+	return(true);
 }
 //done
 void User::leaveRoom()
@@ -63,16 +56,9 @@ int User::closeRoom()
 	{
 		return(USERERROR);
 	}
-	int roomId = _currRoom->closeRoom(this);
-	if (roomId == USERERROR)
-	{
-		return(USERERROR);
-	}
-	else
-	{
-		delete _currRoom;
-	}
-	return(roomId);
+	int temp = _currRoomID;
+	_currRoomID = 0;
+	return(temp);
 }
 //done
 /*
