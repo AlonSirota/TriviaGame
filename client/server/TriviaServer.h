@@ -4,6 +4,7 @@
 #include <mutex>
 #include <map>
 #include <boost\asio.hpp>
+#include <boost/lockfree/queue.hpp>
 #include "DB.h"
 #include "User.h"
 #include "Room.h"
