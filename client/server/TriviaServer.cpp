@@ -11,9 +11,11 @@ void TriviaServer::serve()
 	tcp::acceptor acceptor(_io_service, ep);
 	tcp::socket newSocket(_io_service);
 
-	//acceptor.async_accept(_io_service, boost::bind(&TriviaServer::acceptHandler, this, boost::asio::placeholders::error, std::ref(newSocket))); TODO doesn't compile
+	while (true)
+	{
+		//acceptor.async_accept(_io_service, boost::bind(&TriviaServer::acceptHandler, this, boost::asio::placeholders::error, std::ref(newSocket))); TODO doesn't compile
 
-
+	}
 }
 
 //done
