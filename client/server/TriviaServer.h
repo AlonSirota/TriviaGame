@@ -19,16 +19,19 @@ public:
 	~TriviaServer();//done
 	void serve();//alon
 
+	Room& getRoomById(int);//done
+	Game& getGamebyId(int);
 private:
 	boost::asio::io_service _io_service;
 	std::map<tcp::socket&, User*> _connectedUsers;
 	tcp::socket& _socket;
 	DB _db;
-	std::map<int, Room*> _roomList;
+	std::map<int, Room&> _roomList;
+	std::map<int, Game&> _gameList;
 	std::mutex _mtxMessagesRecieved;
 	std::queue<recievedMessage*> queRcvMessages;
-	//static int _roomIdSequence; - there is a link error with the word static - do we really need it to be static?
 	int _roomIdSequence;
+	int _gameIdSequence;
 
 	void clientHandler(tcp::socket);//alon
 	void safeDeleteUser(recievedMessage*);//done
@@ -57,5 +60,4 @@ private:
 
 	User* getUserByName(std::string);//done
 	User* getUserBySocket(tcp::socket*);//done
-	Room* getRoomById(int);//done
 };

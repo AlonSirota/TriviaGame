@@ -2,8 +2,8 @@
 //done
 User::User(std::string username, tcp::socket& socket) : _username(username), _socket(socket)
 {
-	_currGame = nullptr;
-	_currRoom = nullptr;
+	_currGameID = 0;
+	_currRoomID = 0;
 }
 
 void User::send(std::string& buffer)
@@ -13,7 +13,7 @@ void User::send(std::string& buffer)
 
 bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questionsNo, int questionTime)
 {
-	if (_currRoom != nullptr)
+	if (_currRoomID != 0)
 	{
 		std::string message = std::to_string(CREATE_ROOM_FAILED); // may create problems as it may delete itself
 		send(message);
@@ -36,7 +36,7 @@ bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questi
 //done
 bool User::joinRoom(Room* room)
 {
-	if (_currRoom == nullptr)
+	if (_currRoomID == 0)
 	{
 		return(false);
 	}
@@ -53,7 +53,7 @@ bool User::joinRoom(Room* room)
 //done
 void User::leaveRoom()
 {
-	if (_currRoom != nullptr)
+	if (_currRoomID != 0)
 	{
 		_currRoom->leaveRoom(this);
 		_currRoom = nullptr;
@@ -63,7 +63,7 @@ void User::leaveRoom()
 //done
 int User::closeRoom()
 {
-	if (_currRoom == nullptr)
+	if (_currRoomID == 0)
 	{
 		return(USERERROR);
 	}
@@ -81,17 +81,11 @@ int User::closeRoom()
 //done
 bool User::leaveGame()
 {
-	if (_currGame != nullptr)
+	if (_currGameID != 0)
 	{
 		bool ans = _currGame->leaveGame(this);
 		_currGame = nullptr;
 		return(ans);
 	}
 	return(false);
-}
-//done
-void User::setGame(Game* game)
-{
-	_currGame = game;
-	_currRoom = nullptr;
 }

@@ -121,6 +121,16 @@ Room * TriviaServer::getRoomById(int id)
 	return(nullptr);
 }
 
+Game& TriviaServer::getGamebyId(int id)
+{
+	std::map<int, Game&>::iterator it = _roomList.find(id);
+	if (it != _gameList.end())
+	{
+		return(it->second);
+	}
+	return(_gameList.end());
+}
+
 //done
 void TriviaServer::safeDeleteUser(recievedMessage* message)
 {
