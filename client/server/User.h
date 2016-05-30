@@ -14,7 +14,7 @@ using boost::asio::ip::tcp;
 class User
 {
 public:
-	User(std::string, tcp::socket*);
+	User(std::string, tcp::socket&);
 	void send(std::string&);
 	std::string getUsername() { return(_username); }
 	tcp::socket* getSocket() { return(_socket); }
@@ -31,5 +31,5 @@ private:
 	std::string _username;
 	Room* _currRoom;
 	Game* _currGame;
-	tcp::socket* _socket;
+	tcp::socket& _socket;
 };

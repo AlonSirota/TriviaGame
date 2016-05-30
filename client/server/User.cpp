@@ -1,6 +1,6 @@
 #include "User.h"
 //done
-User::User(std::string username, tcp::socket* socket) : _username(username), _socket(socket)
+User::User(std::string username, tcp::socket& socket) : _username(username), _socket(socket)
 {
 	_currGame = nullptr;
 	_currRoom = nullptr;
@@ -16,20 +16,20 @@ bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questi
 	if (_currRoom != nullptr)
 	{
 		std::string message = std::to_string(CREATE_ROOM_FAILED); // may create problems as it may delete itself
-		this->send(message);
+		send(message);
 		return(false);
 	}
 	_currRoom = new Room(roomId, this, roomName, maxUsers, questionsNo, questionTime);
 	if (_currRoom == nullptr)
 	{
 		std::string message = std::to_string(CREATE_ROOM_FAILED); // may create problems as it may delete itself
-		this->send(message);
+		send(message);
 		return(false);
 		//send failed message 1140
 	}
 	//send sucsess message 1141
 	std::string message = std::to_string(CREATE_ROOM_SUCSESS); // may create problems as it may delete itself
-	this->send(message);
+	send(message);
 	return(true);
 	
 }
