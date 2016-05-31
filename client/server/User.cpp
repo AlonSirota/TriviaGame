@@ -74,6 +74,15 @@ int User::closeRoom()
 	}
 	return(roomId);
 }
+
+void User::copy(const User &other)
+{
+	_username = other._username;
+	_socket = std::move(other._socket); //have i used this properly
+	_currRoomID = other._currRoomID;
+	_currGameID = other._currGameID;
+}
+
 //done
 /*
 bool User::leaveGame()

@@ -24,6 +24,8 @@ public:
 	int closeRoom();
 	bool leaveGame();
 
+	void copy(const User& other);
+
 	int _currRoomID;
 	int _currGameID;
 private:

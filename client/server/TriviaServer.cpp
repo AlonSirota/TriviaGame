@@ -41,6 +41,8 @@ void TriviaServer::handleRecievedMessages()
 	_queRcvMessages.pop(msg);
 	_ulMessagesReceived.unlock();
 	//ATOMIC END
+
+	
 }
 
 //done
