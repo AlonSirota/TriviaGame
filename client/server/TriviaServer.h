@@ -33,8 +33,9 @@ private:
 	std::map<int, Room&> _roomList;
 	std::map<int, Game&> _gameList;
 	std::mutex _mtxMessagesRecieved;
+	std::unique_lock<std::mutex> _ulMessagesReceived;
 	std::condition_variable _cvMessages;
-	boost::lockfree::queue<recievedMessage> queRcvMessages;
+	boost::lockfree::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
 	int _gameIdSequence;
 	//to save actual objects
@@ -64,7 +65,8 @@ private:
 	void handleGetBestScores(recievedMessage&);//not in first section
 	void handlegetPersonalStatus(recievedMessage&);//not in first section
 
-	void handleRecievedMessages(recievedMessage&);//alon
+	void handleRecievedMessages();//in progress (alon)
+	void callHandler(recievedMessage&); //alon
 	void addRecievedMessage(recievedMessage&);//alon
 	recievedMessage buildRecievedMessage(tcp::socket&,int);//done
 

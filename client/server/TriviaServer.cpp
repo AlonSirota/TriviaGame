@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages()//:_db() - only in later version
+TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	
 }
@@ -28,9 +28,45 @@ void TriviaServer::serve()
 	}
 }
 
-void TriviaServer::handleRecievedMessages(recievedMessage &msg)
+void TriviaServer::handleRecievedMessages()
 {
+	recievedMessage msg;
 
+	//ATOMIC START
+	_ulMessagesReceived.lock();
+	if (_queRcvMessages.empty())
+	{
+		_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
+	}	
+	_queRcvMessages.pop(msg);
+	_ulMessagesReceived.unlock();
+	//ATOMIC END
+
+	msg._user.copy(getUserBySocket(msg._socket));
+}
+
+void TriviaServer::callHandler(recievedMessage &msg)
+{
+	switch (msg._messageCode)
+	{
+	case SIGNIN_REQUEST:
+	case SIGNOUT_REQUEST:
+	case SIGNUP_REQUEST:
+	case EXISTING_ROOM_REQUEST:
+	case JOIN_ROOM_REQUEST:
+	case USERS_IN_ROOM_REQUEST:
+	case LEAVE_ROOM_REQUEST:
+	case CREATE_ROOM_REQUEST:
+	case CLOSE_ROOM_REQUEST:
+	case START_GAME_REQUEST:
+	case CLIENT_ANSWER:
+	case LEAVE_GAME_REQUEST:
+	case BEST_SCORE_REQUEST:
+	case PERSONAL_STATE_REQUEST:
+	default:
+		std::cout << "callHandler recieved an unknown message number\n";
+		//case 299 is already handled in clientHandler()
+	}
 }
 
 //done

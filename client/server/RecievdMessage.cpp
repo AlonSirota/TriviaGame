@@ -11,3 +11,8 @@ recievedMessage::recievedMessage(tcp::socket& socket, int messageCode, std::vect
 	_values = values;
 }
 
+recievedMessage::recievedMessage()
+{
+
+}
+
