@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _socket(_io_service)//:_db() - only in later version
+TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages()//:_db() - only in later version
 {
 	
 }
@@ -9,10 +9,27 @@ void TriviaServer::serve()
 {
 	tcp::endpoint ep(tcp::v4(), 8820);
 	tcp::acceptor acceptor(_io_service, ep);
-	tcp::socket newSocket(_io_service);
+	tcp::socket *newSocket;
+	while (true)
+	{
+		newSocket = new tcp::socket(_io_service);
+		acceptor.async_accept(*newSocket, [newSocket](const boost::system::error_code &ec) 
+		{
+			if (ec)
+			{
+				std::cout << "async_accept failed: " << ec.value();
+			}
+			else
+			{
+				boost::thread t(&clientHandler, std::move(/*&*/newSocket)); //TODO is this the correct way?
+				t.detach();
+			}
+		});
+	}
+}
 
-	//acceptor.async_accept(_io_service, boost::bind(&TriviaServer::acceptHandler, this, boost::asio::placeholders::error, std::ref(newSocket))); TODO doesn't compile
-
+void TriviaServer::handleRecievedMessages(recievedMessage &msg)
+{
 
 }
 
@@ -127,20 +144,12 @@ Game& TriviaServer::getGamebyId(int id)
 void TriviaServer::clientHandler(tcp::socket& s)
 {
 	int msgCode = Helper::getMessageTypeCode(s);
-
-}
-
-void TriviaServer::acceptHandler(const boost::system::error_code & ec, tcp::socket& s)
-{
-	if (ec)
+	while (msgCode != 0 && msgCode != EXIT)
 	{
-		std::cout << "async_accept failed: " << ec.value();
+		addRecievedMessage(buildRecievedMessage(s, msgCode));
+		msgCode = Helper::getMessageTypeCode(s);
 	}
-	else
-	{
-		boost::thread t(&clientHandler);
-		t.detach();
-	}
+	addRecievedMessage(buildRecievedMessage(s, EXIT));
 }
 
 //done

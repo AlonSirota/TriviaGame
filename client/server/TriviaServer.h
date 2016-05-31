@@ -12,13 +12,14 @@
 #include "Validator.h"
 #include <boost\bind.hpp>
 #include <boost\thread.hpp>
+#include <boost\lockfree\queue.hpp>
 using boost::asio::ip::tcp;
 
 class TriviaServer
 {
 public:
 	TriviaServer();//done
-	void serve();//alon
+	void serve();//done, not checked
 
 	Room& getRoomById(int);//done
 	Game& getGamebyId(int);
@@ -32,14 +33,13 @@ private:
 	std::map<int, Room&> _roomList;
 	std::map<int, Game&> _gameList;
 	std::mutex _mtxMessagesRecieved;
-	std::queue<recievedMessage> queRcvMessages;
+	std::condition_variable _cvMessages;
+	boost::lockfree::queue<recievedMessage> queRcvMessages;
 	int _roomIdSequence;
 	int _gameIdSequence;
 
+	void clientHandler(tcp::socket&);//done, not debugged
 
-
-	void clientHandler(tcp::socket&);//alon
-	void acceptHandler(const boost::system::error_code &ec);
 	void safeDeleteUser(recievedMessage&);//done
 
 	User& handleSignin(recievedMessage&);//done
