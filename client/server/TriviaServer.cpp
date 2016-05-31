@@ -49,31 +49,49 @@ void TriviaServer::handleRecievedMessages()
 	}	
 }
 
-void TriviaServer::callHandler(const recievedMessage &msg)
+void TriviaServer::callHandler(recievedMessage &msg)
 {
 	switch (msg._messageCode)
 	{
-		case SIGNIN_REQUEST: 
-		{
+		case SIGNIN_REQUEST:
+			handleSignin(msg);
 			break;
-		}
-			
 		case SIGNOUT_REQUEST:
+			handleSignout(msg);
+			break;
 		case SIGNUP_REQUEST:
-		case EXISTING_ROOM_REQUEST:
+			handleSignup(msg);
+			break;
+		//case EXISTING_ROOM_REQUEST: handler isn't written yet TODO
 		case JOIN_ROOM_REQUEST:
-		case USERS_IN_ROOM_REQUEST:
+			handleJoinRoom(msg);
+			break;
+		//case USERS_IN_ROOM_REQUEST: handler isn't written yet TODO
 		case LEAVE_ROOM_REQUEST:
+			handleLeaveRoom(msg);
+			break;
 		case CREATE_ROOM_REQUEST:
+			handleCreateRoom(msg);
+			break;
 		case CLOSE_ROOM_REQUEST:
+			handleCloseRoom(msg);
+			break;
 		case START_GAME_REQUEST:
-		case CLIENT_ANSWER:
+			handleStartGame(msg);
+			break;
+		//case CLIENT_ANSWER: handler isn't written yet TODO (i probably just don't know what is the name of the correct handler)
 		case LEAVE_GAME_REQUEST:
+			handleLeaveGame(msg);
+			break;
 		case BEST_SCORE_REQUEST:
+			handleGetBestScores(msg);
+			break;
 		case PERSONAL_STATE_REQUEST:
+			handlegetPersonalStatus(msg);
+			break;
 		default:
 			std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
-			//case 299 is already handled in clientHandler()
+			//case 299 and 0 is already handled in clientHandler()
 	}
 }
 
