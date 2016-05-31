@@ -9,11 +9,11 @@ void TriviaServer::serve()
 {
 	tcp::endpoint ep(tcp::v4(), 8820);
 	tcp::acceptor acceptor(_io_service, ep);
-	tcp::socket newSocket(_io_service);
-
+	tcp::socket *newSocket;
 	while (true)
 	{
-		acceptor.async_accept(newSocket, [this](boost::system::error_code ec)
+		newSocket = new tcp::socket(_io_service);
+		acceptor.async_accept(*newSocket, [newSocket](const boost::system::error_code &ec) 
 		{
 			if (ec)
 			{
@@ -21,7 +21,7 @@ void TriviaServer::serve()
 			}
 			else
 			{
-				boost::thread t(&clientHandler);
+				boost::thread t(&clientHandler, std::move(/*&*/newSocket)); //TODO is this the correct way?
 				t.detach();
 			}
 		});
