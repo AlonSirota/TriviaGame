@@ -18,7 +18,6 @@ public:
 	void send(std::string&);
 	std::string getUsername() { return(_username); }
 	tcp::socket& getSocket() { return(_socket); }
-	bool createRoom(int, std::string, int, int, int);
 	bool joinRoom(int);
 	void leaveRoom();
 	int closeRoom();
