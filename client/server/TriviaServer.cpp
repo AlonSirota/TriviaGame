@@ -2,7 +2,7 @@
 //done
 TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
-	boost::thread handleRecievedMessagesThread(boost::bind(&handleRecievedMessages, this));
+	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
 }
 
@@ -22,7 +22,7 @@ void TriviaServer::serve()
 			}
 			else
 			{
-				boost::thread t(boost::bind(&clientHandler, this, std::move(/*&*/newSocket)));
+				std::thread t(&clientHandler, this, std::move(/*&*/newSocket));
 				t.detach();
 			}
 		});
