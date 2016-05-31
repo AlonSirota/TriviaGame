@@ -36,9 +36,10 @@ private:
 	int _roomIdSequence;
 	int _gameIdSequence;
 
+
+
 	void clientHandler(tcp::socket&);//alon
 	void acceptHandler(const boost::system::error_code &ec);
-	void safeDeleteUser(recievedMessage&);//done
 	void safeDeleteUser(recievedMessage&);//done
 
 	User& handleSignin(recievedMessage&);//done
