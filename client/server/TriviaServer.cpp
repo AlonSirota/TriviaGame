@@ -30,13 +30,17 @@ void TriviaServer::serve()
 
 void TriviaServer::handleRecievedMessages()
 {
+	recievedMessage msg;
+
+	//ATOMIC START
 	_ulMessagesReceived.lock();
 	if (_queRcvMessages.empty())
 	{
 		_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
-	}
-	
+	}	
+	_queRcvMessages.pop(msg);
 	_ulMessagesReceived.unlock();
+	//ATOMIC END
 }
 
 //done
