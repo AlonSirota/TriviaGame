@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _socket(_io_service)//:_db() - only in later version
+TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages()//:_db() - only in later version
 {
 	
 }
@@ -26,6 +26,11 @@ void TriviaServer::serve()
 			}
 		});
 	}
+}
+
+void TriviaServer::handleRecievedMessages(recievedMessage &msg)
+{
+
 }
 
 //done
