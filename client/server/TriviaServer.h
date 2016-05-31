@@ -35,7 +35,8 @@ private:
 	std::mutex _mtxMessagesRecieved;
 	std::unique_lock<std::mutex> _ulMessagesReceived;
 	std::condition_variable _cvMessages;
-	boost::lockfree::queue<recievedMessage> _queRcvMessages;
+	//boost::lockfree::queue<recievedMessage> _queRcvMessages;
+	std::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
 	int _gameIdSequence;
 	//to save actual objects

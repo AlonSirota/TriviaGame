@@ -31,18 +31,19 @@ void TriviaServer::serve()
 
 void TriviaServer::handleRecievedMessages()
 {
-	recievedMessage msg;
-
+	//recievedMessage
 	while (true)
 	{
+		//ATOMIC START
+		_ulMessagesReceived.lock();
 		if (_queRcvMessages.empty())
 		{
 			_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
 		}
-		_queRcvMessages.pop(msg);
-
-		msg._user.copy(getUserBySocket(msg._socket));
-		callHandler(msg);
+		recievedMessage r(_queRcvMessages.front());
+		_queRcvMessages.pop();
+		_ulMessagesReceived.unlock();
+		//ATOMIC END
 	}	
 }
 
