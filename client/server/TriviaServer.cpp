@@ -11,11 +11,11 @@ void TriviaServer::serve()
 	
 	tcp::endpoint ep(tcp::v4(), 8820);
 	tcp::acceptor acceptor(_io_service, ep);
-	tcp::socket *newSocket;
+
 	while (true)
 	{
-		newSocket = new tcp::socket(_io_service);
-		acceptor.async_accept(*newSocket, [this, newSocket](const boost::system::error_code &ec) 
+		tcp::socket newSocket(_io_service);
+		acceptor.async_accept(newSocket, [this, &newSocket](const boost::system::error_code &ec) 
 		{
 			if (ec)
 			{
