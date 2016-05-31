@@ -8,6 +8,7 @@ TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesRe
 
 void TriviaServer::serve()
 {
+	
 	tcp::endpoint ep(tcp::v4(), 8820);
 	tcp::acceptor acceptor(_io_service, ep);
 	tcp::socket *newSocket;
@@ -22,7 +23,7 @@ void TriviaServer::serve()
 			}
 			else
 			{
-				std::thread t(&clientHandler, this, std::move(/*&*/newSocket));
+				std::thread t(&TriviaServer::clientHandler, this, newSocket); //do we need std::move here?
 				t.detach();
 			}
 		});
