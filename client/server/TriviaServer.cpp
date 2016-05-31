@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages()//:_db() - only in later version
+TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	
 }
@@ -28,9 +28,15 @@ void TriviaServer::serve()
 	}
 }
 
-void TriviaServer::handleRecievedMessages(recievedMessage &msg)
+void TriviaServer::handleRecievedMessages()
 {
-
+	_ulMessagesReceived.lock();
+	if (_queRcvMessages.empty())
+	{
+		_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
+	}
+	
+	_ulMessagesReceived.unlock();
 }
 
 //done
