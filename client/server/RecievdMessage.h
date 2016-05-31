@@ -5,7 +5,6 @@ class recievedMessage
 public:
 	recievedMessage(tcp::socket&, int,User&);
 	recievedMessage(tcp::socket&, int, std::vector<std::string>, User&);
-	recievedMessage();
 
 	tcp::socket& _socket;
 	User& _user;
