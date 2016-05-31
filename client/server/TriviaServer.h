@@ -38,12 +38,16 @@ private:
 	boost::lockfree::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
 	int _gameIdSequence;
+	//to save actual objects
+	std::vector<User> _users;
+	std::vector<Room> _rooms;
+	std::vector<Game> _games;
 
 	void clientHandler(tcp::socket&);//done, not debugged
 
 	void safeDeleteUser(recievedMessage&);//done
 
-	User& handleSignin(recievedMessage&);//done
+	bool handleSignin(recievedMessage&);//done
 	bool handleSignup(recievedMessage&);//done for first stage
 	void handleSignout(recievedMessage&);//done
 
@@ -68,4 +72,5 @@ private:
 
 	User& getUserByName(std::string);//done
 	User& getUserBySocket(tcp::socket&);//done
+	bool userExists(std::string);
 };

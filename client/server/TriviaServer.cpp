@@ -161,6 +161,18 @@ User& TriviaServer::getUserBySocket(tcp::socket& socket)
 	}
 	return(it->second);
 }
+bool TriviaServer::userExists(std::string username)
+{
+	bool found = false;
+	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
+	while (it != _connectedUsers.end())
+	{
+		if (it->second.getUsername() == username)
+			return(true);
+		it++;
+	}
+	return false;
+}
 //done
 Room& TriviaServer::getRoomById(int id)
 {
@@ -208,20 +220,22 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 	}
 }
 //done
-User& TriviaServer::handleSignin(recievedMessage& message)
+bool TriviaServer::handleSignin(recievedMessage& message)
 {
 	//check if user exists in database - in next part
-	User& user = getUserByName(message._user.getUsername());
-	if (user == nullptr)
+	if (!userExists(message._user.getUsername()))
 	{
 		//success connecting
-		User& newUser = new User(message._values[0], message._socket);
-		_connectedUsers.insert(std::pair<tcp::socket&, User&>(message._socket, newUser));
+		_users.push_back(User(message._values[0], message._socket));
+		_connectedUsers.insert(std::pair<tcp::socket&, User&>(message._socket, _users.back()));
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
-		return(newUser);
+		return(true);
 	}
-	Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
-	return nullptr;
+	else
+	{
+		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
+		return false;
+	}
 }
 //done for first stage
 bool TriviaServer::handleSignup(recievedMessage& message)
@@ -257,13 +271,11 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message)
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
 	{
-		_roomIdSequence++;
-		bool ans = user.createRoom(_roomIdSequence, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
-		if (ans)
-		{
-			_roomList.insert(std::pair<int, Room&>(_roomIdSequence, getRoomById(user._currRoomID)));
-		}
-		return ans;
+		int roomIdTemp = ++_roomIdSequence;
+		_rooms.push_back(Room(roomIdTemp, user,message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str())));
+		_roomList.insert(std::pair<int, Room&>(roomIdTemp, getRoomById(user._currRoomID)));
+		user.joinRoom(roomIdTemp);
+		return true;
 	}
 	else
 	{
@@ -299,7 +311,8 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 		Helper::sendData(message._socket, std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
 	}
 	Room& room = getRoomById(roomId);
-	bool ans = message._user.joinRoom(room); //message if failed or succeeded is sent in Room::joinRoom
+	bool ans = message._user.joinRoom(roomId); 
+	room.joinRoom(message._user);//message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
 //done

@@ -1,49 +1,29 @@
 #include "Room.h"
 
-Room::Room(int, User *, std::string, int, int, int)
+Room::Room(int id, User& admin, std::string roomName, int maxUsers, int questionsNo, int questionTime) :_admin(admin),_name(roomName)
 {
+	_id = id;
+	_maxUsers = maxUsers;
+	_questionsNo = questionsNo;
+	_questionTime = questionTime;
 }
 
-bool Room::joinRoom(User *)
+bool Room::joinRoom(User&)
 {
 	return false;
 }
 
-void Room::leaveRoom(User *)
+void Room::leaveRoom(User&)
 {
 }
 
-int Room::closeRoom(User *)
+int Room::closeRoom(User&)
 {
 	return 0;
 }
 
-std::vector<User*> Room::getUsers()
-{
-	return std::vector<User*>();
-}
 
 std::string Room::getUsersListMessage()
-{
-	return std::string();
-}
-
-int Room::getQuestionsNo()
-{
-	return 0;
-}
-
-int Room::getId()
-{
-	return 0;
-}
-
-std::string Room::getName()
-{
-	return std::string();
-}
-
-std::string Room::getUsersAsString(std::vector<User*>, User *)
 {
 	return std::string();
 }
@@ -52,6 +32,6 @@ void Room::sendMessage(std::string)
 {
 }
 
-void Room::sendMessage(User *, std::string)
+void Room::sendMessage(User&, std::string)
 {
 }

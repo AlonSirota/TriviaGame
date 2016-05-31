@@ -10,9 +10,12 @@ void User::send(std::string& buffer)
 {
 	Helper::sendData(_socket, buffer);
 }
-
+/*
 bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questionsNo, int questionTime)
 {
+	
+	
+	
 	if (_currRoomID != 0)
 	{
 		std::string message = std::to_string(CREATE_ROOM_FAILED); // may create problems as it may delete itself
@@ -33,6 +36,7 @@ bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questi
 	return(true);
 	
 }
+*/
 //done
 bool User::joinRoom(int roomId)
 {
@@ -47,7 +51,6 @@ bool User::joinRoom(int roomId)
 void User::leaveRoom()
 {
 	_currRoomID = 0;
-
 }
 //done
 int User::closeRoom()
