@@ -67,7 +67,7 @@ private:
 	void handlegetPersonalStatus(recievedMessage&);//not in first section
 
 	void handleRecievedMessages();//in progress (alon)
-	void callHandler(recievedMessage&); //alon
+	void callHandler(const recievedMessage&); //alon
 	void addRecievedMessage(recievedMessage&);//alon
 	recievedMessage buildRecievedMessage(tcp::socket&,int);//done
 
