@@ -11,6 +11,6 @@ recievedMessage::recievedMessage(tcp::socket& socket, int messageCode, std::vect
 	_values = values;
 }
 
-recievedMessage::recievedMessage(const recievedMessage &other ) : _messageCode(other._messageCode), _socket(other._socket), _user(other._user), _values(std::move(other._values))
+recievedMessage::recievedMessage(const recievedMessage &other ) : _messageCode(other._messageCode), _socket(other._socket), _user(other._user), _values(other._values) //TODO should we use std::move?
 {
 }
