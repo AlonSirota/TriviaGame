@@ -40,7 +40,7 @@ private:
 	int _gameIdSequence;
 
 	void clientHandler(tcp::socket&);//done, not debugged
-	void safeDeleteUser(recievedMessage&);//done
+
 	void safeDeleteUser(recievedMessage&);//done
 
 	User& handleSignin(recievedMessage&);//done
@@ -51,12 +51,12 @@ private:
 	void handleStartGame(recievedMessage&);//not in first section
 	void handleUserAnswer(recievedMessage&);//not in first section
 
-	bool handleCreateRoom(recievedMessage&);//done
-	bool handleCloseRoom(recievedMessage&);//done - CHECK IF NEED TO SEND NOTICE TO CLIENT
-	bool handleJoinRoom(recievedMessage&);//done
-	bool handleLeaveRoom(recievedMessage&);//done
-	void handleGetUsersInRoom(recievedMessage&);//done
-	void handleGetRooms(recievedMessage&);//done
+	bool handleCreateRoom(recievedMessage&);//TODO
+	bool handleCloseRoom(recievedMessage&);//TODO
+	bool handleJoinRoom(recievedMessage&);//TODO
+	bool handleLeaveRoom(recievedMessage&);//TODO
+	void handleGetUsersInRoom(recievedMessage&);//TODO
+	void handleGetRooms(recievedMessage&);//TODO
 
 	void handleGetBestScores(recievedMessage&);//not in first section
 	void handlegetPersonalStatus(recievedMessage&);//not in first section
