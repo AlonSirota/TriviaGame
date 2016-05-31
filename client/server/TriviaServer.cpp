@@ -2,7 +2,8 @@
 //done
 TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
-	
+	boost::thread handleRecievedMessagesThread(boost::bind(&handleRecievedMessages, this));
+	handleRecievedMessagesThread.detach();
 }
 
 void TriviaServer::serve()
@@ -13,7 +14,7 @@ void TriviaServer::serve()
 	while (true)
 	{
 		newSocket = new tcp::socket(_io_service);
-		acceptor.async_accept(*newSocket, [newSocket](const boost::system::error_code &ec) 
+		acceptor.async_accept(*newSocket, [this, newSocket](const boost::system::error_code &ec) 
 		{
 			if (ec)
 			{
@@ -21,7 +22,7 @@ void TriviaServer::serve()
 			}
 			else
 			{
-				boost::thread t(&clientHandler, std::move(/*&*/newSocket)); //TODO is this the correct way?
+				boost::thread t(boost::bind(&clientHandler, this, std::move(/*&*/newSocket)));
 				t.detach();
 			}
 		});
@@ -32,40 +33,44 @@ void TriviaServer::handleRecievedMessages()
 {
 	recievedMessage msg;
 
-	//ATOMIC START
-	_ulMessagesReceived.lock();
-	if (_queRcvMessages.empty())
+	while (true)
 	{
-		_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
-	}	
-	_queRcvMessages.pop(msg);
-	_ulMessagesReceived.unlock();
-	//ATOMIC END
+		if (_queRcvMessages.empty())
+		{
+			_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
+		}
+		_queRcvMessages.pop(msg);
 
-	msg._user.copy(getUserBySocket(msg._socket));
+		msg._user.copy(getUserBySocket(msg._socket));
+		callHandler(msg);
+	}	
 }
 
 void TriviaServer::callHandler(recievedMessage &msg)
 {
 	switch (msg._messageCode)
 	{
-	case SIGNIN_REQUEST:
-	case SIGNOUT_REQUEST:
-	case SIGNUP_REQUEST:
-	case EXISTING_ROOM_REQUEST:
-	case JOIN_ROOM_REQUEST:
-	case USERS_IN_ROOM_REQUEST:
-	case LEAVE_ROOM_REQUEST:
-	case CREATE_ROOM_REQUEST:
-	case CLOSE_ROOM_REQUEST:
-	case START_GAME_REQUEST:
-	case CLIENT_ANSWER:
-	case LEAVE_GAME_REQUEST:
-	case BEST_SCORE_REQUEST:
-	case PERSONAL_STATE_REQUEST:
-	default:
-		std::cout << "callHandler recieved an unknown message number\n";
-		//case 299 is already handled in clientHandler()
+		case SIGNIN_REQUEST: 
+		{
+			break;
+		}
+			
+		case SIGNOUT_REQUEST:
+		case SIGNUP_REQUEST:
+		case EXISTING_ROOM_REQUEST:
+		case JOIN_ROOM_REQUEST:
+		case USERS_IN_ROOM_REQUEST:
+		case LEAVE_ROOM_REQUEST:
+		case CREATE_ROOM_REQUEST:
+		case CLOSE_ROOM_REQUEST:
+		case START_GAME_REQUEST:
+		case CLIENT_ANSWER:
+		case LEAVE_GAME_REQUEST:
+		case BEST_SCORE_REQUEST:
+		case PERSONAL_STATE_REQUEST:
+		default:
+			std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
+			//case 299 is already handled in clientHandler()
 	}
 }
 
