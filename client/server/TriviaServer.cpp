@@ -8,7 +8,6 @@ TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesRe
 
 void TriviaServer::serve()
 {
-	
 	tcp::endpoint ep(tcp::v4(), 8820);
 	tcp::acceptor acceptor(_io_service, ep);
 
@@ -34,16 +33,12 @@ void TriviaServer::handleRecievedMessages()
 {
 	while (true)
 	{
-		//ATOMIC START
-		_ulMessagesReceived.lock();
 		if (_queRcvMessages.empty())
 		{
 			_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
 		}
 		recievedMessage temp(_queRcvMessages.front());
 		_queRcvMessages.pop();
-		_ulMessagesReceived.unlock();
-		//ATOMIC END
 
 		recievedMessage msg(temp._socket, temp._messageCode, getUserBySocket(temp._socket));
 		callHandler(msg);
