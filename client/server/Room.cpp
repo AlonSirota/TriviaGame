@@ -8,12 +8,12 @@ Room::Room(int id, User& admin, std::string roomName, int maxUsers, int question
 	_questionTime = questionTime;
 }
 
-bool Room::joinRoom(User&)
+void Room::joinRoom(User& user)
 {
-	return false;
+	_users.push_back(user);
 }
 
-void Room::leaveRoom(User&)
+void Room::leaveRoom(User& user)
 {
 }
 
