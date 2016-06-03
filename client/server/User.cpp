@@ -1,6 +1,6 @@
 #include "User.h"
 //done
-User::User(std::string username, tcp::socket& socket) : _username(username), _socket(std::move(socket))
+User::User(std::string username, tcp::socket socket) : _username(username), _socket(std::move(socket))
 {
 	_currGameID = 0;
 	_currRoomID = 0;
@@ -62,14 +62,6 @@ int User::closeRoom()
 	int temp = _currRoomID;
 	_currRoomID = 0;
 	return(temp);
-}
-
-void User::copy(const User &other)
-{
-	_username = other._username;
-	_socket = std::move(other._socket); //have i used this properly
-	_currRoomID = other._currRoomID;
-	_currGameID = other._currGameID;
 }
 
 //done
