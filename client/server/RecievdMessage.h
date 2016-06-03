@@ -3,12 +3,11 @@
 class recievedMessage
 {
 public:
-	recievedMessage(tcp::socket&, int,User&);
-	recievedMessage(tcp::socket&, int, std::vector<std::string>, User&);
-	recievedMessage(const recievedMessage&);
+	recievedMessage(tcp::socket, int, User);
+	recievedMessage(tcp::socket, int, std::vector<std::string>, User);
 
-	tcp::socket& _socket;
-	User& _user;
+	tcp::socket _socket;
+	User _user;
 	int _messageCode;
 	std::vector<std::string> _values;
 };

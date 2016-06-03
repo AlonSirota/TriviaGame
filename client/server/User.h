@@ -15,6 +15,7 @@ class User
 {
 public:
 	User(std::string, tcp::socket);
+	User(User&);
 	void send(std::string&);
 	std::string getUsername() { return(_username); }
 	tcp::socket& getSocket() { return(_socket); }

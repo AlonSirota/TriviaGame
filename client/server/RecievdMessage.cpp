@@ -1,6 +1,6 @@
 #include "RecievdMessage.h"
 
-recievedMessage::recievedMessage(tcp::socket& socket, int messageCode, User& user) :_socket(socket), _user(user)
+recievedMessage::recievedMessage(tcp::socket socket, int messageCode, User user) : _socket(std::move(socket)), _user(user)
 {
 	_messageCode = messageCode;
 }
