@@ -1,6 +1,6 @@
 #include "Room.h"
 
-Room::Room(int id, User& admin, std::string roomName, int maxUsers, int questionsNo, int questionTime) :_admin(admin),_name(roomName)
+Room::Room(int id, User admin, std::string roomName, int maxUsers, int questionsNo, int questionTime) : _admin(admin), _name(roomName)
 {
 	_id = id;
 	_maxUsers = maxUsers;
@@ -8,16 +8,16 @@ Room::Room(int id, User& admin, std::string roomName, int maxUsers, int question
 	_questionTime = questionTime;
 }
 
-void Room::joinRoom(User& user)
+void Room::joinRoom(User user)
 {
 	_users.push_back(user);
 }
 
-void Room::leaveRoom(User& user)
+void Room::leaveRoom(User user)
 {
 }
 
-int Room::closeRoom(User&)
+int Room::closeRoom(User)
 {
 	return 0;
 }
