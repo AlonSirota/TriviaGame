@@ -22,7 +22,5 @@ public:
 	int _questionsNo;
 	int _questionTime;
 	std::string _name;
-	int _id;
-	std::vector<User> _users;
-	
+	int _id;	
 };

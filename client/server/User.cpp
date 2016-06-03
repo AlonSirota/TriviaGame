@@ -6,7 +6,7 @@ User::User(std::string username, tcp::socket socket) : _username(username), _soc
 	_currRoomID = 0;
 }
 
-User::User(User &other) : _socket(std::move(other._socket)), _username(other._username)
+User::User(User &&other) : _socket(std::move(other._socket)), _username(other._username)
 {
 	this->_currGameID = other._currGameID;
 	this->_currRoomID = other._currRoomID;

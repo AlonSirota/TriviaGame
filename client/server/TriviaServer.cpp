@@ -40,8 +40,8 @@ void TriviaServer::handleRecievedMessages()
 		recievedMessage& temp = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
-		recievedMessage msg(temp._socket, temp._messageCode, getUserBySocket(temp._socket)); //An error may occur here - it's because we access a variable that was destroyed (from the queue).
-		callHandler(msg);
+		//recievedMessage msg(temp._socket, temp._messageCode, getUserBySocket(temp._socket)); //An error may occur here - it's because we access a variable that was destroyed (from the queue).
+		//callHandler(msg);
 	}	
 }
 
