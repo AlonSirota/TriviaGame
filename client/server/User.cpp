@@ -1,6 +1,6 @@
 #include "User.h"
 //done
-User::User(std::string username, tcp::socket& socket) : _username(username), _socket(socket)
+User::User(std::string username, tcp::socket& socket) : _username(username), _socket(std::move(socket))
 {
 	_currGameID = 0;
 	_currRoomID = 0;

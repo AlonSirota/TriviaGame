@@ -29,5 +29,5 @@ public:
 	int _currGameID;
 private:
 	std::string _username;
-	tcp::socket& _socket;
+	tcp::socket _socket;
 };
