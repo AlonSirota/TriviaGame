@@ -24,14 +24,14 @@ public:
 	Room& getRoomById(int);//done
 	Game& getGamebyId(int);
 
-	std::map<int, Game&> getGameList() { return(_gameList); }
+	std::map<int, Game> getGameList() { return(_gameList); }
 private:
 	boost::asio::io_service _io_service;
-	std::map<tcp::socket&, User&> _connectedUsers;
+	std::map<tcp::socket, User> _connectedUsers;
 	//tcp::socket _socket;
 	DB _db;
-	std::map<int, Room&> _roomList;
-	std::map<int, Game&> _gameList;
+	std::map<int, Room> _roomList;
+	std::map<int, Game> _gameList;
 	std::mutex _mtxMessagesRecieved;
 	std::unique_lock<std::mutex> _ulMessagesReceived;
 	std::condition_variable _cvMessages;
