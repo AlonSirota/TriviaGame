@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
+TriviaServer::TriviaServer(): _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
