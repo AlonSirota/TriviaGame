@@ -22,6 +22,7 @@ public:
 	bool joinRoom(int);
 	void leaveRoom();
 	int closeRoom();
+	void operator=(const User & other);
 	bool leaveGame();
 
 	int _currRoomID;

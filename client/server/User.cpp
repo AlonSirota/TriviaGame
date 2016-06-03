@@ -70,6 +70,14 @@ int User::closeRoom()
 	return(temp);
 }
 
+void User::operator=(const User & other)
+{
+	this->_currGameID = other._currGameID;
+	this->_currRoomID = other._currRoomID;
+	this->_socket = tcp::socket(std::move(other._socket));
+	this->_username = other._username;
+}
+
 //done
 /*
 bool User::leaveGame()
