@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
+TriviaServer::TriviaServer(): _socket(_io_service), _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
@@ -40,8 +40,8 @@ void TriviaServer::handleRecievedMessages()
 		recievedMessage& temp = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
-		//recievedMessage msg(temp._socket, temp._messageCode, getUserBySocket(temp._socket)); //An error may occur here - it's because we access a variable that was destroyed (from the queue).
-		//callHandler(msg);
+		recievedMessage msg(temp._socket, temp._messageCode, getUserBySocket(temp._socket)); //An error may occur here - it's because we access a variable that was destroyed (from the queue).
+		callHandler(msg);
 	}	
 }
 
@@ -158,7 +158,7 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 User& TriviaServer::getUserByName(std::string username)
 {
 	bool found = false;
-	std::map<tcp::socket, User>::iterator it = _connectedUsers.begin();
+	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -171,7 +171,7 @@ User& TriviaServer::getUserByName(std::string username)
 //done
 User& TriviaServer::getUserBySocket(tcp::socket& socket)
 {
-	std::map<tcp::socket, User>::iterator it = _connectedUsers.find(socket);
+	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.find(socket);
 	if (it != _connectedUsers.end())
 	{
 		return(it->second);
@@ -181,7 +181,7 @@ User& TriviaServer::getUserBySocket(tcp::socket& socket)
 bool TriviaServer::userExists(std::string username)
 {
 	bool found = false;
-	std::map<tcp::socket, User>::iterator it = _connectedUsers.begin();
+	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -193,7 +193,7 @@ bool TriviaServer::userExists(std::string username)
 //done
 Room& TriviaServer::getRoomById(int id)
 {
-	std::map<int, Room>::iterator it = _roomList.find(id);
+	std::map<int, Room&>::iterator it = _roomList.find(id);
 	if (it != _roomList.end())
 	{
 		return(it->second);
@@ -203,7 +203,7 @@ Room& TriviaServer::getRoomById(int id)
 
 Game& TriviaServer::getGamebyId(int id)
 {
-	std::map<int, Game>::iterator it = _gameList.find(id);
+	std::map<int, Game&>::iterator it = _gameList.find(id);
 	if (it != _gameList.end())
 	{
 		return(it->second);
@@ -244,7 +244,7 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 	{
 		//success connecting
 		_users.push_back(User(message._values[0], message._socket));
-		_connectedUsers.insert(std::pair<tcp::socket, User>(message._socket, _users.back()));
+		_connectedUsers.insert(std::pair<tcp::socket&, User&>(message._socket, _users.back()));
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
 		return(true);
 	}
@@ -370,7 +370,7 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 {
 	std::string sendString = std::to_string(EXISTING_ROOM_REPLY);
 	sendString += Helper::getPaddedNumber(_roomList.size(), 4);
-	std::map<int, Room>::iterator it = _roomList.begin();
+	std::map<int, Room&>::iterator it = _roomList.begin();
 	while (it != _roomList.end())
 	{
 		sendString += Helper::getPaddedNumber(it->second._id,4);
