@@ -158,7 +158,7 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 User& TriviaServer::getUserByName(std::string username)
 {
 	bool found = false;
-	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
+	std::map<tcp::socket, User>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -171,7 +171,7 @@ User& TriviaServer::getUserByName(std::string username)
 //done
 User& TriviaServer::getUserBySocket(tcp::socket& socket)
 {
-	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.find(socket);
+	std::map<tcp::socket, User>::iterator it = _connectedUsers.find(socket);
 	if (it != _connectedUsers.end())
 	{
 		return(it->second);
@@ -181,7 +181,7 @@ User& TriviaServer::getUserBySocket(tcp::socket& socket)
 bool TriviaServer::userExists(std::string username)
 {
 	bool found = false;
-	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
+	std::map<tcp::socket, User>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -244,7 +244,7 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 	{
 		//success connecting
 		_users.push_back(User(message._values[0], message._socket));
-		_connectedUsers.insert(std::pair<tcp::socket&, User&>(message._socket, _users.back()));
+		_connectedUsers.insert(std::pair<tcp::socket, User>(message._socket, _users.back()));
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
 		return(true);
 	}
@@ -290,7 +290,7 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message)
 	{
 		int roomIdTemp = ++_roomIdSequence;
 		_rooms.push_back(Room(roomIdTemp, user,message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str())));
-		_roomList.insert(std::pair<int, Room&>(roomIdTemp, getRoomById(user._currRoomID)));
+		_roomList.insert(std::pair<int, Room>(roomIdTemp, getRoomById(user._currRoomID)));
 		user.joinRoom(roomIdTemp);
 		return true;
 	}
@@ -370,7 +370,7 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 {
 	std::string sendString = std::to_string(EXISTING_ROOM_REPLY);
 	sendString += Helper::getPaddedNumber(_roomList.size(), 4);
-	std::map<int, Room&>::iterator it = _roomList.begin();
+	std::map<int, Room>::iterator it = _roomList.begin();
 	while (it != _roomList.end())
 	{
 		sendString += Helper::getPaddedNumber(it->second._id,4);
