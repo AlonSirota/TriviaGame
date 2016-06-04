@@ -4,15 +4,15 @@
 #include <mutex>
 #include <map>
 #include <boost\asio.hpp>
-#include <boost/lockfree/queue.hpp>
+//#include <boost/lockfree/queue.hpp>
 #include "DB.h"
 #include "User.h"
 #include "Room.h"
 #include "RecievdMessage.h"
 #include "Validator.h"
 #include <boost\bind.hpp>
-#include <boost\thread.hpp>
-#include <boost\lockfree\queue.hpp>
+//#include <boost\thread.hpp>
+//#include <boost\lockfree\queue.hpp>
 using boost::asio::ip::tcp;
 
 class TriviaServer

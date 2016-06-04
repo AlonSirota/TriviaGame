@@ -14,7 +14,7 @@ void TriviaServer::serve()
 	while (true)
 	{
 		tcp::socket newSocket(_io_service);
-		acceptor.async_accept(newSocket, [this, &newSocket](const boost::system::error_code &ec) 
+		acceptor.async_accept(newSocket, [this, &newSocket](const boost::system::error_code &ec) //error here
 		{
 			if (ec)
 			{
