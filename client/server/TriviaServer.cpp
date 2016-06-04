@@ -1,5 +1,6 @@
 #include "TriviaServer.h"
 //done
+/*
 TriviaServer::TriviaServer(): _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
@@ -378,4 +379,4 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 		sendString += it->second._name;
 	}
 	Helper::sendData(message._socket, sendString);
-}
+}*/
