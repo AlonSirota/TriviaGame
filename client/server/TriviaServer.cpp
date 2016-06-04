@@ -158,7 +158,7 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 User& TriviaServer::getUserByName(std::string username)
 {
 	bool found = false;
-	std::map<User, tcp::socket/*TODO*/>::iterator it = _connectedUsers.begin();
+	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -171,7 +171,7 @@ User& TriviaServer::getUserByName(std::string username)
 //done
 User& TriviaServer::getUserBySocket(tcp::socket& socket)
 {
-	std::map<User, tcp::socket/*TODO*/>::iterator it = _connectedUsers.find(socket);
+	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.find(socket);
 	if (it != _connectedUsers.end())
 	{
 		return(it->second);
@@ -181,7 +181,7 @@ User& TriviaServer::getUserBySocket(tcp::socket& socket)
 bool TriviaServer::userExists(std::string username)
 {
 	bool found = false;
-	std::map<User, tcp::socket/*TODO*/>::iterator it = _connectedUsers.begin();
+	std::map<tcp::socket&, User&>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -370,7 +370,7 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 {
 	std::string sendString = std::to_string(EXISTING_ROOM_REPLY);
 	sendString += Helper::getPaddedNumber(_roomList.size(), 4);
-	std::map<int, Room>::iterator it = _roomList.begin();
+	std::map<int, Room&>::iterator it = _roomList.begin();
 	while (it != _roomList.end())
 	{
 		sendString += Helper::getPaddedNumber(it->second._id,4);
