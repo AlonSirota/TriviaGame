@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-/*
+
 TriviaServer::TriviaServer(): _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
@@ -330,7 +330,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 	}
 	Room& room = getRoomById(roomId);
 	bool ans = message._user.joinRoom(roomId); 
-	room.joinRoom(message._user);//message if failed or succeeded is sent in Room::joinRoom
+	room.joinRoom(std::move(message._user));//message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
 //done
@@ -379,4 +379,4 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 		sendString += it->second._name;
 	}
 	Helper::sendData(message._socket, sendString);
-}*/
+}
