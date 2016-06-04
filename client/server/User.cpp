@@ -1,6 +1,6 @@
 #include "User.h"
 //done
-User::User(std::string username, tcp::socket &socket) : _username(username), _socket(std::move(socket))
+User::User(std::string username, tcp::socket socket) : _username(username), _socket(std::move(socket))
 {
 	_currGameID = 0;
 	_currRoomID = 0;
@@ -10,13 +10,6 @@ User::User(User &&other) : _socket(std::move(other._socket)), _username(other._u
 {
 	this->_currGameID = other._currGameID;
 	this->_currRoomID = other._currRoomID;
-}
-
-User::User(const User & other) : _socket(std::move(other._socket))
-{
-	this->_currGameID = other._currGameID;
-	this->_currRoomID = other._currRoomID;
-	this->_username = other._username;
 }
 
 void User::send(std::string& buffer)
