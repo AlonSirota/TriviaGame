@@ -1,6 +1,5 @@
 #include "TriviaServer.h"
 //done
-/*
 TriviaServer::TriviaServer(): _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
@@ -155,9 +154,9 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 	}
 }
 
-//done
-User& TriviaServer::getUserByName(std::string username)
+User& TriviaServer::getUserByName(std::string username) //TODO fix this according to the flipped map.
 {
+	/*
 	bool found = false;
 	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
@@ -166,21 +165,24 @@ User& TriviaServer::getUserByName(std::string username)
 			return(it->second);
 		it++;
 	}
-	return _connectedUsers.end()->second;
+	return _connectedUsers.end()->second;*/ 
 }
 
 //done
-User& TriviaServer::getUserBySocket(tcp::socket& socket)
+User& TriviaServer::getUserBySocket(tcp::socket& socket) //TODO fix this according to the flipped map.
 {
+	/*
 	std::map<User, tcp::socket>::iterator it = _connectedUsers.find(socket);
 	if (it != _connectedUsers.end())
 	{
 		return(it->second);
 	}
-	return(it->second);
+	return(it->second);*/
 }
-bool TriviaServer::userExists(std::string username)
+
+bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
 {
+	/*
 	bool found = false;
 	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
@@ -188,7 +190,7 @@ bool TriviaServer::userExists(std::string username)
 		if (it->second.getUsername() == username)
 			return(true);
 		it++;
-	}
+	}*/
 	return false;
 }
 //done
@@ -238,8 +240,9 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 	}
 }
 //done
-bool TriviaServer::handleSignin(recievedMessage& message)
+bool TriviaServer::handleSignin(recievedMessage& message) //TODO fix this according to the flipped map.
 {
+	/*
 	//check if user exists in database - in next part
 	if (!userExists(message._user.getUsername()))
 	{
@@ -253,11 +256,11 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 	{
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
 		return false;
-	}
-}*/
-/////////////////////////////////////////////////////////////////////////////////////////////< operand error (comment everything from his row up.
+	}*/
+	return false; //temp TODO delete this.
+}
 //done for first stage
-/*
+
 bool TriviaServer::handleSignup(recievedMessage& message)
 {
 	if(!Validator::isUsernameValid(message._values[0]))
@@ -284,7 +287,7 @@ void TriviaServer::handleSignout(recievedMessage& message)
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
 	//_connectedUsers.erase(_connectedUsers.find(message._socket)); TODO fix this according to the key-value swap of map
-}*/
+}
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message)
 {
@@ -307,7 +310,7 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message)
 		return false;
 	}
 }
-///////////////////////////////////////////////////////////////////////////////THE PROBLEM IS ABOVE THIS LINE
+
 //done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 bool TriviaServer::handleCloseRoom(recievedMessage& message)
 {
