@@ -257,6 +257,7 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 }*/
 /////////////////////////////////////////////////////////////////////////////////////////////< operand error (comment everything from his row up.
 //done for first stage
+/*
 bool TriviaServer::handleSignup(recievedMessage& message)
 {
 	if(!Validator::isUsernameValid(message._values[0]))
@@ -282,19 +283,24 @@ void TriviaServer::handleSignout(recievedMessage& message)
 	handleCloseRoom(message);
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
-	_connectedUsers.erase(_connectedUsers.find(message._socket));
-}
+	//_connectedUsers.erase(_connectedUsers.find(message._socket)); TODO fix this according to the key-value swap of map
+}*/
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message)
 {
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
 	{
+		/*eran's version
 		int roomIdTemp = ++_roomIdSequence;
 		_rooms.push_back(Room(roomIdTemp, user,message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str())));
 		_roomList.insert(std::pair<int, Room>(roomIdTemp, getRoomById(user._currRoomID)));
 		user.joinRoom(roomIdTemp);
-		return true;
+		return true;*/
+		//alon's version - i still don't think we need the extra vector.
+		int roomIdTemp = ++_roomIdSequence;
+		Room currentRoom(roomIdTemp, user, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
+		_roomList.insert(std::pair<int, Room>(roomIdTemp, std::move(currentRoom)));
 	}
 	else
 	{
