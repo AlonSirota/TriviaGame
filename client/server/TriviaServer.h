@@ -27,7 +27,7 @@ public:
 	std::map<int, Game> getGameList() { return(_gameList); }
 private:
 	boost::asio::io_service _io_service;
-	std::map<tcp::socket,User> _connectedUsers;
+	std::map<User, tcp::socket> _connectedUsers;
 	//tcp::socket _socket;
 	DB _db;
 	std::map<int, Room> _roomList;

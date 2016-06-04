@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-
+/*
 TriviaServer::TriviaServer(): _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
@@ -159,7 +159,7 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 User& TriviaServer::getUserByName(std::string username)
 {
 	bool found = false;
-	std::map<tcp::socket, User>::iterator it = _connectedUsers.begin();
+	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -172,7 +172,7 @@ User& TriviaServer::getUserByName(std::string username)
 //done
 User& TriviaServer::getUserBySocket(tcp::socket& socket)
 {
-	std::map<tcp::socket, User>::iterator it = _connectedUsers.find(socket);
+	std::map<User, tcp::socket>::iterator it = _connectedUsers.find(socket);
 	if (it != _connectedUsers.end())
 	{
 		return(it->second);
@@ -182,7 +182,7 @@ User& TriviaServer::getUserBySocket(tcp::socket& socket)
 bool TriviaServer::userExists(std::string username)
 {
 	bool found = false;
-	std::map<tcp::socket, User>::iterator it = _connectedUsers.begin();
+	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second.getUsername() == username)
@@ -245,7 +245,7 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 	{
 		//success connecting
 		_users.push_back(User(message._values[0], message._socket));
-		_connectedUsers.insert(std::pair<tcp::socket, User>(message._socket, _users.back()));
+		_connectedUsers.insert(std::pair<User, tcp::socket>(message._socket, _users.back()));
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
 		return(true);
 	}
@@ -254,7 +254,8 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
 		return false;
 	}
-}
+}*/
+/////////////////////////////////////////////////////////////////////////////////////////////< operand error (comment everything from his row up.
 //done for first stage
 bool TriviaServer::handleSignup(recievedMessage& message)
 {
@@ -300,6 +301,7 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message)
 		return false;
 	}
 }
+///////////////////////////////////////////////////////////////////////////////THE PROBLEM IS ABOVE THIS LINE
 //done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 bool TriviaServer::handleCloseRoom(recievedMessage& message)
 {
