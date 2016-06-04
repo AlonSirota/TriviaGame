@@ -14,7 +14,7 @@ using boost::asio::ip::tcp;
 class User
 {
 public:
-	User(std::string, tcp::socket);
+	User(std::string, tcp::socket&);
 	User(User&&);
 	void send(std::string&);
 	std::string getUsername() { return(_username); }
@@ -29,5 +29,5 @@ public:
 	int _currGameID;
 private:
 	std::string _username;
-	tcp::socket _socket;
+	tcp::socket &_socket;
 };
