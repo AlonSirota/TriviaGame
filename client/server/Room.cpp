@@ -1,6 +1,6 @@
 #include "Room.h"
 
-Room::Room(int id, User admin, std::string roomName, int maxUsers, int questionsNo, int questionTime) : _admin(admin), _name(roomName)
+Room::Room(int id, User &admin, std::string roomName, int maxUsers, int questionsNo, int questionTime) : _admin(admin), _name(roomName)
 {
 	_id = id;
 	_maxUsers = maxUsers;

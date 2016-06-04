@@ -7,7 +7,7 @@ class User;
 class Room
 {
 public:
-	Room(int, User, std::string, int, int, int);
+	Room(int, User&, std::string, int, int, int);
 	void joinRoom(User);
 	void leaveRoom(User);
 	int closeRoom(User);
@@ -17,7 +17,7 @@ public:
 	void sendMessage(User&, std::string);
 	std::string getUsersListMessage();
 
-	User _admin;
+	User &_admin;
 	int _maxUsers;
 	int _questionsNo;
 	int _questionTime;
