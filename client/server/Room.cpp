@@ -9,7 +9,7 @@ Room::Room(int id, User &admin, std::string roomName, int maxUsers, int question
 
 void Room::joinRoom(User &&user)
 {
-	_users.push_back(user);
+	_users.push_back(std::move(user));
 }
 
 void Room::leaveRoom(User &user)
