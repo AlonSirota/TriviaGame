@@ -37,10 +37,18 @@ std::string Room::getUsersAsString(std::vector<User> usersVector, User excluded)
 	return list;
 }
 
-
 std::string Room::getUsersListMessage()
 {
-	return std::string();
+	std::string message = "108";
+	int size = _users.size();
+	message.append(std::to_string(size)); //appends number of users.
+	for (int i = 0; i < size; i++)
+	{
+		message.append(std::to_string(this->_users[i]._username.length())); //appends the size of the current
+		message.append(this->_users[i]._username);
+	}
+
+	return message;
 }
 
 void Room::sendMessage(std::string)
