@@ -24,25 +24,26 @@ void Helper::sendData(std::shared_ptr<tcp::socket> socket, std::string bufTemp)
 
 int Helper::getMessageTypeCode(std::shared_ptr<tcp::socket> socket)
 {
-	char* s = new char[3];
-	s = getPartFromSocket(socket, 3);
-	std::string msg(s);
+	std::vector<char> s = getPartFromSocket(socket, 3);
+	std::string msg(s.data());
 
 	if (msg == "")
 		return 0;
-	return  atoi(s);
+	std::string data = msg.substr(0,3);
+	return  atoi(data.c_str());
 }
 
 int Helper::getIntPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum)
 {
-	char* s = getPartFromSocket(socket, bytesNum);
-	return atoi(s);
+	std::vector<char> data(getPartFromSocket(socket, bytesNum));
+	//char* s = data.data();
+	return atoi(data.data());
 }
 
 std::string Helper::getStringPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum)
 {
-	char* s = getPartFromSocket(socket, bytesNum);
-	std::string res(s);
+	std::vector<char> s = getPartFromSocket(socket, bytesNum);
+	std::string res(s.data());
 	return res;
 }
 
@@ -53,22 +54,22 @@ std::string Helper::getPaddedNumber(int num, int digits)
 	return ostr.str();
 }
 
-char * Helper::getPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum)
+std::vector<char> Helper::getPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum)
 {
 	if (bytesNum == 0)
 	{
-		return "";
+		return std::vector<char>();
 	}
+	std::vector<char> data(bytesNum);
+	socket->read_some(boost::asio::buffer(data.data(), data.size()));
 
-	//char* data = new char[bytesNum + 1];
-	std::vector<char> data(bytesNum + 1);
-	socket->async_read_some(boost::asio::buffer(data.data(), data.size()), [](boost::system::error_code ec, std::size_t /*length*/)
-	{
-		if (!ec)
-		{
+	//socket->async_read_some(boost::asio::buffer(data.data(), data.size()), [](boost::system::error_code ec, std::size_t /*length*/)
+	//{
+	//	if (!ec)
+//		{
 
-		}
-	});
-	data[bytesNum] = NULL;
-	return data.data();
+		//}
+	//});
+	data.push_back(NULL);
+	return data;
 }
