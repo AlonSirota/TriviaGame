@@ -154,20 +154,6 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 	}
 }
 
-User TriviaServer::getUserByName(std::string username) //TODO fix this according to the flipped map.
-{
-	/*
-	bool found = false;
-	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
-	while (it != _connectedUsers.end())
-	{
-		if (it->second.getUsername() == username)
-			return(it->second);
-		it++;
-	}
-	return _connectedUsers.end()->second;*/ 
-}
-
 //done
 User TriviaServer::getUserBySocket(tcp::socket& socket) //TODO fix this according to the flipped map.
 {
@@ -178,11 +164,21 @@ User TriviaServer::getUserBySocket(tcp::socket& socket) //TODO fix this accordin
 		return(it->second);
 	}
 	return(it->second);*/
+	std::map<tcp::socket, User> map;
+
+
+	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
+	while (it != _connectedUsers.end())
+	{
+		if (it->second == socket)
+			return(true);
+		it++;
+	}
+	return false;
 }
 
 bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
 {
-	bool found = false;
 	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{

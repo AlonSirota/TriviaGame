@@ -12,6 +12,12 @@ User::User(User &&other) : _socket(std::move(other._socket)), _username(other._u
 	this->_currRoomID = other._currRoomID;
 }
 
+User::User(const User &other) : _username(other._username), _socket(std::move(other._socket))
+{
+	_currRoomID = other._currRoomID;
+	_currGameID = other._currGameID;
+}
+
 void User::send(std::string& buffer)
 {
 	Helper::sendData(_socket, buffer);

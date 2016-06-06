@@ -25,7 +25,7 @@ public:
 	std::map<int, Game> getGameList() { return(_gameList); }
 private:
 	boost::asio::io_service _io_service;
-	std::map<User, tcp::socket> _connectedUsers;
+	std::map<User, std::shared_ptr<tcp::socket>> _connectedUsers;
 	//tcp::socket _socket;
 	DB _db;
 	std::map<int, Room> _roomList;
@@ -69,7 +69,7 @@ private:
 	void addRecievedMessage(recievedMessage&);//alon
 	recievedMessage buildRecievedMessage(tcp::socket&,int);//done
 
-	User getUserByName(std::string);//done
-	User getUserBySocket(tcp::socket&);//done
+	//User getUserByName(std::string);//if needed implement
+	User getUserBySocket(std::shared_ptr<tcp::socket>);//done
 	bool userExists(std::string);
 };
