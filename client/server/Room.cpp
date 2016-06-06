@@ -24,7 +24,15 @@ void Room::joinRoom(User &user)
 
 void Room::leaveRoom(User &user)
 {
-	//for (std::vector<User>)
+	for (std::vector<User>::iterator i = _users.begin(); i != _users.end(); i++)
+	{
+		if (i->_username == user._username)
+		{
+			_users.erase(i);
+			user.send(std::to_string(LEAVE_ROOM_REPLY_SUCCESS));
+			this->sendMessage(this->getUsersListMessage());
+		}
+	}
 }
 
 int Room::closeRoom(User)
