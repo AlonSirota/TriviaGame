@@ -24,7 +24,7 @@ void Room::joinRoom(User &user)
 
 void Room::leaveRoom(User &user)
 {
-
+	//for (std::vector<User>)
 }
 
 int Room::closeRoom(User)
