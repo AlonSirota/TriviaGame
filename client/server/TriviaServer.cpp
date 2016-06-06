@@ -92,7 +92,7 @@ void TriviaServer::callHandler(recievedMessage &msg)
 }
 
 //done
-recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int messCode)
+recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> socket, int messCode)
 {
 	std::vector<std::string> info;
 	switch (messCode)
@@ -155,26 +155,16 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 }
 
 //done
-User TriviaServer::getUserBySocket(tcp::socket& socket) //TODO fix this according to the flipped map.
+User TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket> socket)
 {
-	/*
-	std::map<User, tcp::socket>::iterator it = _connectedUsers.find(socket);
-	if (it != _connectedUsers.end())
-	{
-		return(it->second);
-	}
-	return(it->second);*/
-	std::map<tcp::socket, User> map;
-
-
-	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
+	std::map<User, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second == socket)
-			return(true);
+			return(it->first);
 		it++;
 	}
-	return false;
+	return it->first;
 }
 
 bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
@@ -209,7 +199,7 @@ Game TriviaServer::getGamebyId(int id)
 	return(_gameList.end()->second);
 }
 
-void TriviaServer::clientHandler(tcp::socket& s)
+void TriviaServer::clientHandler(std::shared_ptr<tcp::socket> s)
 {
 	int msgCode = Helper::getMessageTypeCode(s);
 	while (msgCode != 0 && msgCode != EXIT)
