@@ -31,7 +31,6 @@ private:
 	std::map<int, Room> _roomList;
 	std::map<int, Game> _gameList;
 	std::mutex _mtxMessagesRecieved;
-	std::unique_lock<std::mutex> _ulMessagesReceived;
 	std::condition_variable _cvMessages;
 	//boost::lockfree::queue<recievedMessage> _queRcvMessages;
 	std::queue<recievedMessage> _queRcvMessages;
