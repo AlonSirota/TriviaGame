@@ -23,6 +23,7 @@ public:
 	void leaveRoom();
 	int closeRoom();
 	void operator=(const User & other);
+	bool operator<(const User& other) const;
 	bool leaveGame();
 
 	int _currRoomID;

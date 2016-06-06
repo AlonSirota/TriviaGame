@@ -82,6 +82,11 @@ void User::operator=(const User & other)
 	this->_username = other._username;
 }
 
+bool User::operator<(const User & other) const
+{
+	return _username < other._username;
+}
+
 //done
 /*
 bool User::leaveGame()

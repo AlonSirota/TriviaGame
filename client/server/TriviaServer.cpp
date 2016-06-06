@@ -22,7 +22,7 @@ void TriviaServer::serve()
 			}
 			else
 			{
-				std::thread t(&TriviaServer::clientHandler, this, newSocket); //do we need std::move here?
+				std::thread t(&TriviaServer::clientHandler, this, std::move(newSocket)); //do we need std::move here?
 				t.detach();
 			}
 		});
