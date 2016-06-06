@@ -13,12 +13,12 @@ void Room::joinRoom(User &user)
 	std::string reply = std::to_string(JOIN_ROOM_REPLY);
 	if (_users.size() >= _maxUsers)
 	{
-		user.send(reply + "1");
+		user.send(reply + "1"); //1 means room is full.
 	}
 	else
 	{
-		//add him
-		//send everyone the current list.
+		_users.push_back(user);//add him
+		this->sendMessage(this->getUsersListMessage()); //send everyone the current list.
 	}
 }
 
