@@ -224,6 +224,13 @@ bool TriviaServer::userExists(std::string username) //TODO fix this according to
 	}
 	return false;
 }
+
+int TriviaServer::closeRoom(User &user)
+{
+	Room& room = getRoomById(user._currRoomID);
+	return 0;
+}
+
 //done
 Room TriviaServer::getRoomById(int id)
 {
@@ -347,7 +354,7 @@ bool TriviaServer::handleCloseRoom(recievedMessage& message)
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
 	{
-		int ans = user.closeRoom();
+		int ans = closeRoom(user);
 		if (ans == -1)
 		{
 			return(false);

@@ -68,12 +68,6 @@ void User::leaveRoom()
 {
 	_currRoomID = 0;
 }
-//done
-int User::closeRoom()
-{
-	return -1;
-	
-}
 
 /*
 if (_currRoomID == 0) //is the default value of a room when it's created.
