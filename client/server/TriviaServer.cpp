@@ -22,7 +22,8 @@ void TriviaServer::serve()
 			}
 			else
 			{
-				std::thread t(&TriviaServer::clientHandler, this, std::make_shared<tcp::socket>(newSocket)); //do we need std::move here?
+				std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
+				std::thread t(&TriviaServer::clientHandler, this, ptr);
 				t.detach();
 			}
 		});
