@@ -4,6 +4,7 @@ TriviaServer::TriviaServer() : _cvMessages()//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
+	_roomIdSequence = 1;
 }
 
 void TriviaServer::serve()
@@ -69,7 +70,7 @@ void TriviaServer::handleRecievedMessages()
 	}
 }
 
-void TriviaServer::callHandler(recievedMessage &msg)
+void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 {
 	switch (msg._messageCode)
 	{
@@ -178,14 +179,23 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	}
 	if (info.empty())
 	{
-		if (getUserBySocket(socket) == _connectedUsers.end()->first)
-		{
-
-		}
 		return(recievedMessage(socket, messCode, getUserBySocket(socket)));
 	}
 	else
 	{
+		if (messCode == SIGNIN_REQUEST)
+		{
+			//signin
+			if (!userExists(info[0]))
+			{
+				_connectedUsers.insert(std::pair<User, std::shared_ptr<tcp::socket>>(User(info[0], socket), socket));
+				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
+			}
+			else
+			{
+				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
+			}
+		}
 		return(recievedMessage(socket, messCode, info, getUserBySocket(socket)));
 	}
 }
