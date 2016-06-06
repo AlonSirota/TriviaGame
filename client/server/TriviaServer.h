@@ -26,7 +26,6 @@ public:
 private:
 	boost::asio::io_service _io_service;
 	std::map<User, std::shared_ptr<tcp::socket>> _connectedUsers;
-	//tcp::socket _socket;
 	DB _db;
 	std::map<int, Room> _roomList;
 	std::map<int, Game> _gameList;

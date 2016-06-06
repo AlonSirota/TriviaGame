@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _cvMessages()//:_db() - only in later version
+TriviaServer::TriviaServer() : _cvMessages()//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
@@ -13,7 +13,21 @@ void TriviaServer::serve()
 
 	while (true)
 	{
+		std::cout << "Listening..." << std::endl;
 		tcp::socket newSocket(_io_service);
+		boost::system::error_code ec;
+		acceptor.accept(newSocket, ep, ec);
+		if (ec)
+		{
+			std::cout << "async_accept failed: " << ec.value();
+		}
+		else
+		{
+			std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
+			std::thread t(&TriviaServer::clientHandler, this, ptr);
+			t.detach();
+		}
+		/*
 		acceptor.async_accept(newSocket, [this, &newSocket](const boost::system::error_code &ec) //error here
 		{
 			if (ec)
@@ -26,7 +40,7 @@ void TriviaServer::serve()
 				std::thread t(&TriviaServer::clientHandler, this, ptr);
 				t.detach();
 			}
-		});
+		}); */
 	}
 }
 
@@ -59,45 +73,45 @@ void TriviaServer::callHandler(recievedMessage &msg)
 {
 	switch (msg._messageCode)
 	{
-		case SIGNIN_REQUEST:
-			handleSignin(msg);
-			break;
-		case SIGNOUT_REQUEST:
-			handleSignout(msg);
-			break;
-		case SIGNUP_REQUEST:
-			handleSignup(msg);
-			break;
+	case SIGNIN_REQUEST:
+		handleSignin(msg);
+		break;
+	case SIGNOUT_REQUEST:
+		handleSignout(msg);
+		break;
+	case SIGNUP_REQUEST:
+		handleSignup(msg);
+		break;
 		//case EXISTING_ROOM_REQUEST: handler isn't written yet TODO
-		case JOIN_ROOM_REQUEST:
-			handleJoinRoom(msg);
-			break;
+	case JOIN_ROOM_REQUEST:
+		handleJoinRoom(msg);
+		break;
 		//case USERS_IN_ROOM_REQUEST: handler isn't written yet TODO
-		case LEAVE_ROOM_REQUEST:
-			handleLeaveRoom(msg);
-			break;
-		case CREATE_ROOM_REQUEST:
-			handleCreateRoom(msg);
-			break;
-		case CLOSE_ROOM_REQUEST:
-			handleCloseRoom(msg);
-			break;
-		case START_GAME_REQUEST:
-			handleStartGame(msg);
-			break;
+	case LEAVE_ROOM_REQUEST:
+		handleLeaveRoom(msg);
+		break;
+	case CREATE_ROOM_REQUEST:
+		handleCreateRoom(msg);
+		break;
+	case CLOSE_ROOM_REQUEST:
+		handleCloseRoom(msg);
+		break;
+	case START_GAME_REQUEST:
+		handleStartGame(msg);
+		break;
 		//case CLIENT_ANSWER: handler isn't written yet TODO (i probably just don't know what is the name of the correct handler)
-		case LEAVE_GAME_REQUEST:
-			handleLeaveGame(msg);
-			break;
-		case BEST_SCORE_REQUEST:
-			handleGetBestScores(msg);
-			break;
-		case PERSONAL_STATE_REQUEST:
-			handlegetPersonalStatus(msg);
-			break;
-		default:
-			std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
-			//case 299 and 0 is already handled in clientHandler()
+	case LEAVE_GAME_REQUEST:
+		handleLeaveGame(msg);
+		break;
+	case BEST_SCORE_REQUEST:
+		handleGetBestScores(msg);
+		break;
+	case PERSONAL_STATE_REQUEST:
+		handlegetPersonalStatus(msg);
+		break;
+	default:
+		std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
+		//case 299 and 0 is already handled in clientHandler()
 	}
 }
 
@@ -115,52 +129,52 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	std::vector<std::string> info;
 	switch (messCode)
 	{
-		case SIGNIN_REQUEST:
-		{
-			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, usernameLength));
-			int passLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, passLength));
-			break;
-		}
-		case SIGNUP_REQUEST:
-		{
-			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, usernameLength));
-			int passLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, passLength));
-			int emailLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, emailLength));
-			break;
-		}
-		case USERS_IN_ROOM_REQUEST:
-		case JOIN_ROOM_REQUEST:
-		{
-			info.push_back(Helper::getPartFromSocket(socket, 4));
-			break;
-		}
-		case CREATE_ROOM_REQUEST:
-		{
-			int rommNameLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, rommNameLength));
-			info.push_back(Helper::getPartFromSocket(socket, 1));
-			info.push_back(Helper::getPartFromSocket(socket, 2));
-			info.push_back(Helper::getPartFromSocket(socket, 2));
-			break;
-		}
-		case START_GAME_REQUEST://not in current version
-			break;
-		case CLIENT_ANSWER://not in current version
-			break;
-		case LEAVE_GAME_REQUEST://not in current version
-			break;
-		case BEST_SCORE_REQUEST://not in current version
-			break;
-		case PERSONAL_STATE_REQUEST://not in current version
-			break;
-		default:
-		{
-		}
+	case SIGNIN_REQUEST:
+	{
+		int usernameLength = Helper::getIntPartFromSocket(socket, 2);
+		info.push_back(Helper::getPartFromSocket(socket, usernameLength));
+		int passLength = Helper::getIntPartFromSocket(socket, 2);
+		info.push_back(Helper::getPartFromSocket(socket, passLength));
+		break;
+	}
+	case SIGNUP_REQUEST:
+	{
+		int usernameLength = Helper::getIntPartFromSocket(socket, 2);
+		info.push_back(Helper::getPartFromSocket(socket, usernameLength));
+		int passLength = Helper::getIntPartFromSocket(socket, 2);
+		info.push_back(Helper::getPartFromSocket(socket, passLength));
+		int emailLength = Helper::getIntPartFromSocket(socket, 2);
+		info.push_back(Helper::getPartFromSocket(socket, emailLength));
+		break;
+	}
+	case USERS_IN_ROOM_REQUEST:
+	case JOIN_ROOM_REQUEST:
+	{
+		info.push_back(Helper::getPartFromSocket(socket, 4));
+		break;
+	}
+	case CREATE_ROOM_REQUEST:
+	{
+		int rommNameLength = Helper::getIntPartFromSocket(socket, 2);
+		info.push_back(Helper::getPartFromSocket(socket, rommNameLength));
+		info.push_back(Helper::getPartFromSocket(socket, 1));
+		info.push_back(Helper::getPartFromSocket(socket, 2));
+		info.push_back(Helper::getPartFromSocket(socket, 2));
+		break;
+	}
+	case START_GAME_REQUEST://not in current version
+		break;
+	case CLIENT_ANSWER://not in current version
+		break;
+	case LEAVE_GAME_REQUEST://not in current version
+		break;
+	case BEST_SCORE_REQUEST://not in current version
+		break;
+	case PERSONAL_STATE_REQUEST://not in current version
+		break;
+	default:
+	{
+	}
 	}
 	if (info.empty())
 	{
@@ -168,7 +182,7 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	}
 	else
 	{
-		return(recievedMessage(socket, messCode,info, getUserBySocket(socket)));
+		return(recievedMessage(socket, messCode, info, getUserBySocket(socket)));
 	}
 }
 
@@ -263,7 +277,7 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 
 bool TriviaServer::handleSignup(recievedMessage& message)
 {
-	if(!Validator::isUsernameValid(message._values[0]))
+	if (!Validator::isUsernameValid(message._values[0]))
 	{
 		//fail - username not valid	
 		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(3));
@@ -342,7 +356,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 		Helper::sendData(std::move(message._socket), std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
 	}
 	Room& room = getRoomById(roomId);
-	bool ans = message._user.joinRoom(roomId); 
+	bool ans = message._user.joinRoom(roomId);
 	room.joinRoom(std::move(message._user));//message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
@@ -387,8 +401,8 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 	std::map<int, Room>::iterator it = _roomList.begin();
 	while (it != _roomList.end())
 	{
-		sendString += Helper::getPaddedNumber(it->second._id,4);
-		sendString += Helper::getPaddedNumber(it->second._name.length(),2);
+		sendString += Helper::getPaddedNumber(it->second._id, 4);
+		sendString += Helper::getPaddedNumber(it->second._name.length(), 2);
 		sendString += it->second._name;
 	}
 	Helper::sendData(std::move(message._socket), sendString);
