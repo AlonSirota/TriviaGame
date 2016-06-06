@@ -10,5 +10,5 @@ public:
 	static int getIntPartFromSocket(std::shared_ptr<tcp::socket>, int);
 	static std::string getStringPartFromSocket(std::shared_ptr<tcp::socket>, int);
 	static std::string getPaddedNumber(int, int);
-	static char* Helper::getPartFromSocket(std::shared_ptr<tcp::socket>, int);
+	static std::vector<char> Helper::getPartFromSocket(std::shared_ptr<tcp::socket>, int);
 };
