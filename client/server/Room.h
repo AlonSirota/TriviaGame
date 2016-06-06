@@ -8,7 +8,7 @@ class Room
 {
 public:
 	Room(int, User&, std::string, int, int, int);
-	void joinRoom(User&&);
+	void joinRoom(User&);
 	void leaveRoom(User&);
 	int closeRoom(User);
 	std::string getUsersAsString(std::vector<User>, User);

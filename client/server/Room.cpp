@@ -8,9 +8,18 @@ Room::Room(int id, User &admin, std::string roomName, int maxUsers, int question
 	_users.push_back(_admin);
 }
 
-void Room::joinRoom(User &&user)
+void Room::joinRoom(User &user)
 {
-	_users.push_back(std::move(user));
+	std::string reply = std::to_string(JOIN_ROOM_REPLY);
+	if (_users.size() >= _maxUsers)
+	{
+		user.send(reply + "1");
+	}
+	else
+	{
+		//add him
+		//send everyone the current list.
+	}
 }
 
 void Room::leaveRoom(User &user)
@@ -39,7 +48,7 @@ std::string Room::getUsersAsString(std::vector<User> usersVector, User excluded)
 
 std::string Room::getUsersListMessage()
 {
-	std::string message = "108";
+	std::string message = std::to_string(USERS_IN_ROOM_REPLY);
 	int size = _users.size();
 	message.append(std::to_string(size)); //appends number of users.
 	for (int i = 0; i < size; i++)
