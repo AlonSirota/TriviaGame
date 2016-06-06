@@ -35,9 +35,9 @@ void Room::leaveRoom(User &user)
 	}
 }
 
-int Room::closeRoom(User)
+int Room::closeRoom(User& caller)
 {
-	return 0;
+	return -1;
 }
 
 std::string Room::getUsersAsString(std::vector<User> usersVector, User excluded)

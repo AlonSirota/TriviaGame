@@ -3,7 +3,7 @@
 #include "protocol.h"
 #include "Helper.h"
 #include "Game.h"
-//#include "Room.h" this causes an error, because room uses user as well - do we really need this?
+#include "Room.h" this causes an error, because room uses user as well - do we really need this? YES WE DO
 #include <iostream>
 #include <boost\asio.hpp>
 using boost::asio::ip::tcp;
@@ -24,6 +24,7 @@ public:
 	void leaveRoom();
 	int closeRoom();
 	void operator=(const User & other);
+	bool operator==(const User & other) const;
 	bool operator<(const User& other) const;
 	bool leaveGame();
 

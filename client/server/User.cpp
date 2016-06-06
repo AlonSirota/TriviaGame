@@ -71,14 +71,19 @@ void User::leaveRoom()
 //done
 int User::closeRoom()
 {
-	if (_currRoomID == 0)
-	{
-		return(USERERROR);
-	}
-	int temp = _currRoomID;
-	_currRoomID = 0;
-	return(temp);
+	return -1;
+	
 }
+
+/*
+if (_currRoomID == 0) //is the default value of a room when it's created.
+{
+return(USERERROR);
+}
+
+int temp = _currRoomID;
+_currRoomID = 0;
+return(temp);*/
 
 void User::operator=(const User & other)
 {
@@ -86,6 +91,18 @@ void User::operator=(const User & other)
 	this->_currRoomID = other._currRoomID;
 	this->_socket = other._socket;
 	this->_username = other._username;
+}
+
+bool User::operator==(const User & other) const
+{
+	if (this->_currGameID == other._currGameID &&
+		this->_currRoomID == other._currRoomID &&
+		this->_socket == other._socket &&
+		this->_username == other._username)
+	{
+		return true;
+	}
+	return false;
 }
 
 bool User::operator<(const User & other) const
