@@ -22,7 +22,7 @@ void TriviaServer::serve()
 			}
 			else
 			{
-				std::thread t(&TriviaServer::clientHandler, this, std::move(newSocket)); //do we need std::move here?
+				std::thread t(&TriviaServer::clientHandler, this, std::make_shared<tcp::socket>(newSocket)); //do we need std::move here?
 				t.detach();
 			}
 		});
@@ -169,7 +169,7 @@ User TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket> socket)
 
 bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
 {
-	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
+	std::map<User, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->first.getUsername() == username)
@@ -215,9 +215,9 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 {
 	try
 	{
-		tcp::socket& socket = message._socket;
+		std::shared_ptr<tcp::socket> socket = message._socket;
 		handleSignout(message);
-		socket.close();
+		socket->close();
 	}
 	catch (const std::exception& ex)
 	{
@@ -231,7 +231,7 @@ bool TriviaServer::handleSignin(recievedMessage& message)
 	if (!userExists(message._user.getUsername()))
 	{
 		//success connecting
-		_connectedUsers.insert(std::pair<User, tcp::socket>(User(message._values[0], message._socket), std::move(message._socket)));
+		_connectedUsers.insert(std::pair<User, std::shared_ptr<tcp::socket>>(User(message._values[0], message._socket), std::move(message._socket)));
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
 		return(true);
 	}

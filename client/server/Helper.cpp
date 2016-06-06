@@ -11,7 +11,7 @@
 
 void Helper::sendData(std::shared_ptr<tcp::socket> socket, std::string bufTemp)
 {
-	boost::asio::async_write(socket, boost::asio::buffer(bufTemp.c_str(), bufTemp.length()), [](boost::system::error_code ec, std::size_t /*length*/)
+	boost::asio::async_write(*socket, boost::asio::buffer(bufTemp.c_str(), bufTemp.length()), [](boost::system::error_code ec, std::size_t /*length*/)
 	{
 		if (!ec)
 		{
@@ -62,7 +62,7 @@ char * Helper::getPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesN
 
 	//char* data = new char[bytesNum + 1];
 	std::vector<char> data(bytesNum + 1);
-	socket.async_read_some(boost::asio::buffer(data.data(), data.size()), [](boost::system::error_code ec, std::size_t /*length*/)
+	socket->async_read_some(boost::asio::buffer(data.data(), data.size()), [](boost::system::error_code ec, std::size_t /*length*/)
 	{
 		if (!ec)
 		{

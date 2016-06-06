@@ -42,7 +42,7 @@ private:
 	std::vector<Room> _rooms;
 	std::vector<Game> _games;
 
-	void clientHandler(tcp::socket&);//done, not debugged
+	void clientHandler(std::shared_ptr<tcp::socket>);//done, not debugged
 
 	void safeDeleteUser(recievedMessage&);//done
 
@@ -67,7 +67,7 @@ private:
 	void handleRecievedMessages();//in progress (alon)
 	void callHandler(recievedMessage&); //alon
 	void addRecievedMessage(recievedMessage&);//alon
-	recievedMessage buildRecievedMessage(tcp::socket&,int);//done
+	recievedMessage buildRecievedMessage(std::shared_ptr<tcp::socket>,int);//done
 
 	//User getUserByName(std::string);//if needed implement
 	User getUserBySocket(std::shared_ptr<tcp::socket>);//done
