@@ -16,6 +16,10 @@ void User::send(std::string& buffer)
 {
 	Helper::sendData(_socket, buffer);
 }
+std::string User::getUsername() const
+{
+	return _username;
+}
 /*
 bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questionsNo, int questionTime)
 {

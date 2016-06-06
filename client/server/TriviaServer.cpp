@@ -154,7 +154,7 @@ recievedMessage TriviaServer::buildRecievedMessage(tcp::socket& socket, int mess
 	}
 }
 
-User& TriviaServer::getUserByName(std::string username) //TODO fix this according to the flipped map.
+User TriviaServer::getUserByName(std::string username) //TODO fix this according to the flipped map.
 {
 	/*
 	bool found = false;
@@ -169,7 +169,7 @@ User& TriviaServer::getUserByName(std::string username) //TODO fix this accordin
 }
 
 //done
-User& TriviaServer::getUserBySocket(tcp::socket& socket) //TODO fix this according to the flipped map.
+User TriviaServer::getUserBySocket(tcp::socket& socket) //TODO fix this according to the flipped map.
 {
 	/*
 	std::map<User, tcp::socket>::iterator it = _connectedUsers.find(socket);
@@ -182,19 +182,18 @@ User& TriviaServer::getUserBySocket(tcp::socket& socket) //TODO fix this accordi
 
 bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
 {
-	/*
 	bool found = false;
 	std::map<User, tcp::socket>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
-		if (it->second.getUsername() == username)
+		if (it->first.getUsername() == username)
 			return(true);
 		it++;
-	}*/
+	}
 	return false;
 }
 //done
-Room& TriviaServer::getRoomById(int id)
+Room TriviaServer::getRoomById(int id)
 {
 	std::map<int, Room>::iterator it = _roomList.find(id);
 	if (it != _roomList.end())
@@ -204,7 +203,7 @@ Room& TriviaServer::getRoomById(int id)
 	return(it->second);
 }
 
-Game& TriviaServer::getGamebyId(int id)
+Game TriviaServer::getGamebyId(int id)
 {
 	std::map<int, Game>::iterator it = _gameList.find(id);
 	if (it != _gameList.end())
@@ -240,15 +239,13 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 	}
 }
 //done
-bool TriviaServer::handleSignin(recievedMessage& message) //TODO fix this according to the flipped map.
+bool TriviaServer::handleSignin(recievedMessage& message)
 {
-	/*
 	//check if user exists in database - in next part
 	if (!userExists(message._user.getUsername()))
 	{
 		//success connecting
-		_users.push_back(User(message._values[0], message._socket));
-		_connectedUsers.insert(std::pair<User, tcp::socket>(message._socket, _users.back()));
+		_connectedUsers.insert(std::pair<User, tcp::socket>(User(message._values[0], message._socket), std::move(message._socket)));
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
 		return(true);
 	}
@@ -256,8 +253,7 @@ bool TriviaServer::handleSignin(recievedMessage& message) //TODO fix this accord
 	{
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
 		return false;
-	}*/
-	return false; //temp TODO delete this.
+	}
 }
 //done for first stage
 
@@ -266,17 +262,17 @@ bool TriviaServer::handleSignup(recievedMessage& message)
 	if(!Validator::isUsernameValid(message._values[0]))
 	{
 		//fail - username not valid	
-		Helper::sendData(message._socket, std::to_string(SIGNUP_REPLY) + std::to_string(3));
+		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(3));
 		return(false);
 	}
 	else if (!Validator::isPasswordValid(message._values[1]))
 	{
 		//fail - password not valid
-		Helper::sendData(message._socket, std::to_string(SIGNUP_REPLY) + std::to_string(1));
+		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(1));
 		return(false);
 	}
 	//success
-	Helper::sendData(message._socket, std::to_string(SIGNUP_REPLY) + std::to_string(0));
+	Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(0));
 	return(true);
 }
 //done
@@ -286,7 +282,7 @@ void TriviaServer::handleSignout(recievedMessage& message)
 	handleCloseRoom(message);
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
-	//_connectedUsers.erase(_connectedUsers.find(message._socket)); TODO fix this according to the key-value swap of map
+	_connectedUsers.erase(_connectedUsers.find(message._user));
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message)
@@ -294,13 +290,6 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message)
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
 	{
-		/*eran's version
-		int roomIdTemp = ++_roomIdSequence;
-		_rooms.push_back(Room(roomIdTemp, user,message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str())));
-		_roomList.insert(std::pair<int, Room>(roomIdTemp, getRoomById(user._currRoomID)));
-		user.joinRoom(roomIdTemp);
-		return true;*/
-		//alon's version - i still don't think we need the extra vector.
 		int roomIdTemp = ++_roomIdSequence;
 		Room currentRoom(roomIdTemp, user, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
 		_roomList.insert(std::pair<int, Room>(roomIdTemp, std::move(currentRoom)));
@@ -337,7 +326,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 	if (!_roomList.count(roomId))
 	{
 		//send failed message to user code 1102
-		Helper::sendData(message._socket, std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
+		Helper::sendData(std::move(message._socket), std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
 	}
 	Room& room = getRoomById(roomId);
 	bool ans = message._user.joinRoom(roomId); 
@@ -369,12 +358,12 @@ void TriviaServer::handleGetUsersInRoom(recievedMessage& message)
 		Room& room = getRoomById(atoi(message._values[0].c_str()));
 		std::string sendString = std::to_string(USERS_IN_ROOM_REPLY);
 		sendString += room.getUsersListMessage();
-		Helper::sendData(message._socket, sendString);
+		Helper::sendData(std::move(message._socket), sendString);
 	}
 	else
 	{
 		//fail - no room has this id
-		Helper::sendData(message._socket, std::to_string(USERS_IN_ROOM_REPLY) + std::to_string(0));
+		Helper::sendData(std::move(message._socket), std::to_string(USERS_IN_ROOM_REPLY) + std::to_string(0));
 	}
 }
 //done
@@ -389,5 +378,5 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 		sendString += Helper::getPaddedNumber(it->second._name.length(),2);
 		sendString += it->second._name;
 	}
-	Helper::sendData(message._socket, sendString);
+	Helper::sendData(std::move(message._socket), sendString);
 }

@@ -4,15 +4,13 @@
 #include <mutex>
 #include <map>
 #include <boost\asio.hpp>
-//#include <boost/lockfree/queue.hpp>
 #include "DB.h"
 #include "User.h"
 #include "Room.h"
 #include "RecievdMessage.h"
 #include "Validator.h"
 #include <boost\bind.hpp>
-//#include <boost\thread.hpp>
-//#include <boost\lockfree\queue.hpp>
+
 using boost::asio::ip::tcp;
 
 class TriviaServer
@@ -21,8 +19,8 @@ public:
 	TriviaServer();//done
 	void serve();//done, not checked
 
-	Room& getRoomById(int);//done
-	Game& getGamebyId(int);
+	Room getRoomById(int);//done
+	Game getGamebyId(int);
 
 	std::map<int, Game> getGameList() { return(_gameList); }
 private:
@@ -71,7 +69,7 @@ private:
 	void addRecievedMessage(recievedMessage&);//alon
 	recievedMessage buildRecievedMessage(tcp::socket&,int);//done
 
-	User& getUserByName(std::string);//done
-	User& getUserBySocket(tcp::socket&);//done
+	User getUserByName(std::string);//done
+	User getUserBySocket(tcp::socket&);//done
 	bool userExists(std::string);
 };

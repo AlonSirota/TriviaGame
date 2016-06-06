@@ -7,7 +7,7 @@ public:
 	recievedMessage(tcp::socket&, int, std::vector<std::string>, User&);
 	recievedMessage(const recievedMessage&);
 
-	tcp::socket& _socket;
+	tcp::socket _socket;
 	User& _user;
 	int _messageCode;
 	std::vector<std::string> _values;

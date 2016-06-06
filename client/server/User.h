@@ -17,7 +17,7 @@ public:
 	User(std::string, tcp::socket&);
 	User(User&&);
 	void send(std::string&);
-	std::string getUsername() { return(_username); }
+	std::string getUsername() const;
 	tcp::socket& getSocket() { return(_socket); }
 	bool joinRoom(int);
 	void leaveRoom();
