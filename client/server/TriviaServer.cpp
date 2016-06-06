@@ -30,6 +30,14 @@ void TriviaServer::serve()
 	}
 }
 
+void TriviaServer::handleGetBestScores(recievedMessage &)
+{
+}
+
+void TriviaServer::handlegetPersonalStatus(recievedMessage &)
+{
+}
+
 void TriviaServer::handleRecievedMessages()
 {
 	while (true)
@@ -90,6 +98,10 @@ void TriviaServer::callHandler(recievedMessage &msg)
 			std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
 			//case 299 and 0 is already handled in clientHandler()
 	}
+}
+
+void TriviaServer::addRecievedMessage(recievedMessage &)
+{
 }
 
 //done
@@ -270,6 +282,15 @@ void TriviaServer::handleSignout(recievedMessage& message)
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
 	_connectedUsers.erase(_connectedUsers.find(message._user));
+}
+void TriviaServer::handleLeaveGame(recievedMessage &)
+{
+}
+void TriviaServer::handleStartGame(recievedMessage &)
+{
+}
+void TriviaServer::handleUserAnswer(recievedMessage &)
+{
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message)
