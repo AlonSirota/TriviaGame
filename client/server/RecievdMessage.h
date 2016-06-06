@@ -5,8 +5,7 @@ class recievedMessage
 public:
 	recievedMessage(std::shared_ptr<tcp::socket>, int,User&);
 	recievedMessage(std::shared_ptr<tcp::socket>, int, std::vector<std::string>, User&);
-	//recievedMessage(const recievedMessage&);
-	recievedMessage(recievedMessage&);
+	recievedMessage(const recievedMessage&);
 
 	std::shared_ptr<tcp::socket> _socket;
 	User& _user;

@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer(): _cvMessages(), _ulMessagesReceived(_mtxMessagesRecieved)//:_db() - only in later version
+TriviaServer::TriviaServer(): _cvMessages()//:_db() - only in later version
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
@@ -40,6 +40,7 @@ void TriviaServer::handlegetPersonalStatus(recievedMessage &)
 
 void TriviaServer::handleRecievedMessages()
 {
+	std::unique_lock<std::mutex> _ulMessagesReceived(_mtxMessagesRecieved);
 	while (true)
 	{
 		if (_queRcvMessages.empty())
@@ -100,8 +101,12 @@ void TriviaServer::callHandler(recievedMessage &msg)
 	}
 }
 
-void TriviaServer::addRecievedMessage(recievedMessage &)
+void TriviaServer::addRecievedMessage(recievedMessage& message)
 {
+	_mtxMessagesRecieved.lock();
+	_queRcvMessages.push(message);
+	_mtxMessagesRecieved.unlock();
+	_cvMessages.notify_one();
 }
 
 //done
