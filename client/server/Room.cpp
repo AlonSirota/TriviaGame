@@ -51,10 +51,10 @@ std::string Room::getUsersListMessage()
 	return message;
 }
 
-void Room::sendMessage(std::string)
+void Room::sendMessage(std::string message)
 {
-}
-
-void Room::sendMessage(User&, std::string)
-{
+	for (int i = 0; i < _users.size(); i++)
+	{
+		_users[i].send(message);
+	}
 }

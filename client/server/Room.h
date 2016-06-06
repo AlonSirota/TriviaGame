@@ -13,7 +13,7 @@ public:
 	int closeRoom(User);
 	std::string getUsersAsString(std::vector<User>, User);
 	void sendMessage(std::string);
-	void sendMessage(User&, std::string);
+	//void sendMessage(User&, std::string);
 	std::string getUsersListMessage();
 
 	std::vector<User> _users;
