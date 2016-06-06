@@ -1,18 +1,18 @@
 #include "User.h"
 //done
-User::User(std::string username, tcp::socket &socket) : _username(username), _socket(std::move(socket))
+User::User(std::string username, std::shared_ptr<tcp::socket> socket) : _username(username), _socket(socket)
 {
 	_currGameID = 0;
 	_currRoomID = 0;
 }
 
-User::User(User &&other) : _socket(std::move(other._socket)), _username(other._username)
+User::User(User &&other) : _socket(other._socket), _username(other._username)
 {
 	this->_currGameID = other._currGameID;
 	this->_currRoomID = other._currRoomID;
 }
 
-User::User(const User &other) : _username(other._username), _socket(std::move(other._socket))
+User::User(const User &other) : _username(other._username), _socket(other._socket)
 {
 	_currRoomID = other._currRoomID;
 	_currGameID = other._currGameID;
@@ -84,7 +84,7 @@ void User::operator=(const User & other)
 {
 	this->_currGameID = other._currGameID;
 	this->_currRoomID = other._currRoomID;
-	this->_socket = tcp::socket(std::move(other._socket));
+	this->_socket = other._socket;
 	this->_username = other._username;
 }
 
