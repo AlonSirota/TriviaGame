@@ -29,7 +29,6 @@ public:
 
 	int _currRoomID;
 	int _currGameID;
-private:
 	std::string _username;
-	std::shared_ptr<tcp::socket> _socket;
+	std::shared_ptr<tcp::socket> _socket;	
 };
