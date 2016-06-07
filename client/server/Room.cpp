@@ -18,6 +18,7 @@ void Room::joinRoom(std::shared_ptr<User> user)
 	else
 	{
 		_users.push_back(user);//add him
+		user->send(reply + "0" + Helper::getPaddedNumber(_questionsNo,2)+ Helper::getPaddedNumber(_questionTime, 2));
 		this->sendMessage(this->getUsersListMessage()); //send everyone the current list.
 	}
 }

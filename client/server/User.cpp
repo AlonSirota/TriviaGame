@@ -56,7 +56,7 @@ bool User::createRoom(int roomId, std::string roomName, int maxUsers, int questi
 
 bool User::joinRoom(int roomId)
 {
-	if (_currRoomID == 0)
+	if (_currRoomID != 0)
 	{
 		return(false);
 	}

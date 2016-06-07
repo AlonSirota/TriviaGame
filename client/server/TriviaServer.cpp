@@ -83,10 +83,10 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case SIGNUP_REQUEST:
 		handleSignup(msg);
 		break;
-	case EXISTING_ROOM_REQUEST:
+	case EXISTING_ROOM_REQUEST: //debugged
 		handleGetRooms(msg);
 		break;
-	case JOIN_ROOM_REQUEST:
+	case JOIN_ROOM_REQUEST: //debugged
 		handleJoinRoom(msg);
 		break;
 		//case USERS_IN_ROOM_REQUEST: handler isn't written yet TODO
@@ -403,7 +403,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 	}
 	std::shared_ptr<Room> room = getRoomById(roomId);
 	bool ans = message._user->joinRoom(roomId);
-	room->joinRoom(std::move(message._user));//message if failed or succeeded is sent in Room::joinRoom
+	room->joinRoom(message._user);//message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
 //done
@@ -450,6 +450,7 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 		sendString += Helper::getPaddedNumber(it->second->_id, 4);
 		sendString += Helper::getPaddedNumber(it->second->_name.length(), 2);
 		sendString += it->second->_name;
+		it++;
 	}
 	Helper::sendData(std::move(message._socket), sendString);
 }
