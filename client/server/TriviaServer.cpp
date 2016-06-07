@@ -84,20 +84,20 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case SIGNUP_REQUEST:
 		handleSignup(msg);
 		break;
-	case EXISTING_ROOM_REQUEST:
+	case EXISTING_ROOM_REQUEST: //debugged
 		handleGetRooms(msg);
 		break;
-	case JOIN_ROOM_REQUEST:
+	case JOIN_ROOM_REQUEST: //debugged
 		handleJoinRoom(msg);
 		break;
 		//case USERS_IN_ROOM_REQUEST: handler isn't written yet TODO
 	case LEAVE_ROOM_REQUEST:
 		handleLeaveRoom(msg);
 		break;
-	case CREATE_ROOM_REQUEST:
+	case CREATE_ROOM_REQUEST: //debugged
 		handleCreateRoom(msg);
 		break;
-	case CLOSE_ROOM_REQUEST:
+	case CLOSE_ROOM_REQUEST: //debugged
 		handleCloseRoom(msg);
 		break;
 	case START_GAME_REQUEST:
@@ -357,15 +357,19 @@ void TriviaServer::handleUserAnswer(recievedMessage &)
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 {
 	std::shared_ptr<User> user = message._user;
-	if (_roomList.count(user->_currRoomID))
+	if (!_roomList.count(user->_currRoomID))
 	{
 		int roomIdTemp = ++_roomIdSequence;
 		Room currentRoom(roomIdTemp, user, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
 		_roomList.insert(std::pair<int, std::shared_ptr<Room>>(roomIdTemp, std::make_shared<Room>(currentRoom)));
+		user->_currRoomID = roomIdTemp;
+		Helper::sendData(message._socket,std::to_string(CREATE_ROOM_SUCSESS));
+		currentRoom.sendMessage(currentRoom.getUsersListMessage());
 		return(true);
 	}
 	else
 	{
+		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_FAILED));
 		return false;
 	}
 }
@@ -400,7 +404,7 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 	}
 	std::shared_ptr<Room> room = getRoomById(roomId);
 	bool ans = message._user->joinRoom(roomId);
-	room->joinRoom(std::move(message._user));//message if failed or succeeded is sent in Room::joinRoom
+	room->joinRoom(message._user);//message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
 //done
@@ -447,6 +451,7 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 		sendString += Helper::getPaddedNumber(it->second->_id, 4);
 		sendString += Helper::getPaddedNumber(it->second->_name.length(), 2);
 		sendString += it->second->_name;
+		it++;
 	}
 	Helper::sendData(std::move(message._socket), sendString);
 }
