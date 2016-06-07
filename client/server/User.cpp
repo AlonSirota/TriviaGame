@@ -99,6 +99,11 @@ bool User::operator==(const User & other) const
 	return false;
 }
 
+bool User::operator!=(const User & other) const
+{
+	return !((*this) == other);
+}
+
 bool User::operator<(const User & other) const
 {
 	return _username < other._username;

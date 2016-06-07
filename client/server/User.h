@@ -24,6 +24,7 @@ public:
 	void leaveRoom();
 	void operator=(const User & other);
 	bool operator==(const User & other) const;
+	bool operator!=(const User & other) const;
 	bool operator<(const User& other) const;
 	bool leaveGame();
 

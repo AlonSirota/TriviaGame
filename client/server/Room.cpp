@@ -37,7 +37,10 @@ void Room::leaveRoom(User &user)
 
 int Room::closeRoom(User& caller)
 {
-	return -1;
+	if (caller != _admin)
+	{
+		return false;
+	}
 }
 
 std::string Room::getUsersAsString(std::vector<User> usersVector, User excluded)
