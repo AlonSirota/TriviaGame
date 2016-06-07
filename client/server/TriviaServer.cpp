@@ -65,7 +65,7 @@ void TriviaServer::handleRecievedMessages()
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
-		msg._user = getUserBySocket(msg._socket);
+		//msg._user = getUserBySocket(msg._socket);
 		callHandler(msg);
 	}
 }
@@ -75,7 +75,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	switch (msg._messageCode)
 	{
 	case SIGNIN_REQUEST:
-		handleSignin(msg);
+		//handleSignin(msg);
 		break;
 	case SIGNOUT_REQUEST:
 		handleSignout(msg);
@@ -83,7 +83,9 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case SIGNUP_REQUEST:
 		handleSignup(msg);
 		break;
-		//case EXISTING_ROOM_REQUEST: handler isn't written yet TODO
+	case EXISTING_ROOM_REQUEST:
+		handleGetRooms(msg);
+		break;
 	case JOIN_ROOM_REQUEST:
 		handleJoinRoom(msg);
 		break;
@@ -326,7 +328,7 @@ void TriviaServer::handleUserAnswer(recievedMessage &)
 {
 }
 //done
-bool TriviaServer::handleCreateRoom(recievedMessage& message)
+bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 {
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
