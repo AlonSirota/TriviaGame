@@ -27,7 +27,7 @@ private:
 	boost::asio::io_service _io_service;
 	std::map<User, std::shared_ptr<tcp::socket>> _connectedUsers;
 	DB _db;
-	//std::map<int, Room> _roomList;
+	std::map<int, Room> _roomList;
 	std::map<int, Game> _gameList;
 	std::mutex _mtxMessagesRecieved;
 	std::condition_variable _cvMessages;
@@ -70,5 +70,4 @@ private:
 	//User getUserByName(std::string);//if needed implement
 	User getUserBySocket(std::shared_ptr<tcp::socket>);//done
 	bool userExists(std::string);
-	int closeRoom(User&);
 };
