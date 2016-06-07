@@ -231,7 +231,17 @@ int TriviaServer::closeRoom(User & user)
 	if (_roomList.count(user._currRoomID)) //if room exists
 	{
 		Room &room = getRoomById(user._currRoomID);
-		return room.closeRoom(user);
+		int ret = room.closeRoom(user);
+
+		if (ret == -1) //if it failed (user isn't admin)
+		{
+			return -1;
+		}
+		else
+		{
+			_roomList.erase(ret);
+			return ret;
+		}
 	}
 	else
 	{
@@ -362,7 +372,7 @@ bool TriviaServer::handleCloseRoom(recievedMessage& message)
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
 	{
-		int ans = user.closeRoom();
+		int ans = this->closeRoom(user);
 		if (ans == -1)
 		{
 			return(false);
