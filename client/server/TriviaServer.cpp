@@ -226,6 +226,31 @@ bool TriviaServer::userExists(std::string username) //TODO fix this according to
 	}
 	return false;
 }
+
+int TriviaServer::closeRoom(User & user)
+{
+	bool found = false;
+	if (_roomList.count(user._currRoomID)) //if room exists
+	{
+		Room &room = getRoomById(user._currRoomID);
+		int ret = room.closeRoom(user);
+
+		if (ret == -1) //if it failed (user isn't admin)
+		{
+			return -1;
+		}
+		else
+		{
+			_roomList.erase(ret);
+			return ret;
+		}
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 //done
 Room TriviaServer::getRoomById(int id)
 {
@@ -349,7 +374,7 @@ bool TriviaServer::handleCloseRoom(recievedMessage& message)
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
 	{
-		int ans = user.closeRoom();
+		int ans = this->closeRoom(user);
 		if (ans == -1)
 		{
 			return(false);

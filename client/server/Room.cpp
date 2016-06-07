@@ -37,7 +37,20 @@ void Room::leaveRoom(User &user)
 
 int Room::closeRoom(User& caller)
 {
-	return -1;
+	int id;
+	if (caller != _admin)
+	{
+		return -1;
+	}
+	id = _admin._currRoomID;
+
+	this->sendMessage(std::to_string(CLOSE_ROOM_REPLY));
+	std::for_each(_users.begin(), _users.end(), [](User& currUser)
+	{
+		currUser._currRoomID = 0;
+	});
+	
+	return id;
 }
 
 std::string Room::getUsersAsString(std::vector<User> usersVector, User excluded)
