@@ -90,7 +90,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 		handleJoinRoom(msg);
 		break;
 		//case USERS_IN_ROOM_REQUEST: handler isn't written yet TODO
-	case LEAVE_ROOM_REQUEST:
+	case LEAVE_ROOM_REQUEST: //debugged
 		handleLeaveRoom(msg);
 		break;
 	case CREATE_ROOM_REQUEST: //debugged

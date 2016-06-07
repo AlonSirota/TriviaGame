@@ -32,6 +32,7 @@ void Room::leaveRoom(std::shared_ptr<User> user)
 			_users.erase(i);
 			user->send(std::to_string(LEAVE_ROOM_REPLY_SUCCESS));
 			this->sendMessage(this->getUsersListMessage());
+			return;
 		}
 	}
 }
