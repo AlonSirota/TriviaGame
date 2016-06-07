@@ -14,7 +14,7 @@ void TriviaServer::serve()
 
 	while (true)
 	{
-		std::cout << "Listening..." << std::endl;
+		std::cout << "Listening..." << std::endl;//
 		tcp::socket newSocket(_io_service);
 		boost::system::error_code ec;
 		acceptor.accept(newSocket, ep, ec);
@@ -24,6 +24,7 @@ void TriviaServer::serve()
 		}
 		else
 		{
+			std::cout << "accepted connection\n";
 			std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
 			std::thread t(&TriviaServer::clientHandler, this, ptr);
 			t.detach();
@@ -341,7 +342,7 @@ bool TriviaServer::handleSignup(recievedMessage& message)
 //done
 void TriviaServer::handleSignout(recievedMessage& message)
 {
-	std::shared_ptr<User> user = message._user;
+	//std::shared_ptr<User> user = message._user;
 	handleCloseRoom(message);
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
