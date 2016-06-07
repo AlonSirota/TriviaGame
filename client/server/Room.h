@@ -7,17 +7,17 @@ class User;
 class Room
 {
 public:
-	Room(int, User&, std::string, int, int, int);
-	void joinRoom(User&);
-	void leaveRoom(User&);
-	int closeRoom(User&);
-	std::string getUsersAsString(std::vector<User>, User);
+	Room(int, std::shared_ptr<User>, std::string, int, int, int);
+	void joinRoom(std::shared_ptr<User>);
+	void leaveRoom(std::shared_ptr<User>);
+	int closeRoom(std::shared_ptr<User>);
+	std::string getUsersAsString(std::vector<std::shared_ptr<User>>, std::shared_ptr<User>);
 	void sendMessage(std::string);
 	//void sendMessage(User&, std::string);
 	std::string getUsersListMessage();
 
-	std::vector<User> _users;
-	User &_admin;
+	std::vector<std::shared_ptr<User>> _users;
+	std::shared_ptr<User> _admin;
 	int _maxUsers;
 	int _questionsNo;
 	int _questionTime;

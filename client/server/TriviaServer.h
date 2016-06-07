@@ -19,16 +19,16 @@ public:
 	TriviaServer();//done
 	void serve();//done, not checked
 
-	Room getRoomById(int);//done
-	Game getGamebyId(int);
+	std::shared_ptr<Room> getRoomById(int);//done
+	std::shared_ptr<Game> getGamebyId(int);
 
-	std::map<int, Game> getGameList() { return(_gameList); }
+	std::map<int, std::shared_ptr<Game>> getGameList() { return(_gameList); }
 private:
 	boost::asio::io_service _io_service;
-	std::map<User, std::shared_ptr<tcp::socket>> _connectedUsers;
+	std::map<std::shared_ptr<User>, std::shared_ptr<tcp::socket>> _connectedUsers;
 	DB _db;
-	std::map<int, Room> _roomList;
-	std::map<int, Game> _gameList;
+	std::map<int, std::shared_ptr<Room>> _roomList;
+	std::map<int, std::shared_ptr<Game>> _gameList;
 	std::mutex _mtxMessagesRecieved;
 	std::condition_variable _cvMessages;
 	std::queue<recievedMessage> _queRcvMessages;
@@ -63,7 +63,7 @@ private:
 	recievedMessage buildRecievedMessage(std::shared_ptr<tcp::socket>,int);//done
 
 	//User getUserByName(std::string);//if needed implement
-	User getUserBySocket(std::shared_ptr<tcp::socket>);//done
+	std::shared_ptr<User> getUserBySocket(std::shared_ptr<tcp::socket>);//done
 	bool userExists(std::string);
-	int closeRoom(User&);
+	int closeRoom(std::shared_ptr<User>);
 };

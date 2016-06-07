@@ -190,7 +190,7 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 			//signin
 			if (!userExists(info[0]))
 			{
-				_connectedUsers.insert(std::pair<User, std::shared_ptr<tcp::socket>>(User(info[0], socket), socket));
+				_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(info[0], socket)), socket));
 				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
 			}
 			else
@@ -203,9 +203,9 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 }
 
 //done
-User TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket> socket)
+std::shared_ptr<User> TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket> socket)
 {
-	std::map<User, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
+	std::map<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
 		if (it->second == socket)
@@ -217,23 +217,23 @@ User TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket> socket)
 
 bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
 {
-	std::map<User, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
+	std::map<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
 	{
-		if (it->first.getUsername() == username)
+		if (it->first->getUsername() == username)
 			return(true);
 		it++;
 	}
 	return false;
 }
 
-int TriviaServer::closeRoom(User & user)
+int TriviaServer::closeRoom(std::shared_ptr<User>  user)
 {
 	bool found = false;
-	if (_roomList.count(user._currRoomID)) //if room exists
+	if (_roomList.count(user->_currRoomID)) //if room exists
 	{
-		Room &room = getRoomById(user._currRoomID);
-		int ret = room.closeRoom(user);
+		std::shared_ptr<Room> room = getRoomById(user->_currRoomID);
+		int ret = room->closeRoom(user);
 
 		if (ret == -1) //if it failed (user isn't admin)
 		{
@@ -252,9 +252,9 @@ int TriviaServer::closeRoom(User & user)
 }
 
 //done
-Room TriviaServer::getRoomById(int id)
+std::shared_ptr<Room> TriviaServer::getRoomById(int id)
 {
-	std::map<int, Room>::iterator it = _roomList.find(id);
+	std::map<int, std::shared_ptr<Room>>::iterator it = _roomList.find(id);
 	if (it != _roomList.end())
 	{
 		return(it->second);
@@ -262,9 +262,9 @@ Room TriviaServer::getRoomById(int id)
 	return(it->second);
 }
 
-Game TriviaServer::getGamebyId(int id)
+std::shared_ptr<Game> TriviaServer::getGamebyId(int id)
 {
-	std::map<int, Game>::iterator it = _gameList.find(id);
+	std::map<int, std::shared_ptr<Game>>::iterator it = _gameList.find(id);
 	if (it != _gameList.end())
 	{
 		return(it->second);
@@ -301,10 +301,10 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 bool TriviaServer::handleSignin(recievedMessage& message)
 {
 	//check if user exists in database - in next part
-	if (!userExists(message._user.getUsername()))
+	if (!userExists(message._user->getUsername()))
 	{
 		//success connecting
-		_connectedUsers.insert(std::pair<User, std::shared_ptr<tcp::socket>>(User(message._values[0], message._socket), std::move(message._socket)));
+		_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), std::move(message._socket)));
 		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
 		return(true);
 	}
@@ -337,7 +337,7 @@ bool TriviaServer::handleSignup(recievedMessage& message)
 //done
 void TriviaServer::handleSignout(recievedMessage& message)
 {
-	User& user = message._user;
+	std::shared_ptr<User> user = message._user;
 	handleCloseRoom(message);
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
@@ -355,12 +355,12 @@ void TriviaServer::handleUserAnswer(recievedMessage &)
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 {
-	User& user = message._user;
-	if (_roomList.count(user._currRoomID))
+	std::shared_ptr<User> user = message._user;
+	if (_roomList.count(user->_currRoomID))
 	{
 		int roomIdTemp = ++_roomIdSequence;
 		Room currentRoom(roomIdTemp, user, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
-		_roomList.insert(std::pair<int, Room>(roomIdTemp, std::move(currentRoom)));
+		_roomList.insert(std::pair<int, std::shared_ptr<Room>>(roomIdTemp, std::make_shared<Room>(currentRoom)));
 		return(true);
 	}
 	else
@@ -372,8 +372,8 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 //done - CHECK IF NEED TO SEND NOTICE TO CLIENT
 bool TriviaServer::handleCloseRoom(recievedMessage& message)
 {
-	User& user = message._user;
-	if (_roomList.count(user._currRoomID))
+	std::shared_ptr<User> user = message._user;
+	if (_roomList.count(user->_currRoomID))
 	{
 		int ans = this->closeRoom(user);
 		if (ans == -1)
@@ -397,20 +397,20 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 		//send failed message to user code 1102
 		Helper::sendData(std::move(message._socket), std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
 	}
-	Room& room = getRoomById(roomId);
-	bool ans = message._user.joinRoom(roomId);
-	room.joinRoom(std::move(message._user));//message if failed or succeeded is sent in Room::joinRoom
+	std::shared_ptr<Room> room = getRoomById(roomId);
+	bool ans = message._user->joinRoom(roomId);
+	room->joinRoom(std::move(message._user));//message if failed or succeeded is sent in Room::joinRoom
 	return ans;
 }
 //done
 bool TriviaServer::handleLeaveRoom(recievedMessage& message)
 {
-	User& user = message._user;
-	if (_roomList.count(user._currRoomID))
+	std::shared_ptr<User> user = message._user;
+	if (_roomList.count(user->_currRoomID))
 	{
-		Room& room = getRoomById(user._currRoomID);
-		user.leaveRoom();
-		room.leaveRoom(user);
+		std::shared_ptr<Room> room = getRoomById(user->_currRoomID);
+		user->leaveRoom();
+		room->leaveRoom(user);
 		return true;
 	}
 	else
@@ -421,13 +421,13 @@ bool TriviaServer::handleLeaveRoom(recievedMessage& message)
 //done
 void TriviaServer::handleGetUsersInRoom(recievedMessage& message)
 {
-	User& user = message._user;
-	if (_roomList.count(user._currRoomID))
+	std::shared_ptr<User> user = message._user;
+	if (_roomList.count(user->_currRoomID))
 	{
-		Room& room = getRoomById(atoi(message._values[0].c_str()));
+		std::shared_ptr<Room> room = getRoomById(atoi(message._values[0].c_str()));
 		std::string sendString = std::to_string(USERS_IN_ROOM_REPLY);
-		sendString += room.getUsersListMessage();
-		Helper::sendData(std::move(message._socket), sendString);
+		sendString += room->getUsersListMessage();
+		Helper::sendData(message._socket, sendString);
 	}
 	else
 	{
@@ -440,12 +440,12 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 {
 	std::string sendString = std::to_string(EXISTING_ROOM_REPLY);
 	sendString += Helper::getPaddedNumber(_roomList.size(), 4);
-	std::map<int, Room>::iterator it = _roomList.begin();
+	std::map<int, std::shared_ptr<Room>>::iterator it = _roomList.begin();
 	while (it != _roomList.end())
 	{
-		sendString += Helper::getPaddedNumber(it->second._id, 4);
-		sendString += Helper::getPaddedNumber(it->second._name.length(), 2);
-		sendString += it->second._name;
+		sendString += Helper::getPaddedNumber(it->second->_id, 4);
+		sendString += Helper::getPaddedNumber(it->second->_name.length(), 2);
+		sendString += it->second->_name;
 	}
 	Helper::sendData(std::move(message._socket), sendString);
 }
