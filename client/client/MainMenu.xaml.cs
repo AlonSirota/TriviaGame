@@ -204,5 +204,10 @@ namespace client
         {
             _roomName = (string)listViewRooms.SelectedItem;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //sign out
+        }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="MainMenu" Height="600" Width="250">
+        Title="MainMenu" Height="600" Width="250" Closing="Window_Closing">
     <Grid>
         <Button x:Name="btnGetRoomList" Content="Get List of Existing Rooms" HorizontalAlignment="Left" Height="50" Margin="10,0,0,0" VerticalAlignment="Top" Width="211" Click="btnGetRoomList_Click"/>
         <Button x:Name="btnCreateRoom" Content="Create New Room" HorizontalAlignment="Left" Height="50" Margin="10,50,0,0" VerticalAlignment="Top" Width="211" Click="btnCreateRoom_Click"/>

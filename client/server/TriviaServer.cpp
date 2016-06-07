@@ -197,8 +197,12 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 			{
 				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
 			}
+			return(recievedMessage(socket, messCode, nullptr));
 		}
-		return(recievedMessage(socket, messCode, info, getUserBySocket(socket)));
+		else
+		{
+			return(recievedMessage(socket, messCode, info, getUserBySocket(socket)));
+		}
 	}
 }
 
