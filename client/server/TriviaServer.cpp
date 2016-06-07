@@ -231,6 +231,17 @@ int TriviaServer::closeRoom(User &user)
 	return 0;
 }
 
+//done
+Room TriviaServer::getRoomById(int id)
+{
+	std::map<int, Room>::iterator it = _roomList.find(id);
+	if (it != _roomList.end())
+	{
+		return(it->second);
+	}
+	return(it->second);
+}
+
 Game TriviaServer::getGamebyId(int id)
 {
 	std::map<int, Game>::iterator it = _gameList.find(id);
