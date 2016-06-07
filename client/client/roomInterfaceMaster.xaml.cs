@@ -81,6 +81,7 @@ namespace client
                 _userNo = Int32.Parse(_client.myReceive(1));
                 string nameSize = "";
                 string userName = "";
+                _userList.Clear();
                 for (int i = 0; i < _userNo; i++)
                 {
                     nameSize = _client.myReceive(2);
