@@ -224,6 +224,21 @@ bool TriviaServer::userExists(std::string username) //TODO fix this according to
 	}
 	return false;
 }
+
+int TriviaServer::closeRoom(User & user)
+{
+	bool found = false;
+	if (_roomList.count(user._currRoomID)) //if room exists
+	{
+		Room &room = getRoomById(user._currRoomID);
+		return room.closeRoom(user);
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 //done
 Room TriviaServer::getRoomById(int id)
 {

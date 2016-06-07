@@ -65,4 +65,5 @@ private:
 	//User getUserByName(std::string);//if needed implement
 	User getUserBySocket(std::shared_ptr<tcp::socket>);//done
 	bool userExists(std::string);
+	int closeRoom(User&);
 };
