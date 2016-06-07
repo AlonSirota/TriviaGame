@@ -93,10 +93,10 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case LEAVE_ROOM_REQUEST:
 		handleLeaveRoom(msg);
 		break;
-	case CREATE_ROOM_REQUEST:
+	case CREATE_ROOM_REQUEST: //debugged
 		handleCreateRoom(msg);
 		break;
-	case CLOSE_ROOM_REQUEST:
+	case CLOSE_ROOM_REQUEST: //debugged
 		handleCloseRoom(msg);
 		break;
 	case START_GAME_REQUEST:
@@ -356,15 +356,19 @@ void TriviaServer::handleUserAnswer(recievedMessage &)
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 {
 	std::shared_ptr<User> user = message._user;
-	if (_roomList.count(user->_currRoomID))
+	if (!_roomList.count(user->_currRoomID))
 	{
 		int roomIdTemp = ++_roomIdSequence;
 		Room currentRoom(roomIdTemp, user, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
 		_roomList.insert(std::pair<int, std::shared_ptr<Room>>(roomIdTemp, std::make_shared<Room>(currentRoom)));
+		user->_currRoomID = roomIdTemp;
+		Helper::sendData(message._socket,std::to_string(CREATE_ROOM_SUCSESS));
+		currentRoom.sendMessage(currentRoom.getUsersListMessage());
 		return(true);
 	}
 	else
 	{
+		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_FAILED));
 		return false;
 	}
 }

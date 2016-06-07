@@ -107,6 +107,7 @@ namespace client
             createRoom room = new createRoom();
             room.ShowDialog();
             lblStatus.Content = "got input for createRoom";
+            Show();
             //send create room message and get answer
             string response = await Task.Factory.StartNew(() => requestCreateRoom());
             string code = response.Substring(0, 3);
