@@ -31,14 +31,9 @@ private:
 	std::map<int, Game> _gameList;
 	std::mutex _mtxMessagesRecieved;
 	std::condition_variable _cvMessages;
-	//boost::lockfree::queue<recievedMessage> _queRcvMessages;
 	std::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
 	int _gameIdSequence;
-	//to save actual objects
-	std::vector<User> _users;
-	std::vector<Room> _rooms;
-	std::vector<Game> _games;
 
 	void clientHandler(std::shared_ptr<tcp::socket>);//done, not debugged
 
