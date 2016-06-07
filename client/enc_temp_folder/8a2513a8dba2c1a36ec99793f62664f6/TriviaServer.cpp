@@ -226,31 +226,6 @@ bool TriviaServer::userExists(std::string username) //TODO fix this according to
 	}
 	return false;
 }
-
-int TriviaServer::closeRoom(User & user)
-{
-	bool found = false;
-	if (_roomList.count(user._currRoomID)) //if room exists
-	{
-		Room &room = getRoomById(user._currRoomID);
-		int ret = room.closeRoom(user);
-
-		if (ret == -1) //if it failed (user isn't admin)
-		{
-			return -1;
-		}
-		else
-		{
-			_roomList.erase(ret);
-			return ret;
-		}
-	}
-	else
-	{
-		return -1;
-	}
-}
-
 //done
 Room TriviaServer::getRoomById(int id)
 {
@@ -353,7 +328,7 @@ void TriviaServer::handleUserAnswer(recievedMessage &)
 {
 }
 //done
-bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
+bool TriviaServer::handleCreateRoom(recievedMessage& message)
 {
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
@@ -361,7 +336,6 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 		int roomIdTemp = ++_roomIdSequence;
 		Room currentRoom(roomIdTemp, user, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
 		_roomList.insert(std::pair<int, Room>(roomIdTemp, std::move(currentRoom)));
-		return(true);
 	}
 	else
 	{
@@ -375,7 +349,7 @@ bool TriviaServer::handleCloseRoom(recievedMessage& message)
 	User& user = message._user;
 	if (_roomList.count(user._currRoomID))
 	{
-		int ans = this->closeRoom(user);
+		int ans = user.closeRoom();
 		if (ans == -1)
 		{
 			return(false);
