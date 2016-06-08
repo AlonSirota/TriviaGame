@@ -80,7 +80,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	switch (msg._messageCode)
 	{
 	case SIGNIN_REQUEST:
-		//handleSignin(msg);
+		handleSignin(msg);
 		break;
 	case SIGNOUT_REQUEST:
 		handleSignout(msg);
@@ -320,7 +320,7 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 bool TriviaServer::handleSignin(recievedMessage& message)
 {
 	//check if user exists in database - in next part
-	if (!userExists(message._user->getUsername()))
+	if (!userExists(message._user->getUsername())) //TODO this should check the values in the message, not the username field of User.
 	{
 		//success connecting
 		_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), std::move(message._socket)));
