@@ -221,7 +221,8 @@ std::shared_ptr<User> TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket>
 			return(it->first);
 		it++;
 	}
-	return it->first;
+	//return it->first; is this supposed to return the last one? because this line always accesses bad memory and crashes.
+	return nullptr;
 }
 
 bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
