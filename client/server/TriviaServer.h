@@ -34,6 +34,7 @@ private:
 	std::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
 	int _gameIdSequence;
+	int _tempUserSequence;
 
 	void clientHandler(std::shared_ptr<tcp::socket>);//done, not debugged
 
