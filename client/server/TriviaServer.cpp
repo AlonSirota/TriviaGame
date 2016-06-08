@@ -286,10 +286,14 @@ void TriviaServer::clientHandler(std::shared_ptr<tcp::socket> s)
 	int msgCode = Helper::getMessageTypeCode(s);
 	while (msgCode != 0 && msgCode != EXIT)
 	{
-		std::string newName = "temp_name";
-		newName.append(std::to_string(_tempUserSequence++));
-		std::shared_ptr<User> newUser(new User(newName, s)); //creates a new user
-		_connectedUsers[newUser] = s; //inserts it.
+		if (getUserBySocket(s) == nullptr) //this socket doesn't have User (yet).
+		{
+			//creates it
+			std::string newName = "temp_name";
+			newName.append(std::to_string(_tempUserSequence++));
+			std::shared_ptr<User> newUser(new User(newName, s)); //creates a new user
+			_connectedUsers[newUser] = s; //inserts it.
+		}		
 
 		addRecievedMessage(buildRecievedMessage(s, msgCode));
 		msgCode = Helper::getMessageTypeCode(s);
