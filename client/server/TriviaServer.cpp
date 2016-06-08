@@ -65,6 +65,7 @@ void TriviaServer::handleRecievedMessages()
 		}
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
+		std::cout << msg.toString();
 
 		//msg._user = getUserBySocket(msg._socket);
 		callHandler(msg);

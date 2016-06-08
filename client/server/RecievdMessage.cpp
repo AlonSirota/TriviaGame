@@ -24,7 +24,7 @@ std::string recievedMessage::toString()
 	{
 		data.append(_values[i]);
 	}
-	str.append(data);
+	str.append(data + "\n");
 
 	return str;
 }
