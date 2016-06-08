@@ -6,6 +6,7 @@ public:
 	recievedMessage(std::shared_ptr<tcp::socket>, int, std::shared_ptr<User>);
 	recievedMessage(std::shared_ptr<tcp::socket>, int, std::vector<std::string>, std::shared_ptr<User>);
 	recievedMessage(const recievedMessage&);
+	std::string recievedMessage::toString();
 
 	std::shared_ptr<tcp::socket> _socket;
 	std::shared_ptr<User> _user;

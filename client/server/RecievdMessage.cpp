@@ -15,3 +15,16 @@ recievedMessage::recievedMessage(const recievedMessage &other) : _messageCode(ot
 {
 
 }
+
+std::string recievedMessage::toString()
+{
+	std::string str, data;
+	str.append(this->_user->_username + ": " + std::to_string(this->_messageCode) + " - ");
+	for (int i = 0; i < this->_values.size(); i++)
+	{
+		data.append(_values[i]);
+	}
+	str.append(data);
+
+	return str;
+}
