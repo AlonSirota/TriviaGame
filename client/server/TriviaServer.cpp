@@ -16,7 +16,7 @@ void TriviaServer::serve()
 
 	while (true)
 	{
-		std::cout << "Listening..." << std::endl;//
+		std::cout << "Listening..." << std::endl;
 		tcp::socket newSocket(_io_service);
 		boost::system::error_code ec;
 		acceptor.accept(newSocket, ep, ec);
@@ -64,7 +64,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 {
 	switch (msg._messageCode)
 	{
-	case SIGNIN_REQUEST:
+	case SIGNIN_REQUEST: //debugged
 		handleSignin(msg);
 		break;
 	case SIGNOUT_REQUEST:
@@ -353,14 +353,20 @@ void TriviaServer::handleSignout(recievedMessage& message)
 	//handleLeaveGame - only in later version
 	_connectedUsers.erase(_connectedUsers.find(message._user));
 }
-void TriviaServer::handleLeaveGame(recievedMessage &)
+
+void TriviaServer::handleLeaveGame(recievedMessage &msg)
 {
+	std::cout << "handleLeaveGame was called but isn't implemented yet\n";
 }
-void TriviaServer::handleStartGame(recievedMessage &)
+
+void TriviaServer::handleStartGame(recievedMessage &msg)
 {
+	std::cout << "handleStartGame was called but isn't implemented yet\n";
 }
-void TriviaServer::handleUserAnswer(recievedMessage &)
+
+void TriviaServer::handleUserAnswer(recievedMessage &msg)
 {
+	std::cout << "handleUserAnswer was called but isn't implemented yet\n";
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
