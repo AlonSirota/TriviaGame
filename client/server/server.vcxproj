@@ -69,6 +69,7 @@
     <ClCompile Include="DB.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="Question.cpp" />
     <ClCompile Include="RecievdMessage.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="Source.cpp" />

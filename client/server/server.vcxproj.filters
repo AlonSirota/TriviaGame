@@ -36,7 +36,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DB.cpp">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Question.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
