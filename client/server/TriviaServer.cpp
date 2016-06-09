@@ -31,20 +31,6 @@ void TriviaServer::serve()
 			std::thread t(&TriviaServer::clientHandler, this, ptr);
 			t.detach();
 		}
-		/*
-		acceptor.async_accept(newSocket, [this, &newSocket](const boost::system::error_code &ec) //error here
-		{
-			if (ec)
-			{
-				std::cout << "async_accept failed: " << ec.value();
-			}
-			else
-			{
-				std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
-				std::thread t(&TriviaServer::clientHandler, this, ptr);
-				t.detach();
-			}
-		}); */
 	}
 }
 
@@ -293,16 +279,6 @@ void TriviaServer::clientHandler(std::shared_ptr<tcp::socket> s)
 	int msgCode = Helper::getMessageTypeCode(s);
 	while (msgCode != 0 && msgCode != EXIT)
 	{
-		/*
-		if (getUserBySocket(s) == nullptr) //this socket doesn't have User (yet).
-		{
-			//creates it
-			std::string newName = "temp_name";
-			newName.append(std::to_string(_tempUserSequence++));
-			std::shared_ptr<User> newUser(new User(newName, s)); //creates a new user
-			_connectedUsers[newUser] = s; //inserts it.
-		}*/
-
 		addRecievedMessage(buildRecievedMessage(s, msgCode));
 		msgCode = Helper::getMessageTypeCode(s);
 	}
