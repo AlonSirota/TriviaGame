@@ -16,10 +16,10 @@ using boost::asio::ip::tcp;
 class TriviaServer
 {
 public:
-	TriviaServer();//done
-	void serve();//done, not checked
+	TriviaServer();
+	void serve();
 
-	std::shared_ptr<Room> getRoomById(int);//done
+	std::shared_ptr<Room> getRoomById(int);
 	std::shared_ptr<Game> getGamebyId(int);
 
 	std::map<int, std::shared_ptr<Game>> getGameList() { return(_gameList); }
@@ -36,35 +36,34 @@ private:
 	int _gameIdSequence;
 	int _tempUserSequence;
 
-	void clientHandler(std::shared_ptr<tcp::socket>);//done, not debugged
+	void clientHandler(std::shared_ptr<tcp::socket>);
 
-	void safeDeleteUser(recievedMessage&);//done
+	void safeDeleteUser(recievedMessage&);
 
-	bool handleSignin(recievedMessage&);//done
-	bool handleSignup(recievedMessage&);//done for first stage
-	void handleSignout(recievedMessage&);//done
+	bool handleSignin(recievedMessage&); //DEBUGGED
+	bool handleSignup(recievedMessage&);
+	void handleSignout(recievedMessage&);
 
 	void handleLeaveGame(recievedMessage&);//not in first section
 	void handleStartGame(recievedMessage&);//not in first section
 	void handleUserAnswer(recievedMessage&);//not in first section
 
-	bool handleCreateRoom(recievedMessage&);//TODO
-	bool handleCloseRoom(recievedMessage&);//TODO
-	bool handleJoinRoom(recievedMessage&);//TODO
-	bool handleLeaveRoom(recievedMessage&);//TODO
-	void handleGetUsersInRoom(recievedMessage&);//TODO
-	void handleGetRooms(recievedMessage&);//TODO
+	bool handleCreateRoom(recievedMessage&);
+	bool handleCloseRoom(recievedMessage&);
+	bool handleJoinRoom(recievedMessage&);
+	bool handleLeaveRoom(recievedMessage&);
+	void handleGetUsersInRoom(recievedMessage&);
+	void handleGetRooms(recievedMessage&);
 
 	void handleGetBestScores(recievedMessage&);//not in first section
 	void handlegetPersonalStatus(recievedMessage&);//not in first section
 
-	void handleRecievedMessages();//in progress (alon)
-	void callHandler(recievedMessage&); //alon
-	void addRecievedMessage(recievedMessage&);//alon
-	recievedMessage buildRecievedMessage(std::shared_ptr<tcp::socket>,int);//done
+	void handleRecievedMessages();
+	void callHandler(recievedMessage&);
+	void addRecievedMessage(recievedMessage&);
+	recievedMessage buildRecievedMessage(std::shared_ptr<tcp::socket>,int);
 
-	//User getUserByName(std::string);//if needed implement
-	std::shared_ptr<User> getUserBySocket(std::shared_ptr<tcp::socket>);//done
+	std::shared_ptr<User> getUserBySocket(std::shared_ptr<tcp::socket>);
 	bool userExists(std::string);
 	int closeRoom(std::shared_ptr<User>);
 };
