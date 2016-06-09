@@ -79,7 +79,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case JOIN_ROOM_REQUEST: //debugged
 		handleJoinRoom(msg);
 		break;
-	case USERS_IN_ROOM_REQUEST:
+	case USERS_IN_ROOM_REQUEST: //debugged
 		handleGetUsersInRoom(msg);
 		break;
 	case LEAVE_ROOM_REQUEST: //debugged
@@ -441,12 +441,11 @@ bool TriviaServer::handleLeaveRoom(recievedMessage& message)
 //done
 void TriviaServer::handleGetUsersInRoom(recievedMessage& message)
 {
-	std::shared_ptr<User> user = message._user;
-	if (_roomList.count(user->_currRoomID))
+	int roomId = stoi(message._values[0]);
+	if (_roomList.count(roomId))
 	{
-		std::shared_ptr<Room> room = getRoomById(atoi(message._values[0].c_str()));
-		std::string sendString = std::to_string(USERS_IN_ROOM_REPLY);
-		sendString += room->getUsersListMessage();
+		std::shared_ptr<Room> room = getRoomById(roomId);
+		std::string sendString = room->getUsersListMessage();
 		Helper::sendData(message._socket, sendString);
 	}
 	else
