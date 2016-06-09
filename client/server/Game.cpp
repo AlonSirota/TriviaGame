@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(const std::vector<std::shared_ptr<User>> questions, int questionsNo, std::shared_ptr<DB> db):_questions(questions),_db(db)
+Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::shared_ptr<DB> db):_users(players),_db(db)
 {
 	_questionsNo = questionsNo;
 }
@@ -15,7 +15,8 @@ bool Game::leaveGame(std::shared_ptr<User> user)
 			_users.erase(i);
 			user->send(std::to_string(LEAVE_ROOM_REPLY_SUCCESS));
 			//this->sendMessage(this->getUsersListMessage());
-			return;
+			//;
 		}
 	}
+	return true;
 }

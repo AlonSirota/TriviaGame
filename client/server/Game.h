@@ -8,7 +8,7 @@
 class Game
 {
 public:
-	Game(const std::vector<std::shared_ptr<User>>,int,std::shared_ptr<DB>);
+	Game(std::vector<std::shared_ptr<User>>,int,std::shared_ptr<DB>);
 	void sendFirstQuestion();
 	void handleFinishGame();
 	bool handleNextTurn();

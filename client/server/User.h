@@ -2,7 +2,6 @@
 
 #include "protocol.h"
 #include "Helper.h"
-#include "Game.h"
 #include "Room.h"// this causes an error, because room uses user as well - do we really need this? YES WE DO
 #include <iostream>
 #include <boost\asio.hpp>
