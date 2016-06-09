@@ -9,12 +9,11 @@ class Game
 {
 public:
 	Game(std::vector<std::shared_ptr<User>>,int,std::shared_ptr<DB>);
-	void sendFirstQuestion();
 	void handleFinishGame();
 	bool handleNextTurn();
 	bool handleAnswerFromUser(std::shared_ptr<User>, int, int);
-	int getId();
 	bool leaveGame(std::shared_ptr<User>);
+	void sendQuestionToAllUsers();
 private:
 	int _questionsNo;
 	std::vector<std::shared_ptr<Question>> _questions;
@@ -26,5 +25,5 @@ private:
 
 	bool insertGameToDB();
 	void initQuestionFromDB();
-	void sendQuestionsToAllUsers();
+	
 };

@@ -2,6 +2,7 @@
 
 class Question
 {
+public:
 	Question(int, std::string, std::string, std::string, std::string, std::string);
 	std::string getQuestion();
 	std::vector<std::string> getAnswers();
