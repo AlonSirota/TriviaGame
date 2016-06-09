@@ -8,7 +8,7 @@
 class Game
 {
 public:
-	Game(std::vector<std::shared_ptr<User>>,int,std::shared_ptr<DB>);
+	Game(std::vector<std::shared_ptr<User>>,int,std::shared_ptr<DB>,int);
 	void handleFinishGame();
 	bool handleNextTurn();
 	bool handleAnswerFromUser(std::shared_ptr<User>, int, int);
@@ -21,7 +21,8 @@ private:
 	int _currQuestionIndex;
 	std::shared_ptr<DB> _db;
 	std::map<std::string, int> _results;
-	int _currentTurnAnswer;
+	int _currentTurnAnswers;
+	int _id;
 
 	bool insertGameToDB();
 	void initQuestionFromDB();

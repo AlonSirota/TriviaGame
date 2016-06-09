@@ -1,8 +1,55 @@
 #include "Game.h"
 
-Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::shared_ptr<DB> db):_users(players),_db(db)
+Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::shared_ptr<DB> db,int id):_users(players),_db(db)
 {
 	_questionsNo = questionsNo;
+	_id = id;
+}
+
+void Game::handleFinishGame()
+{
+}
+
+bool Game::handleNextTurn()
+{
+	return false;
+}
+
+bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int time)
+{
+	_currentTurnAnswers++;
+	bool isCorrect = false;
+	if (answerNo == _questions[_currQuestionIndex]->getCorrectAnswerIndex())
+	{
+		_results[user->_username]++;
+		isCorrect = true;
+	}
+	if (answerNo == 5)
+	{
+		_db->addAnswerToUser(_id, user->_username,
+			_questions[_currQuestionIndex]->getId(),
+			"",
+			isCorrect,
+			time);
+	}
+	else
+	{
+		_db->addAnswerToUser(_id,
+			user->_username,
+			_questions[_currQuestionIndex]->getId(),
+			_questions[_currQuestionIndex]->getAnswers()[answerNo],
+			isCorrect,
+			time);
+	}
+	if (isCorrect)
+	{
+		user->send(std::to_string(CLIENT_ANSWER_REPLY) + "1");
+	}
+	else
+	{
+		user->send(std::to_string(CLIENT_ANSWER_REPLY) + "0");
+	}
+	return handleNextTurn();
 }
 
 bool Game::leaveGame(std::shared_ptr<User> user)
@@ -27,7 +74,7 @@ void Game::sendQuestionToAllUsers()
 		message += Helper::getPaddedNumber((_questions[i])->getQuestion().length(), 3);
 		message += (_questions[i])->getQuestion();
 	}
-	_currentTurnAnswer = 0;
+	_currentTurnAnswers = 0;
 	std::vector<std::shared_ptr<User>>::iterator it = _users.begin();
 	while (it != _users.end())
 	{
