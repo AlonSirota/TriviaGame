@@ -68,7 +68,6 @@ void TriviaServer::handleRecievedMessages()
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
-		msg._user = getUserBySocket(msg._socket);
 		std::cout << msg.toString();
 		
 		callHandler(msg);
@@ -184,12 +183,17 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 		{
 		}
 	}
+
+	return recievedMessage(socket, messCode, info, getUserBySocket(socket));
+
+	/*
 	if (info.empty())
 	{
 		return(recievedMessage(socket, messCode, getUserBySocket(socket)));
 	}
 	else
 	{
+		
 		if (messCode == SIGNIN_REQUEST)
 		{
 			//signin
@@ -202,13 +206,13 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 			{
 				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
 			}
-			return(recievedMessage(socket, messCode, nullptr));
+			return(recievedMessage(socket, messCode, getUserBySocket(socket)));
 		}
 		else
 		{
 			return(recievedMessage(socket, messCode, info, getUserBySocket(socket)));
 		}
-	}
+	}*/
 }
 
 //done
