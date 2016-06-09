@@ -18,12 +18,6 @@ bool Validator::isUsernameValid(std::string user)
 		containsSpace = std::regex_search(user, std::regex(" ")),
 		isEmpty = user == "";
 
-	if (!startsWithLetter || containsSpace || isEmpty)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+	if (!startsWithLetter || containsSpace || isEmpty)	return false;
+	else return true;
 }
