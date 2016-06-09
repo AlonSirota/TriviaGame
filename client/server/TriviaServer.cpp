@@ -325,16 +325,24 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 bool TriviaServer::handleSignin(recievedMessage& message)
 {
 	//check if user exists in database - in next part
-	if (!userExists(message._values[0]))
+	if (Validator::isUsernameValid(message._values[0]) && Validator::isPasswordValid(message._values[1]))
 	{
-		//success connecting
-		_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), message._socket));
-		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
-		return(true);
+		if (!userExists(message._values[0]))
+		{
+			//success connecting
+			_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), message._socket));
+			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0)); //success
+			return(true);
+		}
+		else
+		{
+			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2)); //user alread connected
+			return false;
+		}
 	}
 	else
 	{
-		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
+		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(1)); //wrong detailes
 		return false;
 	}
 }
