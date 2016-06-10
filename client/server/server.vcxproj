@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\boostRoot\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include\sqlite3;C:\Program Files (x86)\boostRoot\;C:\Users\User\Desktop\SQLite\SQLite\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -69,6 +69,12 @@
     <ClCompile Include="DB.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="include\sqlite3\sqlite3.c" />
+    <ClCompile Include="include\SQLiteCpp\Backup.cpp" />
+    <ClCompile Include="include\SQLiteCpp\Column.cpp" />
+    <ClCompile Include="include\SQLiteCpp\Database.cpp" />
+    <ClCompile Include="include\SQLiteCpp\Statement.cpp" />
+    <ClCompile Include="include\SQLiteCpp\Transaction.cpp" />
     <ClCompile Include="Question.cpp" />
     <ClCompile Include="RecievdMessage.cpp" />
     <ClCompile Include="Room.cpp" />
@@ -81,6 +87,15 @@
     <ClInclude Include="DB.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Helper.h" />
+    <ClInclude Include="include\sqlite3\sqlite3.h" />
+    <ClInclude Include="include\SQLiteCpp\Assertion.h" />
+    <ClInclude Include="include\SQLiteCpp\Backup.h" />
+    <ClInclude Include="include\SQLiteCpp\Column.h" />
+    <ClInclude Include="include\SQLiteCpp\Database.h" />
+    <ClInclude Include="include\SQLiteCpp\Exception.h" />
+    <ClInclude Include="include\SQLiteCpp\SQLiteCpp.h" />
+    <ClInclude Include="include\SQLiteCpp\Statement.h" />
+    <ClInclude Include="include\SQLiteCpp\Transaction.h" />
     <ClInclude Include="protocol.h" />
     <ClInclude Include="Question.h" />
     <ClInclude Include="RecievdMessage.h" />

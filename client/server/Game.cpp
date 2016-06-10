@@ -5,6 +5,11 @@ Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::sha
 	_questionsNo = questionsNo;
 }
 
+bool Game::handleNextTurn()
+{
+	return false;
+}
+
 bool Game::leaveGame(std::shared_ptr<User> user)
 {
 	for (std::vector<std::shared_ptr<User>>::iterator i = _users.begin(); i != _users.end(); i++)
