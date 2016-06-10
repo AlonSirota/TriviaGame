@@ -1,9 +1,9 @@
 #include "Game.h"
 
-Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::shared_ptr<DB> db,int id):_users(players),_db(db)
+Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::shared_ptr<DB> db):_users(players),_db(db)
 {
 	_questionsNo = questionsNo;
-	_id = id;
+	_id = _db->insertNewGame();
 }
 
 void Game::handleFinishGame()
