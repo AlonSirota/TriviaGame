@@ -4,7 +4,9 @@
 //#include <SQLiteCpp/SQLiteCpp.h>
 #include <cstdlib>
 #include <iostream>
-
+#include <vector>
+#include <memory>
+#include "Question.h"
 class DB
 {
 public:

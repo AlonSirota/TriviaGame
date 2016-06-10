@@ -41,6 +41,10 @@ void Game::handleFinishGame()
 
 bool Game::handleNextTurn()
 {
+	if (_users.size() == 0)
+	{
+		handleFinishGame();
+	}
 	return false;
 }
 
@@ -55,7 +59,8 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int ti
 	}
 	if (answerNo == 5)
 	{
-		_db->addAnswerToUser(_id, user->_username,
+		_db->addAnswerToUser(_id,
+			user->_username,
 			_questions[_currQuestionIndex]->getId(),
 			"",
 			isCorrect,
@@ -81,10 +86,6 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int ti
 	return handleNextTurn();
 }
 
-bool Game::handleNextTurn()
-{
-	return false;
-}
 
 bool Game::leaveGame(std::shared_ptr<User> user)
 {

@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\include\sqlite3;C:\Program Files (x86)\boostRoot\;C:\Users\User\Desktop\SQLite\SQLite\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include\sqlite3;C:\Program Files (x86)\boostRoot\;C:\Users\User\Desktop\SQLiteCpp\SQLiteCpp\include;C:\Users\User\Desktop\magshimim\Homework\year_2\C++ 2\lesson 2\SQLiteCpp\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

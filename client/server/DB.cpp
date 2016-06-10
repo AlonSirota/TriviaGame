@@ -4,6 +4,16 @@ DB::DB()
 {
 }
 
+int DB::insertNewGame()
+{
+	return 0;
+}
+
+bool DB::updateGameStatus(int)
+{
+	return false;
+}
+
 bool DB::addAnswerToUser(int, std::string, int, std::string, bool, int)
 {
 	return false;
@@ -46,4 +56,9 @@ void DB::example()
 		std::cout << "exception: " << e.what() << std::endl;
 	}
 	std::getchar();
+}
+
+std::vector<std::shared_ptr<Question>> DB::questionInit(int)
+{
+	return std::vector<std::shared_ptr<Question>>();
 }
