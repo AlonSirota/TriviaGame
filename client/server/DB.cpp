@@ -10,7 +10,7 @@ DB::DB() : _db("serverDatabase.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
 }
 
 //TODO prevent SQL injections.
-bool DB::isUserExist(std::string username)
+bool DB::isUserExist(std::string username) //debugged
 {
 	SQLite::Statement query(_db, "SELECT COUNT(*) FROM t_users WHERE username = ?");
 	query.bind(1, username);
@@ -27,6 +27,24 @@ bool DB::isUserExist(std::string username)
 	{
 		std::cout << "isUserExist failed: " << exception.what() << "\n";
 		return false;
+	}
+}
+
+//TODO prevent SQL injections.
+bool DB::addNewUser(std::string username, std::string password, std::string email) //debugged
+{
+	if (isUserExist(username))
+	{
+		return false;
+	}
+	else
+	{
+		SQLite::Statement query(_db, "INSERT INTO t_users (username, password, email) values (?, ?, ?)");
+		query.bind(1, username);
+		query.bind(2, password);
+		query.bind(3, email);
+		query.exec();
+		return true;
 	}
 }
 

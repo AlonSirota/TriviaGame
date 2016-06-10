@@ -8,7 +8,7 @@ int main()
 	//TriviaServer server;
 	//server.serve();
 	DB db;
-	std::cout << db.isUserExist("user");
+	std::cout << db.addNewUser("user", "Aa12", "email");
 	system("pause");
 	return(0);
 }
