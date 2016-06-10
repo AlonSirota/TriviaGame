@@ -9,6 +9,7 @@
 #include "Room.h"
 #include "RecievdMessage.h"
 #include "Validator.h"
+#include "Game.h"
 #include <boost\bind.hpp>
 
 using boost::asio::ip::tcp;
