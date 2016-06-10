@@ -20,8 +20,9 @@ void Game::handleFinishGame()
 	message += std::to_string(_users.size());
 	for (int i = 0; i < _users.size(); i++)
 	{
-		message += Helper::getPaddedNumber((_users[i])->getUsername().length(), 3);
+		message += Helper::getPaddedNumber((_users[i])->getUsername().length(), 2);
 		message += (_users[i])->getUsername();
+		message += Helper::getPaddedNumber(_results[(_users[i])->getUsername()], 2);
 		(_users[i])->_currGameID = 0;
 	}
 	std::vector<std::shared_ptr<User>>::iterator it = _users.begin();
@@ -44,8 +45,21 @@ bool Game::handleNextTurn()
 	if (_users.size() == 0)
 	{
 		handleFinishGame();
+		return false;
 	}
-	return false;
+	if (_users.size() == _currentTurnAnswers)
+	{
+		if (_questionsNo == _currQuestionIndex)
+		{
+			handleFinishGame();
+		}
+		else
+		{
+			_currQuestionIndex++;
+			sendQuestionToAllUsers();
+		}
+	}
+	return true;
 }
 
 bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int time)
