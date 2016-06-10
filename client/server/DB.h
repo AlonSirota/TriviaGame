@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
-#include "include\SQLiteCpp\SQLiteCpp.h"
-//#include <SQLiteCpp/SQLiteCpp.h>
+#include <SQLiteCpp/SQLiteCpp.h>
 #include <cstdlib>
 #include <iostream>
 #include <vector>
