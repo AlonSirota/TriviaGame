@@ -3,11 +3,40 @@
 Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::shared_ptr<DB> db):_users(players),_db(db)
 {
 	_questionsNo = questionsNo;
-	_id = _db->insertNewGame();
+	_id = _db->insertNewGame();//need to check if failed
+	_questions = _db->questionInit(questionsNo);
+	for (std::vector<std::shared_ptr<User>>::iterator it = _users.begin(); it != _users.end(); it++)
+	{
+		(*it)->_currGameID = _id;
+		_results.insert(std::pair<std::string, int>((*it)->getUsername(), 0));
+	}
 }
 
 void Game::handleFinishGame()
 {
+	_db->updateGameStatus(_id);
+	//send message 121
+	std::string message = std::to_string(END_GAME);
+	message += std::to_string(_users.size());
+	for (int i = 0; i < _users.size(); i++)
+	{
+		message += Helper::getPaddedNumber((_users[i])->getUsername().length(), 3);
+		message += (_users[i])->getUsername();
+		(_users[i])->_currGameID = 0;
+	}
+	std::vector<std::shared_ptr<User>>::iterator it = _users.begin();
+	while (it != _users.end())
+	{
+		try
+		{
+			(*it)->send(message);
+		}
+		catch (...)
+		{
+
+		}
+		it++;
+	}
 }
 
 bool Game::handleNextTurn()
