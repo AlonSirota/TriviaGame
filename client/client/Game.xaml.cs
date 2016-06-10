@@ -22,28 +22,34 @@ namespace client
     {
         myTcpClient _client;
         int ansNo = 0;
-        double time;
-        bool isAnswered = false;
+        int time;
         string question;
         string ans1;
         string ans2;
         string ans3;
         string ans4;
         int timePerQuestion;
+        DispatcherTimer dispatcherTimer;
 
         public Game()
         {
             InitializeComponent();
         }
-        public Game(myTcpClient newClient)
+        public Game(myTcpClient newClient,int time)
         {
             InitializeComponent();
             _client = newClient;
+            timePerQuestion = time;
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
         }
 
         private void btnAns1_Click(object sender, RoutedEventArgs e)
         {
-
+            ansNo = 1;
+            dispatcherTimer.Stop();
+            sendAns();
         }
         private async void sendAns()
         {
@@ -53,17 +59,21 @@ namespace client
             {
                 lblStatus.Content = "Correct code detected";
                 //indicate if correct
+
+                //get question
+                response = await Task.Factory.StartNew(() => getQuestion());
+                code = response.Substring(0, 3);
+                if (code == "118")
+                {
+                    //got question
+                    asignAnswers();
+                }
             }
             else if (code == "121")
             {
                 lblStatus.Content = "Game Ended";
                 //display scores
                 Close();
-            }
-            else if (code == "118")
-            {
-                //got question
-                asignAnswers();
             }
             else
             {
@@ -84,6 +94,25 @@ namespace client
             return code + ans;
         }
 
+        private string getQuestion()
+        {
+            string code = _client.myReceive(3);
+            if(code == "118")
+            {
+                int stringSize = Int32.Parse(_client.myReceive(3));
+                question = _client.myReceive(stringSize);
+                stringSize = Int32.Parse(_client.myReceive(3));
+                ans1 = _client.myReceive(stringSize);
+                stringSize = Int32.Parse(_client.myReceive(3));
+                ans2 = _client.myReceive(stringSize);
+                stringSize = Int32.Parse(_client.myReceive(3));
+                ans3 = _client.myReceive(stringSize);
+                stringSize = Int32.Parse(_client.myReceive(3));
+                ans4 = _client.myReceive(stringSize);
+            }
+            return (code);
+        }
+
         private void asignAnswers()
         {
             btnAns1.Content = ans1;
@@ -93,9 +122,6 @@ namespace client
             lblQuestion.Content = question;
             //timer
             time = timePerQuestion;
-            DispatcherTimer dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -107,9 +133,30 @@ namespace client
             }
             else
             {
-                isAnswered = true;
                 ansNo = 5;
+                sendAns();
             }
+        }
+
+        private void btnAns2_Click(object sender, RoutedEventArgs e)
+        {
+            ansNo = 2;
+            dispatcherTimer.Stop();
+            sendAns();
+        }
+
+        private void btnAns3_Click(object sender, RoutedEventArgs e)
+        {
+            ansNo = 3;
+            dispatcherTimer.Stop();
+            sendAns();
+        }
+
+        private void btnAns4_Click(object sender, RoutedEventArgs e)
+        {
+            ansNo = 4;
+            dispatcherTimer.Stop();
+            sendAns();
         }
     }
 }

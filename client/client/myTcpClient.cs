@@ -10,9 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System;
 using System.Windows.Threading;
 
 namespace client
