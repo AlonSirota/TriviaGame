@@ -31,6 +31,11 @@ namespace client
         int timePerQuestion;
         DispatcherTimer dispatcherTimer;
 
+        //for score
+        List<string> _userList = new List<string>();
+        List<int> _scores = new List<int>();
+        int _userNo;
+
         public Game()
         {
             InitializeComponent();
@@ -43,6 +48,8 @@ namespace client
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            getQuestionFirst();
+            asignAnswers();
         }
 
         private void btnAns1_Click(object sender, RoutedEventArgs e)
@@ -68,12 +75,16 @@ namespace client
                     //got question
                     asignAnswers();
                 }
-            }
-            else if (code == "121")
-            {
-                lblStatus.Content = "Game Ended";
-                //display scores
-                Close();
+                else if (code == "121")
+                {
+                    lblStatus.Content = "Game Ended";
+                    //display scores
+                    Close();
+                }
+                else
+                {
+                    lblStatus.Content = "Error - wrong code detected";
+                }
             }
             else
             {
@@ -110,7 +121,34 @@ namespace client
                 stringSize = Int32.Parse(_client.myReceive(3));
                 ans4 = _client.myReceive(stringSize);
             }
+            else if(code == "121")
+            {
+                _userNo = Int32.Parse(_client.myReceive(1));
+                string nameSize = "";
+                string userName = "";
+                for (int i = 0; i < _userNo; i++)
+                {
+                    nameSize = _client.myReceive(2);
+                    userName = _client.myReceive(Int32.Parse(nameSize));
+                    _userList.Add(userName);
+                    _scores.Add(Int32.Parse(_client.myReceive(2)));
+                }
+            }
             return (code);
+        }
+        private void getQuestionFirst()
+        {
+    
+            int stringSize = Int32.Parse(_client.myReceive(3));
+            question = _client.myReceive(stringSize);
+            stringSize = Int32.Parse(_client.myReceive(3));
+            ans1 = _client.myReceive(stringSize);
+            stringSize = Int32.Parse(_client.myReceive(3));
+            ans2 = _client.myReceive(stringSize);
+            stringSize = Int32.Parse(_client.myReceive(3));
+            ans3 = _client.myReceive(stringSize);
+            stringSize = Int32.Parse(_client.myReceive(3));
+            ans4 = _client.myReceive(stringSize);
         }
 
         private void asignAnswers()
