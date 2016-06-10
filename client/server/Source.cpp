@@ -5,8 +5,10 @@
 
 int main()
 {
-	TriviaServer server;
-	server.serve();
+	//TriviaServer server;
+	//server.serve();
+	DB db;
+	std::cout << db.isUserExist("user");
 	system("pause");
 	return(0);
 }
