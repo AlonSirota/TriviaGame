@@ -164,7 +164,7 @@ namespace client
                 {
                     //success
                     Hide();
-                    roomInterface room = new roomInterface(_client);
+                    roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime));
                     room.ShowDialog();
                     lblStatus.Content = "success";
                     Show();
