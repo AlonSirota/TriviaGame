@@ -19,10 +19,13 @@ recievedMessage::recievedMessage(const recievedMessage &other) : _messageCode(ot
 std::string recievedMessage::toString()
 {
 	std::string str, data;
-	str.append(this->_user->_username + ": " + std::to_string(this->_messageCode) + " - ");
+	if (this->_user != nullptr) str.append(this->_user->_username + ": ");
+	else str.append("unkown user: ");
+
+	str.append(std::to_string(this->_messageCode) + " - ");
 	for (int i = 0; i < this->_values.size(); i++)
 	{
-		data.append(_values[i]);
+		data.append(_values[i] + ", ");
 	}
 	str.append(data + "\n");
 

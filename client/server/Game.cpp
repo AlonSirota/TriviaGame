@@ -52,6 +52,11 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int ti
 	return handleNextTurn();
 }
 
+bool Game::handleNextTurn()
+{
+	return false;
+}
+
 bool Game::leaveGame(std::shared_ptr<User> user)
 {
 	for (std::vector<std::shared_ptr<User>>::iterator i = _users.begin(); i != _users.end(); i++)

@@ -16,7 +16,7 @@ void TriviaServer::serve()
 
 	while (true)
 	{
-		std::cout << "Listening..." << std::endl;//
+		std::cout << "Listening..." << std::endl;
 		tcp::socket newSocket(_io_service);
 		boost::system::error_code ec;
 		acceptor.accept(newSocket, ep, ec);
@@ -31,20 +31,6 @@ void TriviaServer::serve()
 			std::thread t(&TriviaServer::clientHandler, this, ptr);
 			t.detach();
 		}
-		/*
-		acceptor.async_accept(newSocket, [this, &newSocket](const boost::system::error_code &ec) //error here
-		{
-			if (ec)
-			{
-				std::cout << "async_accept failed: " << ec.value();
-			}
-			else
-			{
-				std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
-				std::thread t(&TriviaServer::clientHandler, this, ptr);
-				t.detach();
-			}
-		}); */
 	}
 }
 
@@ -68,7 +54,6 @@ void TriviaServer::handleRecievedMessages()
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
-		msg._user = getUserBySocket(msg._socket);
 		std::cout << msg.toString();
 		
 		callHandler(msg);
@@ -79,7 +64,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 {
 	switch (msg._messageCode)
 	{
-	case SIGNIN_REQUEST:
+	case SIGNIN_REQUEST: //debugged
 		handleSignin(msg);
 		break;
 	case SIGNOUT_REQUEST:
@@ -94,7 +79,9 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case JOIN_ROOM_REQUEST: //debugged
 		handleJoinRoom(msg);
 		break;
-		//case USERS_IN_ROOM_REQUEST: handler isn't written yet TODO
+	case USERS_IN_ROOM_REQUEST: //debugged
+		handleGetUsersInRoom(msg);
+		break;
 	case LEAVE_ROOM_REQUEST: //debugged
 		handleLeaveRoom(msg);
 		break;
@@ -184,12 +171,17 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 		{
 		}
 	}
+
+	return recievedMessage(socket, messCode, info, getUserBySocket(socket));
+
+	/*
 	if (info.empty())
 	{
 		return(recievedMessage(socket, messCode, getUserBySocket(socket)));
 	}
 	else
 	{
+		
 		if (messCode == SIGNIN_REQUEST)
 		{
 			//signin
@@ -202,13 +194,13 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 			{
 				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
 			}
-			return(recievedMessage(socket, messCode, nullptr));
+			return(recievedMessage(socket, messCode, getUserBySocket(socket)));
 		}
 		else
 		{
 			return(recievedMessage(socket, messCode, info, getUserBySocket(socket)));
 		}
-	}
+	}*/
 }
 
 //done
@@ -287,15 +279,6 @@ void TriviaServer::clientHandler(std::shared_ptr<tcp::socket> s)
 	int msgCode = Helper::getMessageTypeCode(s);
 	while (msgCode != 0 && msgCode != EXIT)
 	{
-		if (getUserBySocket(s) == nullptr) //this socket doesn't have User (yet).
-		{
-			//creates it
-			std::string newName = "temp_name";
-			newName.append(std::to_string(_tempUserSequence++));
-			std::shared_ptr<User> newUser(new User(newName, s)); //creates a new user
-			_connectedUsers[newUser] = s; //inserts it.
-		}		
-
 		addRecievedMessage(buildRecievedMessage(s, msgCode));
 		msgCode = Helper::getMessageTypeCode(s);
 	}
@@ -320,16 +303,24 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 bool TriviaServer::handleSignin(recievedMessage& message)
 {
 	//check if user exists in database - in next part
-	if (!userExists(message._user->getUsername())) //TODO this should check the values in the message, not the username field of User.
+	if (Validator::isUsernameValid(message._values[0]) && Validator::isPasswordValid(message._values[1]))
 	{
-		//success connecting
-		_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), std::move(message._socket)));
-		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
-		return(true);
+		if (!userExists(message._values[0]))
+		{
+			//success connecting
+			_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), message._socket));
+			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0)); //success
+			return(true);
+		}
+		else
+		{
+			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2)); //user alread connected
+			return false;
+		}
 	}
 	else
 	{
-		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
+		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(1)); //wrong detailes
 		return false;
 	}
 }
@@ -362,14 +353,20 @@ void TriviaServer::handleSignout(recievedMessage& message)
 	//handleLeaveGame - only in later version
 	_connectedUsers.erase(_connectedUsers.find(message._user));
 }
-void TriviaServer::handleLeaveGame(recievedMessage &)
+
+void TriviaServer::handleLeaveGame(recievedMessage &msg)
 {
+	std::cout << "handleLeaveGame was called but isn't implemented yet\n";
 }
-void TriviaServer::handleStartGame(recievedMessage &)
+
+void TriviaServer::handleStartGame(recievedMessage &msg)
 {
+	std::cout << "handleStartGame was called but isn't implemented yet\n";
 }
-void TriviaServer::handleUserAnswer(recievedMessage &)
+
+void TriviaServer::handleUserAnswer(recievedMessage &msg)
 {
+	std::cout << "handleUserAnswer was called but isn't implemented yet\n";
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
@@ -444,12 +441,11 @@ bool TriviaServer::handleLeaveRoom(recievedMessage& message)
 //done
 void TriviaServer::handleGetUsersInRoom(recievedMessage& message)
 {
-	std::shared_ptr<User> user = message._user;
-	if (_roomList.count(user->_currRoomID))
+	int roomId = stoi(message._values[0]);
+	if (_roomList.count(roomId))
 	{
-		std::shared_ptr<Room> room = getRoomById(atoi(message._values[0].c_str()));
-		std::string sendString = std::to_string(USERS_IN_ROOM_REPLY);
-		sendString += room->getUsersListMessage();
+		std::shared_ptr<Room> room = getRoomById(roomId);
+		std::string sendString = room->getUsersListMessage();
 		Helper::sendData(message._socket, sendString);
 	}
 	else
