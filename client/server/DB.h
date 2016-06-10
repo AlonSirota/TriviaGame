@@ -21,5 +21,10 @@ public:
 	bool addAnswerToUser(int, std::string, int, std::string, bool,int);
 	void example();
 private:
-	//private variables
+	SQLite::Database _db;
+	enum _player_answer
+	{
+		_true = 1,
+		_false = 0
+	};
 };
