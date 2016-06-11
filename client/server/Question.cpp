@@ -1,6 +1,6 @@
 #include "Question.h"
 
-Question::Question(int id, std::string question, std::string correctAns, std::string ans1, std::string ans2, std::string ans3)
+Question::Question(int id, std::string question, std::string correctAns, std::string ans1, std::string ans2, std::string ans3) : _answers(4)
 {
 	_id = id;
 	_question = question;
