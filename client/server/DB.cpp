@@ -115,7 +115,7 @@ void DB::example()
 }
 
 //throws std::exception if db doesn't contain enough questions.
-std::vector<std::shared_ptr<Question>> DB::questionInit(int amount)
+std::vector<std::shared_ptr<Question>> DB::questionInit(int amount) //debugged.
 {
 	std::vector<std::shared_ptr<Question>> questions;
 	std::string question, correctAns, a2, a3, a4;
