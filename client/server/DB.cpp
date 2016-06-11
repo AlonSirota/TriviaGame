@@ -1,6 +1,6 @@
 #include "DB.h"
 
-DB::DB() : _db("serverDatabase.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
+DB::DB() : _db("serverDatabase.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) //debugged
 {
 	_db.exec("pragma foreign_keys=1");
 	_db.exec("create table IF NOT EXISTS t_users (username string primary key not null, password string not null, email string not null)");
@@ -46,6 +46,18 @@ bool DB::addNewUser(std::string username, std::string password, std::string emai
 		query.exec();
 		return true;
 	}
+}
+
+bool DB::isUserAndPassMatch(std::string username, std::string password) //debugged
+{
+	SQLite::Statement query(_db, "SELECT COUNT(*) FROM t_users WHERE username=? AND password=?");
+	query.bind(1, username);
+	query.bind(2, password);
+
+	query.executeStep();
+	
+	if (atoi(query.getColumn(0)) == 0) return false;
+	else return true;
 }
 
 int DB::insertNewGame()
