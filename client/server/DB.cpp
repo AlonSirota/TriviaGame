@@ -150,9 +150,12 @@ int DB::insertNewGame() //this isn't thread safe!!! debugged.
 	return _db.execAndGet("SELECT last_insert_rowid()");
 }
 
-bool DB::updateGameStatus(int)
+bool DB::updateGameStatus(int gameId) //debugged
 {
-	return false;
+	SQLite::Statement query(_db, "UPDATE t_games SET status=1, end_time=datetime('now','localtime') WHERE game_id=?");
+	query.bind(1, gameId);
+	if (query.exec()) return true; //exec returns the amount of rows modified, returns true if that number isn't 0.
+	else return false;
 }
 
 bool DB::addAnswerToUser(int, std::string, int, std::string, bool, int)

@@ -8,7 +8,8 @@ int main()
 	//TriviaServer server;
 	//server.serve();
 	DB db;
-	std::cout << db.insertNewGame();
+	int id = db.insertNewGame();
+	std::cout << db.updateGameStatus(id);
 
 	system("pause");
 	return(0);
