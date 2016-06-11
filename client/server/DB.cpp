@@ -114,7 +114,36 @@ void DB::example()
 	std::getchar();
 }
 
-std::vector<std::shared_ptr<Question>> DB::questionInit(int)
+//throws std::exception if db doesn't contain enough questions.
+std::vector<std::shared_ptr<Question>> DB::questionInit(int amount)
 {
-	return std::vector<std::shared_ptr<Question>>();
+	std::vector<std::shared_ptr<Question>> questions;
+	std::string question, correctAns, a2, a3, a4;
+
+	SQLite::Statement checkAmount(_db, "SELECT COUNT(*) FROM t_questions");
+	checkAmount.executeStep();
+	if (atoi(checkAmount.getColumn(0)) < amount)
+	{
+		throw std::exception("database doesn't contain enough questions");
+	}
+	//else:
+
+	//selects 'amount' of random questions.
+	SQLite::Statement query(_db, "SELECT question_id, question, correct_ans, ans2, ans3, ans4 FROM t_questions ORDER BY random() LIMIT ?");
+	query.bind(1, amount);
+	
+	while (query.executeStep()) //creates a question and adds it to vector for each question.
+	{
+		int id = query.getColumn(0);
+		std::string question = query.getColumn(1);
+		std::string correctAns = query.getColumn(2);
+		std::string a2 = query.getColumn(3);
+		std::string a3 = query.getColumn(4);
+		std::string a4 = query.getColumn(5);
+
+		std::shared_ptr<Question> temp(new Question(id, question, correctAns, a2, a3, a4));
+		questions.push_back(temp);
+	}
+
+	return questions;
 }

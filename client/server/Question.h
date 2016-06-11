@@ -3,7 +3,7 @@
 class Question
 {
 public:
-	Question(int, std::string, std::string, std::string, std::string, std::string);
+	Question(int id, std::string question, std::string correctAns, std::string ans1, std::string ans2, std::string ans3);
 	std::string getQuestion();
 	std::vector<std::string> getAnswers();
 	int getCorrectAnswerIndex();
