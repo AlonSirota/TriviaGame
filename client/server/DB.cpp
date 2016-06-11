@@ -4,7 +4,7 @@ DB::DB() : _db("serverDatabase.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) 
 {
 	_db.exec("pragma foreign_keys=1");
 	_db.exec("create table IF NOT EXISTS t_users (username string primary key not null, password string not null, email string not null)");
-	_db.exec("create table IF NOT EXISTS t_games (game_id integer primary key autoincrement not null, start_time datetime not null, end_time datetime)");
+	_db.exec("create table IF NOT EXISTS t_games (game_id integer primary key autoincrement not null, status int not null, start_time datetime not null, end_time datetime)");
 	_db.exec("create table IF NOT EXISTS t_questions (question_id integer primary key autoincrement not null, question string not null, correct_ans string not null, ans2 string not null, ans3 string not null, ans4 string not null)");
 	_db.exec("create table IF NOT EXISTS t_player_answers (game_id integer not null, username string not null, question_id integer not null, player_answer string not null, is_correct integer not null, answer_time integer not null, primary key(game_id, username, question_id), foreign key(game_id) references t_games(game_id), foreign key(username) references t_users(username), foreign key(question_id) references t_questions(question_id))");
 }
@@ -146,7 +146,7 @@ std::vector<std::string> DB::getPersonalStatus(std::string)
 
 int DB::insertNewGame() //this isn't thread safe!!! debugged.
 {
-	_db.exec("INSERT INTO t_games (start_time, end_time) values (datetime('now', 'localtime'), null)");
+	_db.exec("INSERT INTO t_games (start_time, status, end_time) values (datetime('now', 'localtime'), 0, null)");
 	return _db.execAndGet("SELECT last_insert_rowid()");
 }
 
