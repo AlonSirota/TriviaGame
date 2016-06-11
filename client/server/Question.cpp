@@ -55,3 +55,18 @@ int Question::getId()
 {
 	return _id;
 }
+
+std::string Question::toString()
+{
+	std::string str;
+	str.append("id: " + std::to_string(_id) + "\n" + 
+		"question: " + _question + "\n" +
+		"correct answer id: " + std::to_string(_correctAnswerIndex) + "\n");
+
+	for (int i = 0; i < 4; i++)
+	{
+		str.append("ans " + std::to_string(i) + ": " + _answers[i] + "\n");
+	}
+
+	return str;
+}

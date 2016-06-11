@@ -1,4 +1,6 @@
+#pragma once
 #include <vector>
+#include <string>
 
 class Question
 {
@@ -8,6 +10,7 @@ public:
 	std::vector<std::string> getAnswers();
 	int getCorrectAnswerIndex();
 	int getId();
+	std::string toString();
 private:
 	std::string _question;
 	std::vector<std::string> _answers;

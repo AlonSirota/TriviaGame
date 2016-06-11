@@ -141,7 +141,7 @@ std::vector<std::shared_ptr<Question>> DB::questionInit(int amount)
 		std::string a3 = query.getColumn(4);
 		std::string a4 = query.getColumn(5);
 
-		std::shared_ptr<Question> temp(new Question(id, question, correctAns, a2, a3, a4));
+		std::shared_ptr<Question> temp = std::make_shared<Question>(id, question, correctAns, a2, a3, a4);//(new Question(id, question, correctAns, a2, a3, a4));
 		questions.push_back(temp);
 	}
 

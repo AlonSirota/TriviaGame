@@ -8,7 +8,7 @@ int main()
 	//TriviaServer server;
 	//server.serve();
 	DB db;
-	std::cout << db.isUserAndPassMatch("user", "Aa12") << db.isUserAndPassMatch("yolo", "Aa12");
+	std::cout << db.questionInit(1)[0];
 	system("pause");
 	return(0);
 }
