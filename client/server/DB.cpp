@@ -33,10 +33,7 @@ bool DB::isUserExist(std::string username) //debugged
 //TODO prevent SQL injections.
 bool DB::addNewUser(std::string username, std::string password, std::string email) //debugged
 {
-	if (isUserExist(username))
-	{
-		return false;
-	}
+	if (isUserExist(username)) return false;
 	else
 	{
 		SQLite::Statement query(_db, "INSERT INTO t_users (username, password, email) values (?, ?, ?)");
@@ -134,9 +131,27 @@ std::vector<std::shared_ptr<Question>> DB::questionInit(int amount) //debugged.
 	return questions;
 }
 
-std::vector<std::string> DB::getBestScores()
+/*
+	Input: amount of high scores to return.
+	Output: a vector, each element is a pair, first = username, second = score.
+	Note: The vector will only contain as many elements as high scores in DB.
+*/
+std::vector<std::pair<std::string, std::string>> DB::getBestScores(int amount)
 {
-	return std::vector<std::string>();
+	std::vector<std::pair<std::string, std::string>> scores;
+
+	//groups rows with the same username and game_id, select the username and the score (sum of is_correct=1), selects in descending order.
+	SQLite::Statement query(_db, "SELECT username, SUM(is_correct) FROM t_player_answers GROUP BY username, game_id ORDER BY SUM(is_correct) DESC LIMIT ?");
+	query.bind(1, amount); //binds the limit value
+
+	while (query.executeStep())
+	{
+		std::string username = query.getColumn(0);
+		std::string score = query.getColumn(1);
+		scores.push_back(std::pair<std::string, std::string>(username, score));
+	}
+
+	return scores;
 }
 
 std::vector<std::string> DB::getPersonalStatus(std::string)
