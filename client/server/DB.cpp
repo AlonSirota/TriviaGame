@@ -60,20 +60,6 @@ bool DB::isUserAndPassMatch(std::string username, std::string password) //debugg
 	else return true;
 }
 
-int DB::insertNewGame()
-{
-	return 0;
-}
-
-bool DB::updateGameStatus(int)
-{
-	return false;
-}
-
-bool DB::addAnswerToUser(int, std::string, int, std::string, bool, int)
-{
-	return false;
-}
 void DB::example()
 {
 	try
@@ -146,4 +132,30 @@ std::vector<std::shared_ptr<Question>> DB::questionInit(int amount) //debugged.
 	}
 
 	return questions;
+}
+
+std::vector<std::string> DB::getBestScores()
+{
+	return std::vector<std::string>();
+}
+
+std::vector<std::string> DB::getPersonalStatus(std::string)
+{
+	return std::vector<std::string>();
+}
+
+int DB::insertNewGame() //this isn't thread safe!!! debugged.
+{
+	_db.exec("INSERT INTO t_games (start_time, end_time) values (datetime('now', 'localtime'), null)");
+	return _db.execAndGet("SELECT last_insert_rowid()");
+}
+
+bool DB::updateGameStatus(int)
+{
+	return false;
+}
+
+bool DB::addAnswerToUser(int, std::string, int, std::string, bool, int)
+{
+	return false;
 }
