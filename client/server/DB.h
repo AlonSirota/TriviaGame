@@ -20,11 +20,21 @@ public:
 	bool updateGameStatus(int);
 	bool addAnswerToUser(int, std::string, int, std::string, bool,int);
 	void example();
-private:
-	SQLite::Database _db;
-	enum _player_answer
+	static std::string columnToString(SQLite::Column c);
+
+	static enum _personalStatusIndexes
+	{
+		NUMBER_OF_GAMES = 0,
+		NUMBER_OF_RIGHT_ANWERS = 1,
+		NUMBER_OF_WRONG_ANSWERS = 2,
+		AVG_TIME_FOR_ANS = 3
+	};
+
+	static enum _player_answer
 	{
 		_true = 1,
 		_false = 0
 	};
+private:
+	SQLite::Database _db;
 };

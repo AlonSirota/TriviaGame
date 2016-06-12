@@ -97,6 +97,12 @@ void DB::example()
 	std::getchar();
 }
 
+std::string DB::columnToString(SQLite::Column c)
+{
+	std::string temp = c;
+	return temp;
+}
+
 //throws std::exception if db doesn't contain enough questions.
 std::vector<std::shared_ptr<Question>> DB::questionInit(int amount) //debugged.
 {
@@ -154,9 +160,25 @@ std::vector<std::pair<std::string, std::string>> DB::getBestScores(int amount)
 	return scores;
 }
 
-std::vector<std::string> DB::getPersonalStatus(std::string)
+//see enum in DB.h. THE MESSAGE ISN'T PREPARED YET - need more parsing.
+std::vector<std::string> DB::getPersonalStatus(std::string username)
 {
-	return std::vector<std::string>();
+	std::vector<std::string> vector(4);
+	SQLite::Statement query(_db, "SELECT COUNT(DISTINCT game_id), SUM(is_correct), AVG(answer_time) FROM t_player_answers WHERE username=?");
+	query.bind(1, username); //binds to the WHERE username=?
+
+	query.executeStep();
+	vector[_personalStatusIndexes::NUMBER_OF_GAMES] = columnToString(query.getColumn(0));
+	vector[_personalStatusIndexes::NUMBER_OF_RIGHT_ANWERS] = columnToString(query.getColumn(1));
+	vector[_personalStatusIndexes::AVG_TIME_FOR_ANS] = columnToString(query.getColumn(2));
+
+	SQLite::Statement query2(_db, "SELECT COUNT(*) FROM t_player_answers WHERE username=? AND is_correct=0");
+	query2.bind(1, username);
+
+	query2.executeStep();
+	vector[_personalStatusIndexes::NUMBER_OF_WRONG_ANSWERS] = columnToString(query2.getColumn(0));
+
+	return vector;
 }
 
 int DB::insertNewGame() //this isn't thread safe!!! debugged.

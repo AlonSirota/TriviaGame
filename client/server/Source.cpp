@@ -8,10 +8,10 @@ int main()
 	//TriviaServer server;
 	//server.serve();
 	DB db;
-	std::vector<std::pair<std::string, std::string>> v = db.getBestScores(3);
-	for (int i = 0; i < v.size(); i++)
+	std::vector<std::string> v = db.getPersonalStatus("moshe");
+	for (int i = 0; i < 4; i++)
 	{
-		std::cout << v[i].first << " " << v[i].second << "\n";
+		std::cout << v[i] << "\n";
 	}
 
 	system("pause");
