@@ -16,7 +16,7 @@ bool DB::isUserExist(std::string username) //debugged
 	query.bind(1, username);
 
 	try
-	{
+{
 		query.executeStep();
 		int count = query.getColumn(0);
 
@@ -26,8 +26,8 @@ bool DB::isUserExist(std::string username) //debugged
 	catch (const SQLite::Exception& exception)
 	{
 		std::cout << "isUserExist failed: " << exception.what() << "\n";
-		return false;
-	}
+	return false;
+}
 }
 
 //TODO prevent SQL injections.
@@ -42,7 +42,7 @@ bool DB::addNewUser(std::string username, std::string password, std::string emai
 		query.bind(3, email);
 		query.exec();
 		return true;
-	}
+}
 }
 
 bool DB::isUserAndPassMatch(std::string username, std::string password) //debugged
@@ -130,15 +130,15 @@ std::vector<std::pair<std::string, std::string>> DB::getBestScores(int amount)
 	SQLite::Statement query(_db, "SELECT username, SUM(is_correct) FROM t_player_answers GROUP BY username, game_id ORDER BY SUM(is_correct) DESC LIMIT ?");
 	query.bind(1, amount); //binds the limit value
 
-	while (query.executeStep())
-	{
+		while (query.executeStep())
+		{
 		std::string username = query.getColumn(0);
 		std::string score = query.getColumn(1);
 		scores.push_back(std::pair<std::string, std::string>(username, score));
 	}
 
 	return scores;
-}
+		}
 
 //see enum in DB.h. THE MESSAGE ISN'T PREPARED YET - need more parsing.
 std::vector<std::string> DB::getPersonalStatus(std::string username)
@@ -159,13 +159,13 @@ std::vector<std::string> DB::getPersonalStatus(std::string username)
 	vector[_personalStatusIndexes::NUMBER_OF_WRONG_ANSWERS] = columnToString(query2.getColumn(0));
 
 	return vector;
-}
+	}
 
 int DB::insertNewGame() //this isn't thread safe!!! debugged.
-{
+	{
 	_db.exec("INSERT INTO t_games (start_time, status, end_time) values (datetime('now', 'localtime'), 0, null)");
 	return _db.execAndGet("SELECT last_insert_rowid()");
-}
+	}
 
 bool DB::updateGameStatus(int gameId) //debugged
 {
@@ -192,7 +192,7 @@ bool DB::addAnswerToUser(int gameId, std::string username, int questionId, std::
 		return true;
 	}
 	catch (const SQLite::Exception &e)
-	{
+{
 		std::cout << "addAnswerToUser failed: " << e.what() << "\n"; //TODO delete this, just for debugging.
 		return false;
 	}
