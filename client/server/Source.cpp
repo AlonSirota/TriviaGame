@@ -8,11 +8,9 @@ int main()
 	//TriviaServer server;
 	//server.serve();
 	DB db;
-	std::vector<std::string> v = db.getPersonalStatus("moshe");
-	for (int i = 0; i < 4; i++)
-	{
-		std::cout << v[i] << "\n";
-	}
+	db.addNewUser("alon", "alons password", "alons email");
+	db.insertQuestion("what color is the sky?", "blue", "red", "green", "yellow");
+	std::cout << "should print 0: " << db.addAnswerToUser(db.insertNewGame(), "alon", 1, "ans1", true, 3);
 
 	system("pause");
 	return(0);

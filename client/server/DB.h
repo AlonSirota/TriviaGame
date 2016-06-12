@@ -18,9 +18,10 @@ public:
 	std::vector<std::string> getPersonalStatus(std::string);
 	int insertNewGame();
 	bool updateGameStatus(int);
-	bool addAnswerToUser(int, std::string, int, std::string, bool,int);
-	void example();
+	bool addAnswerToUser(int gameId, std::string username, int questionId, std::string answer, bool isCorrect ,int answerTime_seconds);
 	static std::string columnToString(SQLite::Column c);
+
+	void insertQuestion(std::string question, std::string correctAns, std::string ans1, std::string ans2, std::string ans3);
 
 	static enum _personalStatusIndexes
 	{

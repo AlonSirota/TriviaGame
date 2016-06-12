@@ -2,7 +2,7 @@
 
 DB::DB() : _db("serverDatabase.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) //debugged
 {
-	_db.exec("pragma foreign_keys=1");
+	_db.exec("pragma foreign_keys=ON");
 	_db.exec("create table IF NOT EXISTS t_users (username string primary key not null, password string not null, email string not null)");
 	_db.exec("create table IF NOT EXISTS t_games (game_id integer primary key autoincrement not null, status int not null, start_time datetime not null, end_time datetime)");
 	_db.exec("create table IF NOT EXISTS t_questions (question_id integer primary key autoincrement not null, question string not null, correct_ans string not null, ans2 string not null, ans3 string not null, ans4 string not null)");
@@ -57,50 +57,30 @@ bool DB::isUserAndPassMatch(std::string username, std::string password) //debugg
 	else return true;
 }
 
-void DB::example()
-{
-	try
-	{
-		// Open a database file
-		SQLite::Database    db("example.db3", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE);
-
-		// Create a new table with an explicit "id" column aliasing the underlying rowid
-		db.exec("DROP TABLE IF EXISTS test"); // just good practice in any case you don't have to do it
-		db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, value TEXT, size integer)");
-
-		// first row
-		int nb = db.exec("INSERT INTO test VALUES (1,\"test1\", 20)"); // pay attention to the escaping 
-		nb = db.exec("INSERT INTO test VALUES (2,\"test2\", 2)"); // pay attention to the escaping 
-		nb = db.exec("INSERT INTO test VALUES (3,\"test\", 7)"); // pay attention to the escaping 
-
-																 // Compile a SQL query, containing one parameter (index 1)
-		SQLite::Statement   query(db, "SELECT * FROM test WHERE size > ?");
-
-		// Bind the integer value 6 to the first parameter of the SQL query
-		query.bind(1, 6);
-
-		// Loop to execute the query step by step, to get rows of result
-		while (query.executeStep())
-		{
-			// Demonstrate how to get some typed column value
-			int         id = query.getColumn(0);
-			const char* value = query.getColumn(1);
-			int         size = query.getColumn(2);
-
-			std::cout << "row: " << id << ", " << value << ", " << size << std::endl;
-		}
-	}
-	catch (std::exception& e)
-	{
-		std::cout << "exception: " << e.what() << std::endl;
-	}
-	std::getchar();
-}
-
 std::string DB::columnToString(SQLite::Column c)
 {
 	std::string temp = c;
 	return temp;
+}
+
+//helper class for easier DB management, maybe use for a new feature?
+void DB::insertQuestion(std::string question, std::string correctAns, std::string ans1, std::string ans2, std::string ans3)
+{
+	try
+	{
+																		//id is autoincrement
+		SQLite::Statement query(_db, "INSERT INTO t_questions (question, correct_ans, ans2,ans3, ans4) VALUES (?, ?, ?, ?, ?)");
+		query.bind(1, question);
+		query.bind(2, correctAns);
+		query.bind(3, ans1);
+		query.bind(4, ans2);
+		query.bind(5, ans3);
+		query.exec();
+	}
+	catch (const SQLite::Exception& e)
+	{
+		std::cout << "insertQuestion failed: " << e.what() << "\n";
+	}
 }
 
 //throws std::exception if db doesn't contain enough questions.
@@ -195,7 +175,25 @@ bool DB::updateGameStatus(int gameId) //debugged
 	else return false;
 }
 
-bool DB::addAnswerToUser(int, std::string, int, std::string, bool, int)
+//t_player_answers columns:game_id integer, username string, question_id integer, player_answer string, is_correct integer, answer_time integer
+bool DB::addAnswerToUser(int gameId, std::string username, int questionId, std::string answer, bool isCorrect, int answerTime_seconds)
 {
-	return false;
+	SQLite::Statement query(_db, "INSERT INTO t_player_answers values(?, ?, ?, ?, ?, ?)");
+	query.bind(1, gameId);
+	query.bind(2, username);
+	query.bind(3, questionId);
+	query.bind(4, answer);
+	query.bind(5, isCorrect); //TODO make true=1 and false=0
+	query.bind(6, answerTime_seconds);
+
+	try
+	{
+		query.executeStep();
+		return true;
+	}
+	catch (const SQLite::Exception &e)
+	{
+		std::cout << "addAnswerToUser failed: " << e.what() << "\n"; //TODO delete this, just for debugging.
+		return false;
+	}
 }
