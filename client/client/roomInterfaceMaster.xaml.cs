@@ -100,5 +100,10 @@ namespace client
         {
             _client.mySend("215"); //send code
         }
+
+        private void btnStartGame_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

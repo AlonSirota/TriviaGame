@@ -31,6 +31,8 @@ namespace client
         int timePerQuestion;
         DispatcherTimer dispatcherTimer;
 
+        int correctNo = 0;
+        int questionNo = 0;
         //for score
         List<string> _userList = new List<string>();
         List<int> _scores = new List<int>();
@@ -66,7 +68,12 @@ namespace client
             {
                 lblStatus.Content = "Correct code detected";
                 //indicate if correct
-
+                questionNo++;
+                if (response[3] == '1')
+                {
+                    correctNo++;
+                }
+                lblScore.Content = correctNo.ToString() + "/" + questionNo.ToString();
                 //get question
                 response = await Task.Factory.StartNew(() => getQuestion());
                 code = response.Substring(0, 3);
@@ -79,6 +86,15 @@ namespace client
                 {
                     lblStatus.Content = "Game Ended";
                     //display scores
+                    string msg = "";
+                    for(int i = 0; i < _userNo; i++)
+                    {
+                        msg += _userList[i];
+                        msg += " : ";
+                        msg += _scores[i].ToString();
+                        msg += "\n";
+                    }
+                    MessageBox.Show(msg,"Scores");
                     Close();
                 }
                 else
