@@ -37,9 +37,10 @@ namespace client
 
         private async void requestGetUserListAsync()
         {
+            bool exists = true;
             string response = await Task.Factory.StartNew(() => requestUserList());
             string code = response.Substring(0, 3);
-            while (this.Visibility == Visibility.Visible)
+            while (exists)
             {
                 if (code == "108")
                 {
@@ -57,6 +58,7 @@ namespace client
                     Game s = new Game(_client, _time);
                     s.ShowDialog();
                     Close();
+                    exists = false;
                 }
                 else
                 {
