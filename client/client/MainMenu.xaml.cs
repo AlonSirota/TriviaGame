@@ -118,7 +118,7 @@ namespace client
                 {
                     //success
                     Hide();
-                    roomInterfaceMaster roomIn = new roomInterfaceMaster(_client);
+                    roomInterfaceMaster roomIn = new roomInterfaceMaster(_client, Int32.Parse(questionTime));
                     roomIn.ShowDialog();
                     lblStatus.Content = "success";
                     Show();

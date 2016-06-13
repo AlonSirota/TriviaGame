@@ -22,15 +22,17 @@ namespace client
         myTcpClient _client;
         List<string> _userList = new List<string>();
         int _userNo;
+        int _time;
         public roomInterfaceMaster()
         {
             InitializeComponent();
         }
-        public roomInterfaceMaster(myTcpClient newClient)
+        public roomInterfaceMaster(myTcpClient newClient,int time)
         {
             InitializeComponent();
             _client = newClient;
             requestGetUserListAsync();
+            _time = time;
         }
 
         private async void requestGetUserListAsync()
@@ -51,6 +53,10 @@ namespace client
                 else if (code == "118")
                 {
                     //game begun
+                    Hide();
+                    Game s = new Game(_client, _time);
+                    s.ShowDialog();
+                    Close();
                 }
                 else
                 {
@@ -98,12 +104,16 @@ namespace client
         }
         private async void requestCloseRoom()
         {
-            _client.mySend("215"); //send code
+            await Task.Factory.StartNew(() => _client.mySend("215")); //send code
         }
 
         private void btnStartGame_Click(object sender, RoutedEventArgs e)
         {
-
+            startGame();
+        }
+        private async void startGame()
+        {
+            await Task.Factory.StartNew(() => _client.mySend("217"););
         }
     }
 }
