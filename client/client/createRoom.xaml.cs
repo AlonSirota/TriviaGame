@@ -61,9 +61,15 @@ namespace client
                 MainMenu.questionTime = questionTime;
                 MainMenu.roomName = roomName;
                 MainMenu.playerNo = playerNo;
+                MainMenu.gotInfo = true;
                 Close();
             }
         }
-        
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            MainMenu.gotInfo = false;
+            Close();
+        }
     }
 }

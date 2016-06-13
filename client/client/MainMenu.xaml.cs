@@ -29,7 +29,8 @@ namespace client
         public static string playerNo { get; set; }
         public static string questionNo { get; set; }
         public static string questionTime { get; set; }
-        
+        public static bool gotInfo { get; set; }
+
 
         //joinRoom variables
         string _joinRoomQuestionsNo;
@@ -110,33 +111,36 @@ namespace client
             room.ShowDialog();
             lblStatus.Content = "got input for createRoom";
             Show();
-            //send create room message and get answer
-            string response = await Task.Factory.StartNew(() => requestCreateRoom());
-            string code = response.Substring(0, 3);
-            if (code == "114")
+            if(gotInfo)
             {
-                lblStatus.Content = "Correct code detected";//open roomInterfaceMaster
-                if (response[3] == '0')
+                //send create room message and get answer
+                string response = await Task.Factory.StartNew(() => requestCreateRoom());
+                string code = response.Substring(0, 3);
+                if (code == "114")
                 {
-                    //success
-                    Hide();
-                    roomInterfaceMaster roomIn = new roomInterfaceMaster(_client, Int32.Parse(questionTime));
-                    roomIn.ShowDialog();
-                    lblStatus.Content = "success";
-                    Show();
-                }
-                else if (response[3] == '1')
-                {
-                    lblStatus.Content = "Error - fail";
+                    lblStatus.Content = "Correct code detected";//open roomInterfaceMaster
+                    if (response[3] == '0')
+                    {
+                        //success
+                        Hide();
+                        roomInterfaceMaster roomIn = new roomInterfaceMaster(_client, Int32.Parse(questionTime));
+                        roomIn.ShowDialog();
+                        lblStatus.Content = "success";
+                        Show();
+                    }
+                    else if (response[3] == '1')
+                    {
+                        lblStatus.Content = "Error - fail";
+                    }
+                    else
+                    {
+                        lblStatus.Content = "Error - unknown";
+                    }
                 }
                 else
                 {
-                    lblStatus.Content = "Error - unknown";
+                    lblStatus.Content = "Error - wrong code detected";
                 }
-            }
-            else
-            {
-                lblStatus.Content = "Error - wrong code detected";
             }
         }
 

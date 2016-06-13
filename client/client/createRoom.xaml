@@ -16,7 +16,7 @@
         <TextBox x:Name="txtbQuestionsNo" HorizontalAlignment="Left" Height="42" Margin="0,189,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" TextChanged="txtbQuestionsNo_TextChanged"/>
         <TextBox x:Name="txtbQuestionTime" HorizontalAlignment="Left" Height="42" Margin="0,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" TextChanged="txtbQuestionTime_TextChanged"/>
         <Button x:Name="btnCreateRoom" Content="Create Room" HorizontalAlignment="Left" Height="56" Margin="0,313,0,0" VerticalAlignment="Top" Width="146" Click="btnCreateRoom_Click"/>
-        <Button x:Name="btnBack" Content="Back" HorizontalAlignment="Left" Height="56" Margin="146,313,0,0" VerticalAlignment="Top" Width="146"/>
+        <Button x:Name="btnBack" Content="Back" HorizontalAlignment="Left" Height="56" Margin="146,313,0,0" VerticalAlignment="Top" Width="146" Click="btnBack_Click"/>
 
     </Grid>
 </Window>
