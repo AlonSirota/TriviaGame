@@ -55,7 +55,7 @@ namespace client
                     Hide();
                     Game s = new Game(_client,_time);
                     s.ShowDialog();
-                    Close();
+                    Close();//doesnt close   
                 }
                 else if(code == "112")
                 {

@@ -20,7 +20,7 @@ namespace client
         TcpClient client;
         IPEndPoint serverEndPoint;
         NetworkStream clientStream;
-        SslStream secureStream;
+        //SslStream secureStream;
         public myTcpClient(string ipAddress, int port)
         {
             client = new TcpClient();

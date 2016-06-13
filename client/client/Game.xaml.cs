@@ -212,5 +212,16 @@ namespace client
             dispatcherTimer.Stop();
             sendAns();
         }
+
+        private void btnLeaveGame_Click(object sender, RoutedEventArgs e)
+        {
+            leaveGame();
+            Close();
+        }
+        
+        private async void leaveGame()
+        {
+            await Task.Factory.StartNew(() => _client.mySend("222"));
+        }
     }
 }
