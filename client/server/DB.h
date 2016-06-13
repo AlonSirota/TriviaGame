@@ -23,7 +23,7 @@ public:
 
 	void insertQuestion(std::string question, std::string correctAns, std::string ans1, std::string ans2, std::string ans3);
 
-	static enum _personalStatusIndexes
+	enum _personalStatusIndexes
 	{
 		NUMBER_OF_GAMES = 0,
 		NUMBER_OF_RIGHT_ANWERS = 1,
@@ -31,7 +31,7 @@ public:
 		AVG_TIME_FOR_ANS = 3
 	};
 
-	static enum _player_answer
+	enum _player_answer
 	{
 		_true = 1,
 		_false = 0

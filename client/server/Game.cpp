@@ -118,13 +118,27 @@ bool Game::leaveGame(std::shared_ptr<User> user)
 void Game::sendQuestionToAllUsers()
 {
 	std::string message = std::to_string(SEND_QUESTION);
-	for (int i = 0; i < _questions.size(); i++)
+	message += Helper::getPaddedNumber((_questions[_currQuestionIndex])->getQuestion().length(), 3);
+	message += (_questions[_currQuestionIndex])->getQuestion();
+	for (int i = 0; i < _questions[_currQuestionIndex]->getAnswers().size(); i++)
 	{
-		message += Helper::getPaddedNumber((_questions[i])->getQuestion().length(), 3);
-		message += (_questions[i])->getQuestion();
+		message += Helper::getPaddedNumber((_questions[_currQuestionIndex])->getAnswers()[i].length(), 3);
+		message += (_questions[_currQuestionIndex])->getAnswers()[i];
 	}
 	_currentTurnAnswers = 0;
-	std::vector<std::shared_ptr<User>>::iterator it = _users.begin();
+	//std::vector<std::shared_ptr<User>>::iterator it = _users.begin();
+	for (std::vector<std::shared_ptr<User>>::iterator it = _users.begin(); it != _users.end(); it++)
+	{
+		try
+		{
+			(*it)->send(message);
+		}
+		catch (...)
+		{
+
+		}
+	}
+	/*
 	while (it != _users.end())
 	{
 		try
@@ -136,5 +150,5 @@ void Game::sendQuestionToAllUsers()
 
 		}
 		it++;
-	}
+	}*/
 }
