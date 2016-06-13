@@ -369,9 +369,14 @@ void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged
 	msg._user->_currGameID = 0;
 }
 
-void TriviaServer::handleStartGame(recievedMessage &msg)
+void TriviaServer::handleStartGame(recievedMessage &msg)// not debugged
 {
 	std::cout << "handleStartGame was called but isn't implemented yet\n";
+	int gameIdTemp = _gameIdSequence++;
+	Game currentGame(_roomList[msg._user->_currRoomID]->_users, _roomList[msg._user->_currRoomID]->_questionsNo, _db); //std::make_shared<DB>(_db));
+	_gameList.insert(std::pair<int, std::shared_ptr<Game>>(gameIdTemp, std::make_shared<Game>(currentGame)));
+	currentGame.sendQuestionToAllUsers();
+	handleCloseRoom(msg);
 }
 
 void TriviaServer::handleUserAnswer(recievedMessage &msg)
