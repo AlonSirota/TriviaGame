@@ -137,7 +137,7 @@ void TriviaServer::addRecievedMessage(recievedMessage& message)
 recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> socket, int messCode)
 {
 	std::vector<std::string> info;
-	switch (messCode)
+	switch (messCode) //parses the string to the string vector _values.
 	{
 	case SIGNIN_REQUEST:
 	{
@@ -174,8 +174,12 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	}
 	case START_GAME_REQUEST://not in current version
 		break;
-	case CLIENT_ANSWER://not in current version
+	case CLIENT_ANSWER:
+	{
+		info.push_back(Helper::getPartFromSocket(socket, 1).data()); //answer index
+		info.push_back(Helper::getPartFromSocket(socket, 2).data()); //answer time
 		break;
+	}		
 	case LEAVE_GAME_REQUEST://not in current version
 		break;
 	case BEST_SCORE_REQUEST://not in current version
@@ -388,8 +392,14 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 
 void TriviaServer::handleUserAnswer(recievedMessage &msg)
 {
-	//std::cout << "handleUserAnswer was called but isn't implemented yet\n";
-	std::shared_ptr<Game> game;
+	std::cout << "handleUserAnswer was called but isn't implemented yet\n";
+	std::shared_ptr<Game> game = _gameList[msg._user->_currGameID];
+
+	if (game != nullptr)
+	{
+		game->handleAnswerFromUser(msg._user, )
+	}
+
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
