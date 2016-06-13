@@ -10,9 +10,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.Security;
 using System.Threading;
 using System.Windows.Threading;
-
 namespace client
 {
     public class myTcpClient
@@ -20,7 +20,7 @@ namespace client
         TcpClient client;
         IPEndPoint serverEndPoint;
         NetworkStream clientStream;
-
+        SslStream secureStream;
         public myTcpClient(string ipAddress, int port)
         {
             client = new TcpClient();
@@ -28,7 +28,8 @@ namespace client
 
             client.Connect(serverEndPoint);
             clientStream = client.GetStream();
-
+            //secure
+            //secureStream = new SslStream(client.GetStream());
             //client.Close();
         }
 
@@ -37,13 +38,19 @@ namespace client
             byte[] buffer = new ASCIIEncoding().GetBytes(text);
             clientStream.Write(buffer, 0, buffer.Length);
             clientStream.Flush();
+            //secure
+            //secureStream.Write(buffer);
+            //secureStream.Flush();
         }
 
         public string myReceive(int size)
         {
             byte[] buffer = new byte[size];
             clientStream.Read(buffer, 0, size);
+            //secure
+            //secureStream.Read(buffer, 0, size);
             return new ASCIIEncoding().GetString(buffer);
+            
         }
     }
 }
