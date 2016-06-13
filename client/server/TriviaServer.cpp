@@ -40,14 +40,17 @@ void TriviaServer::handleGetBestScores(recievedMessage& message)
 	std::cout << "handleGetBestScores was called but is yet to be implemented.\n";
 }
 
-void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//not debugged
+void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//debugged
 {
 	std::vector<std::string> ansVector = _db->getPersonalStatus(message._user->getUsername());
 	std::string sendMessage = "126";
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[0].c_str()), 4);
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[1].c_str()), 6);
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[2].c_str()), 6);
-	sendMessage += ansVector[4];
+	std::string::size_type pos = ansVector[3].find('.');
+	std::string temp = ansVector[3].substr(pos+1, 2);
+	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[3].substr(0, pos).c_str()),2);
+	sendMessage += Helper::getPaddedNumber(std::atoi(temp.c_str()), 2);
 	message._user->send(sendMessage);
 }
 
@@ -112,6 +115,9 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 		break;
 	case PERSONAL_STATE_REQUEST:
 		handlegetPersonalStatus(msg);
+		break;
+	case CLIENT_ANSWER:
+		handleUserAnswer(msg);
 		break;
 	default:
 		std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";

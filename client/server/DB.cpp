@@ -6,7 +6,7 @@ DB::DB() : _db("serverDatabase.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) 
 	_db.exec("create table IF NOT EXISTS t_users (username string primary key not null, password string not null, email string not null)");
 	_db.exec("create table IF NOT EXISTS t_games (game_id integer primary key autoincrement not null, status int not null, start_time datetime not null, end_time datetime)");
 	_db.exec("create table IF NOT EXISTS t_questions (question_id integer primary key autoincrement not null, question string not null, correct_ans string not null, ans2 string not null, ans3 string not null, ans4 string not null)");
-	_db.exec("create table IF NOT EXISTS t_player_answers (game_id integer not null, username string not null, question_id integer not null, player_answer string not null, is_correct integer not null, answer_time integer not null, primary key(game_id, username, question_id), foreign key(game_id) references t_games(game_id), foreign key(username) references t_users(username), foreign key(question_id) references t_questions(question_id))");
+	_db.exec("create table IF NOT EXISTS t_players_answers (game_id integer not null, username string not null, question_id integer not null, player_answer string not null, is_correct integer not null, answer_time integer not null, primary key(game_id, username, question_id), foreign key(game_id) references t_games(game_id), foreign key(username) references t_users(username), foreign key(question_id) references t_questions(question_id))");
 }
 
 //TODO prevent SQL injections.
@@ -127,7 +127,7 @@ std::vector<std::pair<std::string, std::string>> DB::getBestScores(int amount)
 	std::vector<std::pair<std::string, std::string>> scores;
 
 	//groups rows with the same username and game_id, select the username and the score (sum of is_correct=1), selects in descending order.
-	SQLite::Statement query(_db, "SELECT username, SUM(is_correct) FROM t_player_answers GROUP BY username, game_id ORDER BY SUM(is_correct) DESC LIMIT ?");
+	SQLite::Statement query(_db, "SELECT username, SUM(is_correct) FROM t_players_answers GROUP BY username, game_id ORDER BY SUM(is_correct) DESC LIMIT ?");
 	query.bind(1, amount); //binds the limit value
 
 		while (query.executeStep())
@@ -144,7 +144,7 @@ std::vector<std::pair<std::string, std::string>> DB::getBestScores(int amount)
 std::vector<std::string> DB::getPersonalStatus(std::string username)
 {
 	std::vector<std::string> vector(4);
-	SQLite::Statement query(_db, "SELECT COUNT(DISTINCT game_id), SUM(is_correct), AVG(answer_time) FROM t_player_answers WHERE username=?");
+	SQLite::Statement query(_db, "SELECT COUNT(DISTINCT game_id), SUM(is_correct), AVG(answer_time) FROM t_players_answers WHERE username=?");
 	query.bind(1, username); //binds to the WHERE username=?
 
 	query.executeStep();
@@ -152,7 +152,7 @@ std::vector<std::string> DB::getPersonalStatus(std::string username)
 	vector[_personalStatusIndexes::NUMBER_OF_RIGHT_ANWERS] = columnToString(query.getColumn(1));
 	vector[_personalStatusIndexes::AVG_TIME_FOR_ANS] = columnToString(query.getColumn(2));
 
-	SQLite::Statement query2(_db, "SELECT COUNT(*) FROM t_player_answers WHERE username=? AND is_correct=0");
+	SQLite::Statement query2(_db, "SELECT COUNT(*) FROM t_players_answers WHERE username=? AND is_correct=0");
 	query2.bind(1, username);
 
 	query2.executeStep();
@@ -175,10 +175,10 @@ bool DB::updateGameStatus(int gameId) //debugged
 	else return false;
 }
 
-//t_player_answers columns:game_id integer, username string, question_id integer, player_answer string, is_correct integer, answer_time integer
+//t_players_answers columns:game_id integer, username string, question_id integer, player_answer string, is_correct integer, answer_time integer
 bool DB::addAnswerToUser(int gameId, std::string username, int questionId, std::string answer, bool isCorrect, int answerTime_seconds)
 {
-	SQLite::Statement query(_db, "INSERT INTO t_player_answers values(?, ?, ?, ?, ?, ?)");
+	SQLite::Statement query(_db, "INSERT INTO t_players_answers values(?, ?, ?, ?, ?, ?)");
 	query.bind(1, gameId);
 	query.bind(2, username);
 	query.bind(3, questionId);
