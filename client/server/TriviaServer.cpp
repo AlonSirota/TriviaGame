@@ -34,12 +34,20 @@ void TriviaServer::serve()
 	}
 }
 
-void TriviaServer::handleGetBestScores(recievedMessage &)
+void TriviaServer::handleGetBestScores(recievedMessage& message)
 {
+	
 }
 
-void TriviaServer::handlegetPersonalStatus(recievedMessage &)
+void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//not debugged
 {
+	std::vector<std::string> ansVector = _db.getPersonalStatus(message._user->getUsername());
+	std::string sendMessage = "126";
+	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[0].c_str()), 4);
+	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[1].c_str()), 6);
+	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[2].c_str()), 6);
+	sendMessage += ansVector[4];
+	message._user->send(sendMessage);
 }
 
 void TriviaServer::handleRecievedMessages()
