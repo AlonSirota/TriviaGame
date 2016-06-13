@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace client
         List<string> _userList = new List<string>();
         int _userNo;
         int _time;
+        
         public roomInterface()
         {
             InitializeComponent();
@@ -36,13 +38,27 @@ namespace client
         }
         private async void requestGetUserListAsync()
         {
+            bool exists = true;
             string response = await Task.Factory.StartNew(() => requestUserList());
             string code = response.Substring(0, 3);
-            while (this.Visibility == Visibility.Visible)
+            //while (this.Visibility == Visibility.Visible)
+            while(exists)
             {
                 if (code == "108")
                 {
                     lblStatus.Content = "Correct code detected";
+                    if (_userList.Count() == 0)
+                    {
+                        lblStatus.Content = "Error - no rooms";
+                    }
+                    else
+                    {
+                        listViewUsers.Items.Clear();
+                        foreach (var item in _userList)
+                        {
+                            listViewUsers.Items.Add(item);
+                        }
+                    }
                 }
                 else if(code == "116")
                 {
@@ -56,6 +72,8 @@ namespace client
                     Game s = new Game(_client,_time);
                     s.ShowDialog();
                     Close();//DOESNT CLOSE
+                    exists = false;
+                    //return; //didn't solve the problem
                 }
                 else if(code == "112")
                 {
@@ -65,25 +83,18 @@ namespace client
                 {
                     lblStatus.Content = "Error - wrong code detected";
                 }
-                if (_userList.Count() == 0)
+                
+                if(exists)
                 {
-                    lblStatus.Content = "Error - no rooms";
+                    response = await Task.Factory.StartNew(() => requestUserList());
                 }
-                else
-                {
-                    listViewUsers.Items.Clear();
-                    foreach (var item in _userList)
-                    {
-                        listViewUsers.Items.Add(item);
-                    }
-                }
-                response = await Task.Factory.StartNew(() => requestUserList());
                 code = response.Substring(0, 3);
             }
         }
         private string requestUserList()
         {
             string code = _client.myReceive(3);
+            Debug.Print("got in requestUserList: " + code);
             if(code == "108")
             {
                 _userNo = Int32.Parse(_client.myReceive(1));

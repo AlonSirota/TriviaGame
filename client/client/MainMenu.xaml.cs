@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -81,6 +82,7 @@ namespace client
             _client.mySend("205"); //send code
             _roomNametoId.Clear();//clear dictionary
             string code = _client.myReceive(3);
+            Debug.Print("got in requestRoomList : " + code);
             _roomNo = Int32.Parse(_client.myReceive(4));
             string roomId = "";
             string nameSize = "";
