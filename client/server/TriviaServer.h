@@ -34,7 +34,6 @@ private:
 	std::condition_variable _cvMessages;
 	std::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
-	int _gameIdSequence;
 	int _tempUserSequence;
 
 	void clientHandler(std::shared_ptr<tcp::socket>);
