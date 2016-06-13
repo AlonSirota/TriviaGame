@@ -42,9 +42,9 @@ void TriviaServer::handleGetBestScores(recievedMessage& message)
 	std::string sendMessage = "124";
 	for (int i = 0; i < ansVector.size(); i++)
 	{
-		sendMessage += Helper::getPaddedNumber(ansVector[0].first.length(), 2);
-		sendMessage += ansVector[0].first;
-		sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[0].second.c_str()), 6);
+		sendMessage += Helper::getPaddedNumber(ansVector[i].first.length(), 2);
+		sendMessage += ansVector[i].first;
+		sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[i].second.c_str()), 6);
 	}
 	message._user->send(sendMessage);
 }
@@ -118,10 +118,10 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case LEAVE_GAME_REQUEST:
 		handleLeaveGame(msg);
 		break;
-	case BEST_SCORE_REQUEST:
+	case BEST_SCORE_REQUEST: //debugged
 		handleGetBestScores(msg);
 		break;
-	case PERSONAL_STATE_REQUEST:
+	case PERSONAL_STATE_REQUEST: //debugged
 		handlegetPersonalStatus(msg);
 		break;
 	case CLIENT_ANSWER:
