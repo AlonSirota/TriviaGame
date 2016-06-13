@@ -5,7 +5,6 @@ TriviaServer::TriviaServer() : _cvMessages()
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
 	_roomIdSequence = 1;
-	_gameIdSequence = 1;
 	_tempUserSequence = 1;
 	_db = std::make_shared<DB>();
 }
