@@ -37,7 +37,7 @@ void TriviaServer::serve()
 
 void TriviaServer::handleGetBestScores(recievedMessage& message)
 {
-	
+	std::cout << "handleGetBestScores was called but is yet to be implemented.\n";
 }
 
 void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//not debugged
