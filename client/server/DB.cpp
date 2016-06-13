@@ -127,7 +127,7 @@ std::vector<std::pair<std::string, std::string>> DB::getBestScores(int amount)
 	std::vector<std::pair<std::string, std::string>> scores;
 
 	//groups rows with the same username and game_id, select the username and the score (sum of is_correct=1), selects in descending order.
-	SQLite::Statement query(_db, "SELECT username, SUM(is_correct) FROM t_players_answers GROUP BY username, game_id ORDER BY SUM(is_correct) DESC LIMIT ?");
+	SQLite::Statement query(_db, "SELECT username, SUM(is_correct) FROM t_players_answers GROUP BY username ORDER BY SUM(is_correct) DESC LIMIT ?");
 	query.bind(1, amount); //binds the limit value
 
 		while (query.executeStep())
