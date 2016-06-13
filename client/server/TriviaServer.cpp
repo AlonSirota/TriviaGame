@@ -364,6 +364,7 @@ void TriviaServer::handleSignout(recievedMessage& message)
 void TriviaServer::handleLeaveGame(recievedMessage &msg)
 {
 	std::cout << "handleLeaveGame was called but isn't implemented yet\n";
+	_gameList[msg._user->_currGameID]->leaveGame(msg._user);
 }
 
 void TriviaServer::handleStartGame(recievedMessage &msg)
