@@ -308,10 +308,9 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 	}
 }
 //done
-bool TriviaServer::handleSignin(recievedMessage& message)
+bool TriviaServer::handleSignin(recievedMessage& message)//debugged
 {
-	//check if user exists in database - in next part
-	if (Validator::isUsernameValid(message._values[0]) && Validator::isPasswordValid(message._values[1]))
+	if(_db.isUserAndPassMatch(message._values[0], message._values[1]))
 	{
 		if (!userExists(message._values[0]))
 		{
