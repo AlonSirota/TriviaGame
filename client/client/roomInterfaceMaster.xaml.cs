@@ -113,7 +113,7 @@ namespace client
         }
         private async void startGame()
         {
-            await Task.Factory.StartNew(() => _client.mySend("217"););
+            await Task.Factory.StartNew(() => _client.mySend("217"));
         }
     }
 }

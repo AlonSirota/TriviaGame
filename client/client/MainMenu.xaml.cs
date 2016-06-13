@@ -209,5 +209,19 @@ namespace client
         {
             //sign out
         }
+
+        private void btnBestScores_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void btnMyStatus_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
+            status statusWin = new status(_client);
+            statusWin.ShowDialog();
+            lblStatus.Content = "success";
+            Show();
+        }
     }
 }

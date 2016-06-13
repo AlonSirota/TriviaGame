@@ -18,7 +18,7 @@
         </ListView>
         <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Height="122" Margin="10,547,0,0" VerticalAlignment="Top" Width="211"/>
         <Button x:Name="btnJoinRoom" Content="Join Room" HorizontalAlignment="Left" Height="50" Margin="10,100,0,0" VerticalAlignment="Top" Width="211" Click="btnJoinRoom_Click"/>
-        <Button x:Name="btnMyStatus" Content="My Status" HorizontalAlignment="Left" Height="50" Margin="10,442,0,0" VerticalAlignment="Top" Width="211"/>
-        <Button x:Name="btnBestScores" Content="Best Scores" HorizontalAlignment="Left" Height="50" Margin="10,492,0,0" VerticalAlignment="Top" Width="211"/>
+        <Button x:Name="btnMyStatus" Content="My Status" HorizontalAlignment="Left" Height="50" Margin="10,442,0,0" VerticalAlignment="Top" Width="211" Click="btnMyStatus_Click"/>
+        <Button x:Name="btnBestScores" Content="Best Scores" HorizontalAlignment="Left" Height="50" Margin="10,492,0,0" VerticalAlignment="Top" Width="211" Click="btnBestScores_Click"/>
     </Grid>
 </Window>
