@@ -106,7 +106,6 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case START_GAME_REQUEST:
 		handleStartGame(msg);
 		break;
-		//case CLIENT_ANSWER: handler isn't written yet TODO (i probably just don't know what is the name of the correct handler)
 	case LEAVE_GAME_REQUEST:
 		handleLeaveGame(msg);
 		break;

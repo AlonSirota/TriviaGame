@@ -126,7 +126,6 @@ void Game::sendQuestionToAllUsers()
 		message += (_questions[_currQuestionIndex])->getAnswers()[i];
 	}
 	_currentTurnAnswers = 0;
-	//std::vector<std::shared_ptr<User>>::iterator it = _users.begin();
 	for (std::vector<std::shared_ptr<User>>::iterator it = _users.begin(); it != _users.end(); it++)
 	{
 		try
@@ -138,17 +137,4 @@ void Game::sendQuestionToAllUsers()
 
 		}
 	}
-	/*
-	while (it != _users.end())
-	{
-		try
-		{
-			(*it)->send(message);
-		}
-		catch (...)
-		{
-
-		}
-		it++;
-	}*/
 }
