@@ -208,8 +208,12 @@ namespace client
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             //sign out
+            signout();
         }
-
+        private async void signout()
+        {
+            await Task.Factory.StartNew(() => _client.mySend("201"));
+        }
         private void btnBestScores_Click(object sender, RoutedEventArgs e)
         {
             Hide();
