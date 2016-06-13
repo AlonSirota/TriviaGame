@@ -88,10 +88,10 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case SIGNIN_REQUEST: //debugged
 		handleSignin(msg);
 		break;
-	case SIGNOUT_REQUEST:
+	case SIGNOUT_REQUEST: // HAS BUG
 		handleSignout(msg);
 		break;
-	case SIGNUP_REQUEST:
+	case SIGNUP_REQUEST: //debugged
 		handleSignup(msg);
 		break;
 	case EXISTING_ROOM_REQUEST: //debugged
@@ -112,7 +112,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case CLOSE_ROOM_REQUEST: //debugged
 		handleCloseRoom(msg);
 		break;
-	case START_GAME_REQUEST:
+	case START_GAME_REQUEST: //debugged
 		handleStartGame(msg);
 		break;
 	case LEAVE_GAME_REQUEST:
@@ -366,7 +366,14 @@ bool TriviaServer::handleSignup(recievedMessage& message)
 		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(1));
 		return(false);
 	}
+	else if (userExists(message._values[0]))
+	{
+		//fail - user already exists
+		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(2));
+		return(false);
+	}
 	//success
+	_db->addNewUser(message._values[0], message._values[1], message._values[2]);
 	Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(0));
 	return(true);
 }
@@ -374,7 +381,7 @@ bool TriviaServer::handleSignup(recievedMessage& message)
 void TriviaServer::handleSignout(recievedMessage& message)
 {
 	//std::shared_ptr<User> user = message._user;
-	handleCloseRoom(message);
+	//handleCloseRoom(message);
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
 	_connectedUsers.erase(_connectedUsers.find(message._user));
