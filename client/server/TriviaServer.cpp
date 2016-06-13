@@ -407,7 +407,7 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 
 void TriviaServer::handleUserAnswer(recievedMessage &msg)
 {
-	std::cout << "handleUserAnswer was called but isn't implemented yet\n";
+	//std::cout << "handleUserAnswer was called but isn't implemented yet\n";
 	std::shared_ptr<Game> game = _gameList[msg._user->_currGameID];
 
 	if (game != nullptr)
