@@ -37,7 +37,7 @@ void TriviaServer::serve()
 
 void TriviaServer::handleGetBestScores(recievedMessage& message)
 {
-	
+	std::cout << "handleGetBestScores was called but is yet to be implemented.\n";
 }
 
 void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//not debugged
@@ -364,7 +364,7 @@ void TriviaServer::handleSignout(recievedMessage& message)
 
 void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged
 {
-	std::cout << "handleLeaveGame was called but isn't implemented yet\n";
+	//std::cout << "handleLeaveGame was called but isn't implemented yet\n";
 	_gameList[msg._user->_currGameID]->leaveGame(msg._user);
 	handleLeaveRoom(msg);
 	msg._user->_currGameID = 0;
@@ -372,7 +372,7 @@ void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged
 
 void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 {
-	std::cout << "handleStartGame was called but isn't implemented yet\n";
+	//std::cout << "handleStartGame was called but isn't implemented yet\n";
 	int gameIdTemp = _gameIdSequence++;
 	Game currentGame(_roomList[msg._user->_currRoomID]->_users, _roomList[msg._user->_currRoomID]->_questionsNo, _db);
 	_gameList.insert(std::pair<int, std::shared_ptr<Game>>(gameIdTemp, std::make_shared<Game>(currentGame)));
