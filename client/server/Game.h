@@ -13,7 +13,7 @@ public:
 	bool handleAnswerFromUser(std::shared_ptr<User>, int, int);
 	bool leaveGame(std::shared_ptr<User>);
 	void sendQuestionToAllUsers();
-private:
+
 	int _questionsNo;
 	std::vector<std::shared_ptr<Question>> _questions;
 	std::vector<std::shared_ptr<User>> _users;
@@ -23,6 +23,7 @@ private:
 	int _currentTurnAnswers;
 	int _id;
 
+private:
 	bool insertGameToDB();
 	void initQuestionFromDB();
 	

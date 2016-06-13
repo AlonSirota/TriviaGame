@@ -405,9 +405,11 @@ void TriviaServer::handleUserAnswer(recievedMessage &msg)
 
 	if (game != nullptr)
 	{
-		game->handleAnswerFromUser(msg._user, stoi(msg._values[0]), stoi(msg._values[1]));
+		if (!game->handleAnswerFromUser(msg._user, stoi(msg._values[0]), stoi(msg._values[1])))
+		{ //means the game has ended.
+			_gameList.erase(game->_id);
+		}
 	}
-
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
