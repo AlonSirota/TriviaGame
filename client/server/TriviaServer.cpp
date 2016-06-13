@@ -1,12 +1,13 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer() : _cvMessages()//:_db() - only in later version
+TriviaServer::TriviaServer() : _cvMessages()
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
 	_roomIdSequence = 1;
 	_gameIdSequence = 1;
 	_tempUserSequence = 1;
+	_db = std::make_shared<DB>();
 }
 
 void TriviaServer::serve()
@@ -41,7 +42,7 @@ void TriviaServer::handleGetBestScores(recievedMessage& message)
 
 void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//not debugged
 {
-	std::vector<std::string> ansVector = _db.getPersonalStatus(message._user->getUsername());
+	std::vector<std::string> ansVector = _db->getPersonalStatus(message._user->getUsername());
 	std::string sendMessage = "126";
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[0].c_str()), 4);
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[1].c_str()), 6);
@@ -310,7 +311,7 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 //done
 bool TriviaServer::handleSignin(recievedMessage& message)//debugged
 {
-	if(_db.isUserAndPassMatch(message._values[0], message._values[1]))
+	if(_db->isUserAndPassMatch(message._values[0], message._values[1]))
 	{
 		if (!userExists(message._values[0]))
 		{
@@ -376,7 +377,8 @@ void TriviaServer::handleStartGame(recievedMessage &msg)
 
 void TriviaServer::handleUserAnswer(recievedMessage &msg)
 {
-	std::cout << "handleUserAnswer was called but isn't implemented yet\n";
+	//std::cout << "handleUserAnswer was called but isn't implemented yet\n";
+	std::shared_ptr<Game> game;
 }
 //done
 bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this

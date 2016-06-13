@@ -27,7 +27,7 @@ public:
 private:
 	boost::asio::io_service _io_service;
 	std::map<std::shared_ptr<User>, std::shared_ptr<tcp::socket>> _connectedUsers;
-	DB _db;
+	std::shared_ptr<DB> _db;
 	std::map<int, std::shared_ptr<Room>> _roomList;
 	std::map<int, std::shared_ptr<Game>> _gameList;
 	std::mutex _mtxMessagesRecieved;
