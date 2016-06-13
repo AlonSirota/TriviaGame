@@ -212,7 +212,11 @@ namespace client
 
         private void btnBestScores_Click(object sender, RoutedEventArgs e)
         {
-            
+            Hide();
+            bestScores statusWin = new bestScores(_client);
+            statusWin.ShowDialog();
+            lblStatus.Content = "success";
+            Show();
         }
 
         private void btnMyStatus_Click(object sender, RoutedEventArgs e)
