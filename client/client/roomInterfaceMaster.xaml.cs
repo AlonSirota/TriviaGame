@@ -117,8 +117,8 @@ namespace client
         private async void startGame()
         {
             //await Task.Factory.StartNew(() => _client.mySend("217"));
-            _client.mySend("217");
-            string response = _client.myReceive(4);
+            _client.mySend("217"); //make these async?
+            string response = _client.myReceive(4); //make these async?
             if (response == "9991")
             {
                 lblStatus.Content = "server encountered an error, probably not enough questions.";
