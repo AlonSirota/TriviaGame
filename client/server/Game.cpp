@@ -45,6 +45,7 @@ void Game::handleFinishGame()
 
 bool Game::handleNextTurn()
 {
+	_currQuestionIndex++;
 	if (_users.size() == 0)
 	{
 		handleFinishGame();
@@ -58,7 +59,7 @@ bool Game::handleNextTurn()
 		}
 		else
 		{
-			_currQuestionIndex++;
+			//_currQuestionIndex++;
 			sendQuestionToAllUsers();
 		}
 	}
