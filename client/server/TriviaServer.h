@@ -49,7 +49,7 @@ private:
 	void handleUserAnswer(recievedMessage&);//not in first section
 
 	bool handleCreateRoom(recievedMessage&);
-	bool handleCloseRoom(recievedMessage&);
+	bool handleCloseRoom(recievedMessage & message, bool startGame);
 	bool handleJoinRoom(recievedMessage&);
 	bool handleLeaveRoom(recievedMessage&);
 	void handleGetUsersInRoom(recievedMessage&);
@@ -65,5 +65,5 @@ private:
 
 	std::shared_ptr<User> getUserBySocket(std::shared_ptr<tcp::socket>);
 	bool userExists(std::string);
-	int closeRoom(std::shared_ptr<User>);
+	int closeRoom(std::shared_ptr<User> user, bool startGame);
 };

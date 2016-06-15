@@ -37,7 +37,7 @@ void Room::leaveRoom(std::shared_ptr<User> user)
 	}
 }
 
-int Room::closeRoom(std::shared_ptr<User> caller)
+int Room::closeRoom(std::shared_ptr<User> caller, bool startGame)
 {
 	int id;
 	if (caller != _admin)
@@ -46,7 +46,8 @@ int Room::closeRoom(std::shared_ptr<User> caller)
 	}
 	id = _admin->_currRoomID;
 
-	this->sendMessage(std::to_string(CLOSE_ROOM_REPLY));
+	if (!startGame)	this->sendMessage(std::to_string(CLOSE_ROOM_REPLY)); //only sends if the admin closed the room (not because he started a game).
+	
 	std::for_each(_users.begin(), _users.end(), [](std::shared_ptr<User> currUser)
 	{
 		currUser->_currRoomID = 0;

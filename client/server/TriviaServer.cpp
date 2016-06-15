@@ -109,7 +109,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 		handleCreateRoom(msg);
 		break;
 	case CLOSE_ROOM_REQUEST: //debugged
-		handleCloseRoom(msg);
+		handleCloseRoom(msg, false);
 		break;
 	case START_GAME_REQUEST: //debugged
 		handleStartGame(msg);
@@ -223,13 +223,13 @@ bool TriviaServer::userExists(std::string username)
 	return false;
 }
 
-int TriviaServer::closeRoom(std::shared_ptr<User>  user)
+int TriviaServer::closeRoom(std::shared_ptr<User>  user, bool startGame)
 {
 	bool found = false;
 	if (_roomList.count(user->_currRoomID)) //if room exists
 	{
 		std::shared_ptr<Room> room = getRoomById(user->_currRoomID);
-		int ret = room->closeRoom(user);
+		int ret = room->closeRoom(user, startGame);
 
 		if (ret == -1) //if it failed (user isn't admin)
 		{
@@ -372,7 +372,7 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 		room->_admin->send(std::to_string(START_GAME_REPLY_SUCCESS));
 		_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
 		currentGame.sendQuestionToAllUsers();
-		handleCloseRoom(msg);
+		handleCloseRoom(msg, true);
 	}	
 	catch (SQLite::Exception & e)
 	{
@@ -416,12 +416,12 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 }
 
 //done - CHECK IF NEED TO SEND NOTICE TO CLIENT
-bool TriviaServer::handleCloseRoom(recievedMessage& message)
+bool TriviaServer::handleCloseRoom(recievedMessage& message, bool startGame)
 {
 	std::shared_ptr<User> user = message._user;
 	if (_roomList.count(user->_currRoomID))
 	{
-		int ans = this->closeRoom(user);
+		int ans = this->closeRoom(user, startGame);
 		if (ans == -1)
 		{
 			return(false);
