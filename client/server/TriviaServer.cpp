@@ -146,56 +146,55 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	std::vector<std::string> info;
 	switch (messCode) //parses the string to the string vector _values.
 	{
-	case SIGNIN_REQUEST:
-	{
-		int usernameLength = Helper::getIntPartFromSocket(socket, 2);
-		info.push_back(Helper::getPartFromSocket(socket, usernameLength).data());
-		int passLength = Helper::getIntPartFromSocket(socket, 2);
-		info.push_back(Helper::getPartFromSocket(socket, passLength).data());
-		break;
-	}
-	case SIGNUP_REQUEST:
-	{
-		int usernameLength = Helper::getIntPartFromSocket(socket, 2);
-		info.push_back(Helper::getPartFromSocket(socket, usernameLength).data());
-		int passLength = Helper::getIntPartFromSocket(socket, 2);
-		info.push_back(Helper::getPartFromSocket(socket, passLength).data());
-		int emailLength = Helper::getIntPartFromSocket(socket, 2);
-		info.push_back(Helper::getPartFromSocket(socket, emailLength).data());
-		break;
-	}
-	case USERS_IN_ROOM_REQUEST:
-	case JOIN_ROOM_REQUEST:
-	{
-		info.push_back(Helper::getPartFromSocket(socket, 4).data());
-		break;
-	}
-	case CREATE_ROOM_REQUEST:
-	{
-		int rommNameLength = Helper::getIntPartFromSocket(socket, 2);
-		info.push_back(Helper::getPartFromSocket(socket, rommNameLength).data());
-		info.push_back(Helper::getPartFromSocket(socket, 1).data());
-		info.push_back(Helper::getPartFromSocket(socket, 2).data());
-		info.push_back(Helper::getPartFromSocket(socket, 2).data());
-		break;
-	}
-	case START_GAME_REQUEST://not in current version
-		break;
-	case CLIENT_ANSWER:
-	{
-		info.push_back(Helper::getPartFromSocket(socket, 1).data()); //answer index
-		info.push_back(Helper::getPartFromSocket(socket, 2).data()); //answer time
-		break;
-	}		
-	case LEAVE_GAME_REQUEST://not in current version
-		break;
-	case BEST_SCORE_REQUEST://not in current version
-		break;
-	case PERSONAL_STATE_REQUEST://not in current version
-		break;
-	default:
-	}
-
+		case SIGNIN_REQUEST:
+		{
+			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, usernameLength).data());
+			int passLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, passLength).data());
+			break;
+		}
+		case SIGNUP_REQUEST:
+		{
+			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, usernameLength).data());
+			int passLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, passLength).data());
+			int emailLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, emailLength).data());
+			break;
+		}
+		case USERS_IN_ROOM_REQUEST:
+		case JOIN_ROOM_REQUEST:
+		{
+			info.push_back(Helper::getPartFromSocket(socket, 4).data());
+			break;
+		}
+		case CREATE_ROOM_REQUEST:
+		{
+			int rommNameLength = Helper::getIntPartFromSocket(socket, 2);
+			info.push_back(Helper::getPartFromSocket(socket, rommNameLength).data());
+			info.push_back(Helper::getPartFromSocket(socket, 1).data());
+			info.push_back(Helper::getPartFromSocket(socket, 2).data());
+			info.push_back(Helper::getPartFromSocket(socket, 2).data());
+			break;
+		}
+		case START_GAME_REQUEST://not in current version
+			break;
+		case CLIENT_ANSWER:
+		{
+			info.push_back(Helper::getPartFromSocket(socket, 1).data()); //answer index
+			info.push_back(Helper::getPartFromSocket(socket, 2).data()); //answer time
+			break;
+		}
+		case LEAVE_GAME_REQUEST://not in current version
+			break;
+		case BEST_SCORE_REQUEST://not in current version
+			break;
+		case PERSONAL_STATE_REQUEST://not in current version
+			break;
+		default: {}
+	}//switch end
 	return recievedMessage(socket, messCode, info, getUserBySocket(socket));
 }
 

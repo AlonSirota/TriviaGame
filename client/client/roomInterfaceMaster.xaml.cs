@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+//TODO combine this with normal room interface (using inheritance).
 namespace client
 {
     /// <summary>
@@ -115,7 +116,17 @@ namespace client
         }
         private async void startGame()
         {
-            await Task.Factory.StartNew(() => _client.mySend("217"));
+            //await Task.Factory.StartNew(() => _client.mySend("217"));
+            _client.mySend("217");
+            string response = _client.myReceive(4);
+            if (response == "9991")
+            {
+                lblStatus.Content = "server encountered an error, probably not enough questions.";
+            }
+            else if (response == "9990")
+            {
+                lblStatus.Content = "server started game succesfuly - game should start now";
+            }
         }
     }
 }

@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+﻿using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.Security;
-using System.Threading;
-using System.Windows.Threading;
 namespace client
 {
     public class myTcpClient
