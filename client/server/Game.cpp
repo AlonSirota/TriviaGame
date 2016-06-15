@@ -70,7 +70,7 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int ti
 {
 	_currentTurnAnswers++;
 	bool isCorrect = false;
-	if (answerNo == _questions[_currQuestionIndex]->getCorrectAnswerIndex())
+	if (answerNo - 1 == _questions[_currQuestionIndex]->getCorrectAnswerIndex()) //the -1 is there because answerNo index starts at 1, but the index of correct answer starts at 0.
 	{
 		_results[user->_username]++;
 		isCorrect = true;
