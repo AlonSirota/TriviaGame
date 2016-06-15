@@ -1,5 +1,5 @@
 #pragma once
-
+//TODO maKe these string instead of integers.
 #define SIGNIN_REQUEST 200
 #define SIGNIN_REPLY 102
 
@@ -30,6 +30,8 @@
 #define CLOSE_ROOM_REPLY 116
 
 #define START_GAME_REQUEST 217
+#define START_GAME_REPLY_SUCCESS 9991
+#define START_GAME_REPLY_FAILED 9990
 #define SEND_QUESTION 118
 
 #define CLIENT_ANSWER 219

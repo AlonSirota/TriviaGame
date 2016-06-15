@@ -194,39 +194,9 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	case PERSONAL_STATE_REQUEST://not in current version
 		break;
 	default:
-		{
-		}
 	}
 
 	return recievedMessage(socket, messCode, info, getUserBySocket(socket));
-
-	/*
-	if (info.empty())
-	{
-		return(recievedMessage(socket, messCode, getUserBySocket(socket)));
-	}
-	else
-	{
-		
-		if (messCode == SIGNIN_REQUEST)
-		{
-			//signin
-			if (!userExists(info[0]))
-			{
-				_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(info[0], socket)), socket));
-				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(0));
-			}
-			else
-			{
-				Helper::sendData(socket, std::to_string(SIGNIN_REPLY) + std::to_string(2));
-			}
-			return(recievedMessage(socket, messCode, getUserBySocket(socket)));
-		}
-		else
-		{
-			return(recievedMessage(socket, messCode, info, getUserBySocket(socket)));
-		}
-	}*/
 }
 
 //done
@@ -239,11 +209,10 @@ std::shared_ptr<User> TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket>
 			return(it->first);
 		it++;
 	}
-	//return it->first; is this supposed to return the last one? because this line always accesses bad memory and crashes.
 	return nullptr;
 }
 
-bool TriviaServer::userExists(std::string username) //TODO fix this according to the flipped map.
+bool TriviaServer::userExists(std::string username)
 {
 	std::map<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
 	while (it != _connectedUsers.end())
@@ -401,14 +370,15 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 	try
 	{
 		Game currentGame(room->_users, room->_questionsNo, _db); //this may throw
-		//room->_admin->send(std::string("));
+		room->_admin->send(std::to_string(START_GAME_REPLY_SUCCESS));
 		_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
 		currentGame.sendQuestionToAllUsers();
 		handleCloseRoom(msg);
 	}	
 	catch (SQLite::Exception & e)
 	{
-		room->_admin->send(std::string(e.what()));
+		room->_admin->send(std::to_string(START_GAME_REPLY_FAILED));
+		std::cout << "handleStartGame failed: " << e.what() << "\n";
 	}
 }
 
