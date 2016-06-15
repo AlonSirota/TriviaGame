@@ -104,7 +104,7 @@ namespace client
             }
             else
             {
-                lblStatus.Content = "Error - wrong code detected";
+                lblStatus.Content = "Error - expected '120' but recieved: " + code;
             }
         }
 
