@@ -160,38 +160,45 @@ namespace client
         }
         private async void joinRoomAsync()
         {
-            string roomID = _roomNametoId[_roomName]; //get room id
-            string response = await Task.Factory.StartNew(() => requestJoinRoom(roomID));
-            string code = response.Substring(0, 3);
-            if (code == "110")
+            if (_roomName == null)
             {
-                lblStatus.Content = "Correct code detected";//open roomInterface
-                if(response[3] == '0')
-                {
-                    //success
-                    Hide();
-                    roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime));
-                    room.ShowDialog();
-                    lblStatus.Content = "success";
-                    Show();
-                }
-                else if (response[3] == '1')
-                {
-                    lblStatus.Content = "Error - room is full";
-                }
-                else if (response[3] == '2')
-                {
-                    lblStatus.Content = "Error - room doesnt exist";
-                }
-                else
-                {
-                    lblStatus.Content = "Error - unknown";
-                }
+                lblStatus.Content = "Choose a room";
             }
             else
             {
-                lblStatus.Content = "Error - wrong code detected";
-            }
+                string roomID = _roomNametoId[_roomName]; //get room id
+                string response = await Task.Factory.StartNew(() => requestJoinRoom(roomID));
+                string code = response.Substring(0, 3);
+                if (code == "110")
+                {
+                    lblStatus.Content = "Correct code detected";//open roomInterface
+                    if (response[3] == '0')
+                    {
+                        //success
+                        Hide();
+                        roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime));
+                        room.ShowDialog();
+                        lblStatus.Content = "success";
+                        Show();
+                    }
+                    else if (response[3] == '1')
+                    {
+                        lblStatus.Content = "Error - room is full";
+                    }
+                    else if (response[3] == '2')
+                    {
+                        lblStatus.Content = "Error - room doesnt exist";
+                    }
+                    else
+                    {
+                        lblStatus.Content = "Error - unknown";
+                    }
+                }
+                else
+                {
+                    lblStatus.Content = "Error - wrong code detected";
+                }
+            }            
         }
         private string requestJoinRoom(string roomID)
         {
