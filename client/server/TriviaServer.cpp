@@ -397,10 +397,19 @@ void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged
 void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 {
 	//std::cout << "handleStartGame was called but isn't implemented yet\n";
-	Game currentGame(_roomList[msg._user->_currRoomID]->_users, _roomList[msg._user->_currRoomID]->_questionsNo, _db);
-	_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
-	currentGame.sendQuestionToAllUsers();
-	handleCloseRoom(msg);
+	std::shared_ptr<Room> room = _roomList[msg._user->_currRoomID];
+	try
+	{
+		Game currentGame(room->_users, room->_questionsNo, _db); //this may throw
+		//room->_admin->send(std::string("));
+		_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
+		currentGame.sendQuestionToAllUsers();
+		handleCloseRoom(msg);
+	}	
+	catch (SQLite::Exception & e)
+	{
+		room->_admin->send(std::string(e.what()));
+	}
 }
 
 void TriviaServer::handleUserAnswer(recievedMessage &msg)

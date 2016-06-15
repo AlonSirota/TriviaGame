@@ -4,7 +4,10 @@ Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::sha
 {
 	_questionsNo = questionsNo;
 	_id = _db->insertNewGame();//need to check if failed
-	_questions = _db->questionInit(questionsNo);
+
+	_questions = _db->questionInit(questionsNo); //this may throw. should catch in whoever created the Game.
+
+	//this code will only be invoked if no exception was thrown.
 	for (std::vector<std::shared_ptr<User>>::iterator it = _users.begin(); it != _users.end(); it++)
 	{
 		(*it)->_currGameID = _id;
