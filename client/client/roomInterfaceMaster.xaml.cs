@@ -39,13 +39,14 @@ namespace client
         private async void requestGetUserListAsync()
         {
             bool exists = true;
-            string response = await Task.Factory.StartNew(() => requestUserList());
+            //string response = await Task.Factory.StartNew(() => requestUserList());
+            string response = requestUserList();
             string code = response.Substring(0, 3);
             while (exists)
             {
                 if (code == "108")
                 {
-                    lblStatus.Content = "Correct code detected";
+                    lblStatus.Content = "recieved user list. (it could be empty)";
                 }
                 else if (code == "116")
                 {

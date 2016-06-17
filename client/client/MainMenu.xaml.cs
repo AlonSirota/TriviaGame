@@ -114,7 +114,8 @@ namespace client
             if(gotInfo)
             {
                 //send create room message and get answer
-                string response = await Task.Factory.StartNew(() => requestCreateRoom());
+                //string response = await Task.Factory.StartNew(() => requestCreateRoom());
+                string response = requestCreateRoom();
                 string code = response.Substring(0, 3);
                 if (code == "114")
                 {
