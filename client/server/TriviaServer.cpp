@@ -369,7 +369,7 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 	try
 	{
 		Game currentGame(room->_users, room->_questionsNo, _db); //this may throw
-		room->_admin->send(std::to_string(START_GAME_REPLY_SUCCESS));
+		//room->_admin->send(std::to_string(START_GAME_REPLY_SUCCESS)); //WHAT IS THIS MESSAGE???
 		_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
 		currentGame.sendQuestionToAllUsers();
 		handleCloseRoom(msg, true);
