@@ -28,7 +28,8 @@ namespace client
         {
             InitializeComponent();
         }
-        public roomInterfaceMaster(myTcpClient newClient,int time)
+
+        public roomInterfaceMaster(myTcpClient newClient,int time) //TODO change name to something more accurate.
         {
             InitializeComponent();
             _client = newClient;
@@ -66,9 +67,10 @@ namespace client
                 {
                     lblStatus.Content = "Error - wrong code detected";
                 }
+
                 if (_userList.Count() == 0)
                 {
-                    lblStatus.Content = "Error - no rooms";
+                    lblStatus.Content = "Error - room doesn't exist";
                 }
                 else
                 {

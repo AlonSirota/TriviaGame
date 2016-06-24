@@ -1,21 +1,3 @@
-follow debugging process - not including extreme cases
-client:
-MainWindow -  DEBUGGED
-MainMenu - DEBUGGED
-createRoom - DEBUGGED
-roomInterface - DEBUGGED
-roomInterfaceMaster - DEBUGGED
-SignUp - DEBUGGED
-myTcpClient - DEBUGGED
-
-server:
-DB - 
-Game - 
-Helper - 
-protocol - DEBUGGED
-Question - 
-RecievedMessage - 
-Room - 
-TriviaServer - 
-User - 
-Validator - 
+twenty one pilots: HeavyDirtySoul
+twenty one pilots: Tear In My Heart
+Panic! At The Disco: Mercenary
