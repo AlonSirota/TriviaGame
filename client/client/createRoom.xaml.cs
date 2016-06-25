@@ -19,48 +19,24 @@ namespace client
     /// </summary>
     public partial class createRoom : Window
     {
-        public string roomName = "";
-        public string playerNo = "";
-        public string questionNo = "";
-        public string questionTime = "";
         public createRoom()
         {
             InitializeComponent();
         }
 
-        private void txtbQuestionTime_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            questionTime = ((TextBox)sender).Text;
-        }
-
-        private void txtbQuestionsNo_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            questionNo = ((TextBox)sender).Text;
-        }
-
-        private void txtbPlayerNo_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            playerNo = ((TextBox)sender).Text;
-        }
-
-        private void txtbRoomName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            roomName = ((TextBox)sender).Text;
-        }
-
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
         {
             //move values to Main menu
-            if(roomName == "" || playerNo == "" || questionNo == "" || questionTime == "")
+            if(this.txtbRoomName.Text == "" || this.txtbPlayerNo.Text == "" || this.txtbQuestionsNo.Text == "" || this.txtbQuestionTime.Text == "")
             {
                 MessageBox.Show("Complete all fields");
             }
             else
             {
-                MainMenu.questionNo = questionNo;
-                MainMenu.questionTime = questionTime;
-                MainMenu.roomName = roomName;
-                MainMenu.playerNo = playerNo;
+                MainMenu.questionNo = this.txtbQuestionsNo.Text;
+                MainMenu.questionTime = this.txtbQuestionTime.Text;
+                MainMenu.roomName = this.txtbRoomName.Text;
+                MainMenu.playerNo = this.txtbPlayerNo.Text;
                 MainMenu.gotInfo = true;
                 Close();
             }
