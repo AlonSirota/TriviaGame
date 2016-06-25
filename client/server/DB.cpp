@@ -189,7 +189,7 @@ bool DB::addAnswerToUser(int gameId, std::string username, int questionId, std::
 		std::cout << columnToString(query2.getColumn(1)) << std::endl;
 		std::cout << columnToString(query2.getColumn(2)) << std::endl;
 		std::cout << columnToString(query2.getColumn(3)) << std::endl;
-		std::cout << columnToString(query2.getColumn(4)) << std::endl;*/
+		std::cout << columnToString(query2.getColumn(4)) << std::endl;
 		SQLite::Statement query2(_db, "INSERT INTO test3(game_id,username) values(2,'user')");
 		try
 		{
@@ -201,7 +201,7 @@ bool DB::addAnswerToUser(int gameId, std::string username, int questionId, std::
 			std::cout << "addAnswerToUser failed: " << e.what() << "\n"; //TODO delete this, just for debugging.
 			return false;
 		}
-		SQLite::Statement query3(_db, "INSERT INTO test2 VALUES(81,'user2',3,'Movie file',0,10);");
+		SQLite::Statement query3(_db, "INSERT INTO test2 VALUES(81,'user2',3,'Movie file',0,10);");*/
 		////////////////////////
 		SQLite::Statement query(_db, "INSERT INTO t_players_answers(game_id, username, question_id, player_answer, is_correct, answer_time) values(?, ?, ?, ?, ?, ?)");
 		query.bind(1, gameId);

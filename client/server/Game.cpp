@@ -75,7 +75,7 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int ti
 		_results[user->_username]++;
 		isCorrect = true;
 	}
-	/*
+	
 	if (answerNo == 5)
 	{
 		_db->addAnswerToUser(_id,
@@ -94,7 +94,7 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int ti
 			isCorrect,
 			time);
 	}
-	*/
+	
 	if (isCorrect)
 	{
 		user->send(std::to_string(CLIENT_ANSWER_REPLY) + "1");
