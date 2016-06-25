@@ -126,6 +126,8 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case CLIENT_ANSWER:
 		handleUserAnswer(msg);
 		break;
+	case EXIT:
+		std::cout << (msg._user == nullptr ? "unkown user" : msg._user->_username) << " exited\n";
 	default:
 		std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
 		//case 299 and 0 is already handled in clientHandler()

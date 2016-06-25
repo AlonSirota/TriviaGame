@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 //TODO combine this with normal room interface (using inheritance).
 namespace client
@@ -24,47 +16,75 @@ namespace client
         List<string> _userList = new List<string>();
         int _userNo;
         int _time;
+
+        public void listenToReplies()
+        {
+            bool exists = true;
+            string responseCode;
+
+            do /*while (exists)*/
+            {
+                //response = await Task.Factory.StartNew(() => requestUserList());
+                responseCode = _client.myReceive(3);
+
+                switch (responseCode)
+                {
+                    case "108":
+                        lblStatus.Content = "recieved user list.";
+                        readUserList();
+                        break;
+                    case "116":
+                        lblStatus.Content = "Room Closed By Admin";
+                        Close();
+                        break;
+                    case "118":
+                        //game begun
+                        Hide();
+                        Game s = new Game(_client, _time);
+                        s.ShowDialog();
+                        Close();
+                        exists = false;
+                        break;
+                    default:
+                        lblStatus.Content = "Error - wrong code detected";
+                        break;
+                }
+            } while (exists);
+        }
+
         public roomInterfaceMaster()
         {
             InitializeComponent();
         }
 
-        public roomInterfaceMaster(myTcpClient newClient,int time) //TODO change name to something more accurate.
+        public roomInterfaceMaster(myTcpClient newClient, int time)
         {
             InitializeComponent();
             _client = newClient;
             requestGetUserListAsync();
             _time = time;
+            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));//TODO this crushes because it alters labels before the constructor is done.
+            listenThread.Start();
         }
 
         private async void requestGetUserListAsync()
         {
-            bool exists = true;
-            //string response = await Task.Factory.StartNew(() => requestUserList());
-            string response = requestUserList();
-            string code = response.Substring(0, 3);
+            _client.mySend("207"); //TODO make this async
+        }
 
-            if (code == "108")
+        //after recieved 108
+        private void readUserList()
+        {
+            _userNo = Int32.Parse(_client.myReceive(1));
+            string nameSize = "";
+            string userName = "";
+            _userList.Clear();
+
+            for (int i = 0; i < _userNo; i++)
             {
-                lblStatus.Content = "recieved user list. (it could be empty)";
-            }
-            else if (code == "116")
-            {
-                lblStatus.Content = "Room Closed By Admin";
-                Close();
-            }
-            else if (code == "118")
-            {
-                //game begun
-                Hide();
-                Game s = new Game(_client, _time);
-                s.ShowDialog();
-                Close();
-                exists = false;
-            }
-            else
-            {
-                lblStatus.Content = "Error - wrong code detected";
+                nameSize = _client.myReceive(2);
+                userName = _client.myReceive(Int32.Parse(nameSize));
+                _userList.Add(userName);
             }
 
             if (_userList.Count() == 0)
@@ -79,75 +99,14 @@ namespace client
                     listViewUsers.Items.Add(item);
                 }
             }
-
-            //TODO removed this loop, if we want the userlist to refresh - maybe we should add a refresh button instead of a semi-infinite loop.
-            /*while (exists)
-            {
-                if (code == "108")
-                {
-                    lblStatus.Content = "recieved user list. (it could be empty)";
-                }
-                else if (code == "116")
-                {
-                    lblStatus.Content = "Room Closed By Admin";
-                    Close();
-                }
-                else if (code == "118")
-                {
-                    //game begun
-                    Hide();
-                    Game s = new Game(_client, _time);
-                    s.ShowDialog();
-                    Close();
-                    exists = false;
-                }
-                else
-                {
-                    lblStatus.Content = "Error - wrong code detected";
-                }
-
-                if (_userList.Count() == 0)
-                {
-                    lblStatus.Content = "Error - room doesn't exist";
-                }
-                else
-                {
-                    listViewUsers.Items.Clear();
-                    foreach (var item in _userList)
-                    {
-                        listViewUsers.Items.Add(item);
-                    }
-                }
-                //response = await Task.Factory.StartNew(() => requestUserList());
-                response = requestUserList();
-                code = response.Substring(0, 3);
-            }*/
-        }
-
-        private string requestUserList()
-        {
-            string code = _client.myReceive(3);
-            if (code == "108")
-            {
-                _userNo = Int32.Parse(_client.myReceive(1));
-                string nameSize = "";
-                string userName = "";
-                _userList.Clear();
-                for (int i = 0; i < _userNo; i++)
-                {
-                    nameSize = _client.myReceive(2);
-                    userName = _client.myReceive(Int32.Parse(nameSize));
-                    _userList.Add(userName);
-                }
-            }
-            return code;
         }
 
         private void btnCloseRoom_Click(object sender, RoutedEventArgs e)
         {
             requestCloseRoom();
         }
-        private /*async*/ void requestCloseRoom()
+        private /*async*/
+                void requestCloseRoom()
         {
             //await Task.Factory.StartNew(() => _client.mySend("215")); //send code
             _client.mySend("215");
@@ -157,10 +116,14 @@ namespace client
         {
             startGame();
         }
+
         private /*async*/ void startGame()
         {
             //await Task.Factory.StartNew(() => _client.mySend("217"));
             _client.mySend("217"); //make these async?
+
+            //TODO uncomment this and make it works. its supposed to check with the server if the game actually successfuly started (it could fail if there arent enough questions).
+            /*
             string response = _client.myReceive(4); //make these async?
             if (response == "9991")
             {
@@ -169,7 +132,7 @@ namespace client
             else if (response == "9990")
             {
                 lblStatus.Content = "server started game succesfuly - game should start now";
-            }
+            }*/
         }
     }
 }
