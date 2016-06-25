@@ -35,7 +35,8 @@ namespace client
 
         private async void getBestScores()
         {
-            await Task.Factory.StartNew(() => requestGetBestScores());
+            //await Task.Factory.StartNew(() => requestGetBestScores());
+            requestGetBestScores();
             lblScore1.Content = _users[0] + " : " + _scores[0];
             lblScore2.Content = _users[1] + " : " + _scores[1];
             lblScore3.Content = _users[2] + " : " + _scores[2];

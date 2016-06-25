@@ -39,7 +39,8 @@ namespace client
         private async void requestGetUserListAsync()
         {
             bool exists = true;
-            string response = await Task.Factory.StartNew(() => requestUserList());
+            //string response = await Task.Factory.StartNew(() => requestUserList());
+            string response = requestUserList();
             string code = response.Substring(0, 3);
             //while (this.Visibility == Visibility.Visible)
             while(exists)
@@ -86,7 +87,8 @@ namespace client
                 
                 if(exists)
                 {
-                    response = await Task.Factory.StartNew(() => requestUserList());
+                    //response = await Task.Factory.StartNew(() => requestUserList());
+                    response = requestUserList();
                 }
                 code = response.Substring(0, 3);
             }

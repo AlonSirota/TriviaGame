@@ -46,7 +46,8 @@ namespace client
 
         private async void requestSignUpAsync()
         {
-            string response = await Task.Factory.StartNew(() => requestSignUp());
+            //string response = await Task.Factory.StartNew(() => requestSignUp());
+            string response = requestSignUp();
 
             if (response == "1040")
             {

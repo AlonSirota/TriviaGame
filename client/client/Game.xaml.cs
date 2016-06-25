@@ -221,7 +221,8 @@ namespace client
         
         private async void leaveGame()
         {
-            await Task.Factory.StartNew(() => _client.mySend("222"));
+            //await Task.Factory.StartNew(() => _client.mySend("222"));
+            _client.mySend("222");
         }
     }
 }

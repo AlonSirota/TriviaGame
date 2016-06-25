@@ -54,7 +54,8 @@ namespace client
         }
         private async void requestGetRoomListAsync()
         {
-            string response = await Task.Factory.StartNew(() => requestRoomList());
+            //string response = await Task.Factory.StartNew(() => requestRoomList());
+            string response = requestRoomList();
             string code = response.Substring(0, 3);
             if (code == "106")
             {
@@ -159,7 +160,7 @@ namespace client
         {
             joinRoomAsync();
         }
-        private async void joinRoomAsync()
+        private /*async*/ void joinRoomAsync()
         {
             if (_roomName == null)
             {
@@ -168,7 +169,8 @@ namespace client
             else
             {
                 string roomID = _roomNametoId[_roomName]; //get room id
-                string response = await Task.Factory.StartNew(() => requestJoinRoom(roomID));
+                //string response = await Task.Factory.StartNew(() => requestJoinRoom(roomID));
+                string response = requestJoinRoom(roomID);
                 string code = response.Substring(0, 3);
                 if (code == "110")
                 {
@@ -226,7 +228,8 @@ namespace client
         }
         private async void signout()
         {
-            await Task.Factory.StartNew(() => _client.mySend("201"));
+            //await Task.Factory.StartNew(() => _client.mySend("201"));
+            _client.mySend("201");
         }
         private void btnBestScores_Click(object sender, RoutedEventArgs e)
         {

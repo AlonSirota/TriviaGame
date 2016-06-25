@@ -38,7 +38,8 @@ namespace client
         
         private async void getStatus()
         {
-            await Task.Factory.StartNew(() => requestGetStatus());
+            //await Task.Factory.StartNew(() => requestGetStatus());
+            requestGetStatus();
             lblGameNo.Content = "Total Game No : " + gameNo.ToString();
             lblCorrectNo.Content = "Number of correct answers : " + correctAnsNo.ToString();
             lblWrongNo.Content = "Number of wrong answers : " + wrongAnsNo.ToString();

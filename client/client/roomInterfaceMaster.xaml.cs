@@ -80,7 +80,8 @@ namespace client
                         listViewUsers.Items.Add(item);
                     }
                 }
-                response = await Task.Factory.StartNew(() => requestUserList());
+                //response = await Task.Factory.StartNew(() => requestUserList());
+                response = requestUserList();
                 code = response.Substring(0, 3);
             }
         }
@@ -108,16 +109,17 @@ namespace client
         {
             requestCloseRoom();
         }
-        private async void requestCloseRoom()
+        private /*async*/ void requestCloseRoom()
         {
-            await Task.Factory.StartNew(() => _client.mySend("215")); //send code
+            //await Task.Factory.StartNew(() => _client.mySend("215")); //send code
+            _client.mySend("215");
         }
 
         private void btnStartGame_Click(object sender, RoutedEventArgs e)
         {
             startGame();
         }
-        private async void startGame()
+        private /*async*/ void startGame()
         {
             //await Task.Factory.StartNew(() => _client.mySend("217"));
             _client.mySend("217"); //make these async?

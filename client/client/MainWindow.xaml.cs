@@ -39,9 +39,10 @@ namespace client
             lblStatus.Content = "trying to login";
         }
 
-        private async void requestSignInAsync()
+        private /*async*/ void requestSignInAsync()
         {
-            string response = await Task.Factory.StartNew(() => requestSignIn());
+            //string response = await Task.Factory.StartNew(() => requestSignIn());
+            string response = requestSignIn();
 
             if (response == "1020")
             {
