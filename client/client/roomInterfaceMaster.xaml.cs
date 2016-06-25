@@ -43,7 +43,45 @@ namespace client
             //string response = await Task.Factory.StartNew(() => requestUserList());
             string response = requestUserList();
             string code = response.Substring(0, 3);
-            while (exists)
+
+            if (code == "108")
+            {
+                lblStatus.Content = "recieved user list. (it could be empty)";
+            }
+            else if (code == "116")
+            {
+                lblStatus.Content = "Room Closed By Admin";
+                Close();
+            }
+            else if (code == "118")
+            {
+                //game begun
+                Hide();
+                Game s = new Game(_client, _time);
+                s.ShowDialog();
+                Close();
+                exists = false;
+            }
+            else
+            {
+                lblStatus.Content = "Error - wrong code detected";
+            }
+
+            if (_userList.Count() == 0)
+            {
+                lblStatus.Content = "Error - room doesn't exist";
+            }
+            else
+            {
+                listViewUsers.Items.Clear();
+                foreach (var item in _userList)
+                {
+                    listViewUsers.Items.Add(item);
+                }
+            }
+
+            //TODO removed this loop, if we want the userlist to refresh - maybe we should add a refresh button instead of a semi-infinite loop.
+            /*while (exists)
             {
                 if (code == "108")
                 {
@@ -83,7 +121,7 @@ namespace client
                 //response = await Task.Factory.StartNew(() => requestUserList());
                 response = requestUserList();
                 code = response.Substring(0, 3);
-            }
+            }*/
         }
 
         private string requestUserList()
