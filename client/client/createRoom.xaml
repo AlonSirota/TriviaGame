@@ -11,10 +11,10 @@
         <Label x:Name="lblPlayerNo" Content="Player Number:" HorizontalAlignment="Left" Height="30" Margin="100,77,0,0" VerticalAlignment="Top" Width="100"/>
         <Label x:Name="lblQuestionsNo" Content="Questions Number:" HorizontalAlignment="Left" Height="30" Margin="90,154,0,0" VerticalAlignment="Top" Width="120"/>
         <Label x:Name="lblQuestionTime" Content="Time for Each Question:" HorizontalAlignment="Left" Height="30" Margin="80,236,0,0" VerticalAlignment="Top" Width="140"/>
-        <TextBox x:Name="txtbRoomName" HorizontalAlignment="Left" Height="42" Margin="0,35,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" TextChanged="txtbRoomName_TextChanged"/>
-        <TextBox x:Name="txtbPlayerNo" HorizontalAlignment="Left" Height="42" Margin="0,107,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" TextChanged="txtbPlayerNo_TextChanged"/>
-        <TextBox x:Name="txtbQuestionsNo" HorizontalAlignment="Left" Height="42" Margin="0,189,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" TextChanged="txtbQuestionsNo_TextChanged"/>
-        <TextBox x:Name="txtbQuestionTime" HorizontalAlignment="Left" Height="42" Margin="0,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" TextChanged="txtbQuestionTime_TextChanged"/>
+        <TextBox x:Name="txtbRoomName" HorizontalAlignment="Left" Height="42" Margin="0,35,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" />
+        <TextBox x:Name="txtbPlayerNo" HorizontalAlignment="Left" Height="42" Margin="0,107,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" />
+        <TextBox x:Name="txtbQuestionsNo" HorizontalAlignment="Left" Height="42" Margin="0,189,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" />
+        <TextBox x:Name="txtbQuestionTime" HorizontalAlignment="Left" Height="42" Margin="0,271,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" />
         <Button x:Name="btnCreateRoom" Content="Create Room" HorizontalAlignment="Left" Height="56" Margin="0,313,0,0" VerticalAlignment="Top" Width="146" Click="btnCreateRoom_Click"/>
         <Button x:Name="btnBack" Content="Back" HorizontalAlignment="Left" Height="56" Margin="146,313,0,0" VerticalAlignment="Top" Width="146" Click="btnBack_Click"/>
 
