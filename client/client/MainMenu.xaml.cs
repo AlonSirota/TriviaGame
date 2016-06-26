@@ -23,8 +23,9 @@ namespace client
         myTcpClient _client;
         //for getting existing rooms
         Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
-        int _roomNo;
-        //for creating new room
+        int _numberOfRooms;
+        //for creating new room.
+        //TODO there has got to be a better solution than this:
         public static string roomName { get; set; }
         public static string playerNo { get; set; }
         public static string questionNo { get; set; }
@@ -85,11 +86,11 @@ namespace client
             _roomNametoId.Clear();//clear dictionary
             string code = _client.myReceive(3);
             Debug.Print("got in requestRoomList : " + code);
-            _roomNo = Int32.Parse(_client.myReceive(4));
+            _numberOfRooms = Int32.Parse(_client.myReceive(4));
             string roomId = "";
             string nameSize = "";
             string roomName = "";
-            for (int i = 0; i < _roomNo; i++)
+            for (int i = 0; i < _numberOfRooms; i++)
             {
                 roomId = _client.myReceive(4);
                 nameSize = _client.myReceive(2);
@@ -111,7 +112,7 @@ namespace client
             createRoom room = new createRoom();
             room.ShowDialog();
             Show();
-            if (gotInfo)
+            if (gotInfo) //if user entered values in the 4 text boxes.
             {
                 lblStatus.Content = "got input for createRoom";
                 //send create room message and get answer
@@ -160,6 +161,7 @@ namespace client
         {
             joinRoomAsync();
         }
+
         private /*async*/ void joinRoomAsync()
         {
             if (_roomName == null)
@@ -179,7 +181,7 @@ namespace client
                     {
                         //success
                         Hide();
-                        roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime));
+                        roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime), roomID);
                         room.ShowDialog();
                         lblStatus.Content = "success";
                         Show();

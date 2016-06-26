@@ -7,14 +7,14 @@
         mc:Ignorable="d"
         Title="Login" Height="208.019" Width="364.784">
     <Grid>
-        <TextBox x:Name="txtUsername" HorizontalAlignment="Left" Height="24" Margin="130,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="txtUsername_TextChanged" Text="user"/>
+        <TextBox x:Name="txtUsername" HorizontalAlignment="Left" Height="24" Margin="130,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="user"/>
         <Label x:Name="lblUsername" Content="Username" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.776,0.654" Width="69"/>
         <Label x:Name="lblPassword" Content="Password" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top" Width="69"/>
         <Button x:Name="btnLogin" Content="Log In" HorizontalAlignment="Left" Margin="10,147,0,0" VerticalAlignment="Top" Width="75" Click="btnLogin_Click"/>
         <Button x:Name="btnExit" Content="Exit" HorizontalAlignment="Left" Margin="254,147,0,0" VerticalAlignment="Top" Width="75"/>
         <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="77,10,0,0" VerticalAlignment="Top" Height="30" Width="207"/>
         <Button x:Name="btnSignUp" Content="Sign Up" HorizontalAlignment="Left" Margin="130,147,0,0" VerticalAlignment="Top" Width="75" Click="btnSignUp_Click"/>
-        <PasswordBox x:Name="passBox" HorizontalAlignment="Left" Height="24" Margin="130,101,0,0" VerticalAlignment="Top" Width="120" PasswordChanged="passwordBox_PasswordChanged" Password="Aa12"/>
+        <PasswordBox x:Name="passBox" HorizontalAlignment="Left" Height="24" Margin="130,101,0,0" VerticalAlignment="Top" Width="120" Password="Aa12"/>
 
     </Grid>
 </Window>

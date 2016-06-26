@@ -24,18 +24,22 @@ namespace client
         List<string> _userList = new List<string>();
         int _userNo;
         int _time;
+        string _roomId;
         
         public roomInterface()
         {
             InitializeComponent();
         }
-        public roomInterface(myTcpClient newClient,int time)
+
+        public roomInterface(myTcpClient newClient,int time, string roomId)
         {
             InitializeComponent();
             _client = newClient;
             requestGetUserListAsync();
             _time = time;
+            _roomId = roomId;
         }
+
         private async void requestGetUserListAsync()
         {
             bool exists = true;

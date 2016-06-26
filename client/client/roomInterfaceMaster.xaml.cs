@@ -23,11 +23,11 @@ namespace client
         {
             InitializeComponent();
             _client = newClient;
+            //TODO? send a join request
             requestGetUserListAsync();
             _time = time;
             Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
             listenThread.Start();
-            requestGetUserListAsync();
         }
 
         public void listenToReplies()
