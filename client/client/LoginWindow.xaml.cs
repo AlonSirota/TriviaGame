@@ -68,5 +68,11 @@ namespace client
             s.ShowDialog();
             Show();
         }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            _client.mySend("299");
+            Close();
+        }
     }
 }
