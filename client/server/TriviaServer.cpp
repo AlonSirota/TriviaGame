@@ -250,6 +250,21 @@ int TriviaServer::closeRoom(std::shared_ptr<User>  user, bool startGame)
 	}
 }
 
+bool TriviaServer::isUserAdminOfRoom(std::shared_ptr<User> user)
+{
+	if (user != nullptr)
+	{
+		if (!_roomList.count(user->_currRoomID)) //and if room exist
+		{
+			return user == _roomList[user->_currRoomID]->_admin;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
 //done
 std::shared_ptr<Room> TriviaServer::getRoomById(int id)
 {
@@ -366,22 +381,24 @@ void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged
 }
 
 void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
-{
-	//std::cout << "handleStartGame was called but isn't implemented yet\n";
-	std::shared_ptr<Room> room = _roomList[msg._user->_currRoomID];
-	try
+{//TODO add to the protocol a confirmation of whether or not the game was created successfuly.
+	if (isUserAdminOfRoom(msg._user))
 	{
-		Game currentGame(room->_users, room->_questionsNo, _db); //this may throw
-		//room->_admin->send(std::to_string(START_GAME_REPLY_SUCCESS)); //WHAT IS THIS MESSAGE???
-		_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
-		currentGame.sendQuestionToAllUsers();
-		handleCloseRoom(msg, true);
+		std::shared_ptr<Room> room = _roomList[msg._user->_currRoomID];
+		try
+		{
+			Game currentGame(room->_users, room->_questionsNo, _db); //this may throw
+																	 //room->_admin->send(std::to_string(START_GAME_REPLY_SUCCESS)); //WHAT IS THIS MESSAGE???
+			_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
+			currentGame.sendQuestionToAllUsers();
+			handleCloseRoom(msg, true);
+		}
+		catch (SQLite::Exception & e)
+		{
+			//room->_admin->send(std::to_string(START_GAME_REPLY_FAILED));
+			std::cout << "handleStartGame failed: " << e.what() << "\n";
+		}
 	}	
-	catch (SQLite::Exception & e)
-	{
-		room->_admin->send(std::to_string(START_GAME_REPLY_FAILED));
-		std::cout << "handleStartGame failed: " << e.what() << "\n";
-	}
 }
 
 void TriviaServer::handleUserAnswer(recievedMessage &msg)
