@@ -167,6 +167,7 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 			break;
 		}
 		case USERS_IN_ROOM_REQUEST:
+
 		case JOIN_ROOM_REQUEST:
 		{
 			info.push_back(Helper::getPartFromSocket(socket, 4).data());
@@ -407,7 +408,7 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 		_roomList.insert(std::pair<int, std::shared_ptr<Room>>(roomIdTemp, std::make_shared<Room>(currentRoom)));
 		user->_currRoomID = roomIdTemp;
 		Helper::sendData(message._socket,std::to_string(CREATE_ROOM_SUCSESS));
-		currentRoom.sendMessage(currentRoom.getUsersListMessage());
+		//currentRoom.sendMessage(currentRoom.getUsersListMessage());
 		return(true);
 	}
 	else

@@ -9,8 +9,6 @@ namespace client
     public partial class LoginWindow : Window
     {
         myTcpClient _client;
-        string username;
-        string password;
         public LoginWindow()
         {
             InitializeComponent();
@@ -58,27 +56,17 @@ namespace client
         private string requestSignIn()
         {
             _client.mySend("200" +
-                username.Length.ToString().PadLeft(2, '0') + username +
-                password.Length.ToString().PadLeft(2, '0') + password);
+                this.txtUsername.Text.Length.ToString().PadLeft(2, '0') + this.txtUsername.Text +
+                this.passBox.Password.Length.ToString().PadLeft(2, '0') + this.passBox.Password);
             return _client.myReceive(4);
         }
 
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-            SignUp s = new SignUp(username, password, _client);
+            SignUp s = new SignUp(this.txtUsername.Text, this.passBox.Password, _client);
             s.ShowDialog();
             Show();
-        }
-
-        private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            username = txtUsername.Text;
-        }
-
-        private void passwordBox_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            password = passBox.Password;
         }
     }
 }

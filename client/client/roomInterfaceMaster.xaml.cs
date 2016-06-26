@@ -19,6 +19,17 @@ namespace client
         int _userNo;
         int _time;
 
+        public roomInterfaceMaster(myTcpClient newClient, int time)
+        {
+            InitializeComponent();
+            _client = newClient;
+            requestGetUserListAsync();
+            _time = time;
+            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
+            listenThread.Start();
+            requestGetUserListAsync();
+        }
+
         public void listenToReplies()
         {
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () => 
@@ -60,16 +71,6 @@ namespace client
         public roomInterfaceMaster()
         {
             InitializeComponent();
-        }
-
-        public roomInterfaceMaster(myTcpClient newClient, int time)
-        {
-            InitializeComponent();
-            _client = newClient;
-            requestGetUserListAsync();
-            _time = time;
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            listenThread.Start();
         }
 
         private async void requestGetUserListAsync()
