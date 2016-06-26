@@ -136,7 +136,7 @@ namespace client
                 roomId = _client.myReceive(roomIdLength);
                 //success
                 Hide();
-                roomInterfaceMaster roomIn = new roomInterfaceMaster(_client, Int32.Parse(questionTime), roomId);
+                roomInterface roomIn = new roomInterface(_client, Int32.Parse(questionTime), roomId);
                 roomIn.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
