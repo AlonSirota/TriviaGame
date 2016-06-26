@@ -66,17 +66,17 @@ bool Game::handleNextTurn()
 	return true;
 }
 
-bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int time)
+bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerIndex, int time)
 {
 	_currentTurnAnswers++;
 	bool isCorrect = false;
-	if (answerNo - 1 == _questions[_currQuestionIndex]->getCorrectAnswerIndex()) //the -1 is there because answerNo index starts at 1, but the index of correct answer starts at 0.
+	if (answerIndex - 1 == _questions[_currQuestionIndex]->getCorrectAnswerIndex()) //the -1 is there because answerIndex index starts at 1, but the index of correct answer starts at 0.
 	{
 		_results[user->_username]++;
 		isCorrect = true;
 	}
 	
-	if (answerNo == 5)
+	if (answerIndex == 5)
 	{
 		_db->addAnswerToUser(_id,
 			user->_username,
@@ -90,7 +90,7 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerNo, int ti
 		_db->addAnswerToUser(_id,
 			user->_username,
 			_questions[_currQuestionIndex]->getId(),
-			_questions[_currQuestionIndex]->getAnswers()[answerNo],
+			_questions[_currQuestionIndex]->getAnswers()[answerIndex],
 			isCorrect,
 			time);
 	}
