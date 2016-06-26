@@ -75,6 +75,7 @@ namespace client
         private async void requestGetUserListAsync()
         {
             _client.mySend("207"); //TODO make this async
+            //TODO send the id of the room
         }
 
         //after recieved 108
