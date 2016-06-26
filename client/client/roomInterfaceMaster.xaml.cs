@@ -18,14 +18,16 @@ namespace client
         List<string> _userList = new List<string>();
         int _userNo;
         int _time;
+        string _roomId;
 
-        public roomInterfaceMaster(myTcpClient newClient, int time)
+        public roomInterfaceMaster(myTcpClient newClient, int time, string roomId)
         {
+            _time = time;
+            _roomId = roomId;
             InitializeComponent();
             _client = newClient;
             //TODO? send a join request
-            requestGetUserListAsync();
-            _time = time;
+            requestGetUserListAsync();            
             Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
             listenThread.Start();
         }
@@ -75,8 +77,7 @@ namespace client
 
         private async void requestGetUserListAsync()
         {
-            _client.mySend("207"); //TODO make this async
-            //TODO send the id of the room
+            _client.mySend("207" + _roomId); //TODO make this async
         }
 
         //after recieved 108

@@ -407,13 +407,18 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 		Room currentRoom(roomIdTemp, user, message._values[0], atoi(message._values[1].c_str()), atoi(message._values[2].c_str()), atoi(message._values[3].c_str()));
 		_roomList.insert(std::pair<int, std::shared_ptr<Room>>(roomIdTemp, std::make_shared<Room>(currentRoom)));
 		user->_currRoomID = roomIdTemp;
-		Helper::sendData(message._socket,std::to_string(CREATE_ROOM_SUCSESS));
-		//currentRoom.sendMessage(currentRoom.getUsersListMessage());
+
+		std::string messageCode = std::to_string(CREATE_ROOM_REPLY),
+			roomIdStr = std::to_string(roomIdTemp),
+			roomIdStrLength = std::to_string(roomIdStr.length());
+
+		Helper::sendData(message._socket, messageCode + roomIdStrLength + roomIdStr);
+		currentRoom.sendMessage(currentRoom.getUsersListMessage());
 		return(true);
 	}
 	else
 	{
-		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_FAILED));
+		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_REPLY) + std::to_string(0));
 		return false;
 	}
 }

@@ -2,16 +2,11 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace client
 {
@@ -46,26 +41,53 @@ namespace client
         {
             InitializeComponent();
             _client = newClient;
+            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
+            listenThread.Start();
         }
 
-        private void btnGetRoomList_Click(object sender, RoutedEventArgs e)
+        public void listenToReplies()
         {
-            requestGetRoomListAsync();
-            lblStatus.Content = "Trying to get Room List";
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () => 
+            {
+                bool exists = true;
+                string responseCode;
+
+                do /*while (exists)*/
+                {
+                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
+                    //responseCode = _client.myReceive(3);
+
+                    switch (responseCode)
+                    {
+                        case "106":
+                            handleRoomList();
+                            break;
+                        case "114":
+                            handleCreateRoomResponse();
+                            break;
+                        default:
+                            lblStatus.Content = "Error - wrong code detected";
+                            break;
+                    }
+                } while (exists);
+            })); //end of beginInvoke.
         }
-        private async void requestGetRoomListAsync()
+
+        public void handleRoomList()
         {
-            //string response = await Task.Factory.StartNew(() => requestRoomList());
-            string response = requestRoomList();
-            string code = response.Substring(0, 3);
-            if (code == "106")
+            _numberOfRooms = Int32.Parse(_client.myReceive(4));
+            string roomId = "";
+            string nameSize = "";
+            string roomName = "";
+            _roomNametoId.Clear();//clear dictionary
+            for (int i = 0; i < _numberOfRooms; i++)
             {
-                lblStatus.Content = "Correct code detected";
+                roomId = _client.myReceive(4);
+                nameSize = _client.myReceive(2);
+                roomName = _client.myReceive(Int32.Parse(nameSize));
+                _roomNametoId.Add(roomName, roomId);
             }
-            else
-            {
-                lblStatus.Content = "Error - wrong code detected";
-            }
+
             if (_roomNametoId.Count() == 0)
             {
                 lblStatus.Content = "Error - no rooms";
@@ -79,30 +101,46 @@ namespace client
                 }
             }
         }
+
+        private void btnGetRoomList_Click(object sender, RoutedEventArgs e)
+        {
+            requestGetRoomListAsync();
+            lblStatus.Content = "Trying to get Room List";
+        }
+        private async void requestGetRoomListAsync()
+        {
+            //string response = await Task.Factory.StartNew(() => requestRoomList());
+            requestRoomList();
+        }
         //205
-        private string requestRoomList()
+        private void requestRoomList()
         {
             _client.mySend("205"); //send code
-            _roomNametoId.Clear();//clear dictionary
-            string code = _client.myReceive(3);
-            Debug.Print("got in requestRoomList : " + code);
-            _numberOfRooms = Int32.Parse(_client.myReceive(4));
-            string roomId = "";
-            string nameSize = "";
-            string roomName = "";
-            for (int i = 0; i < _numberOfRooms; i++)
-            {
-                roomId = _client.myReceive(4);
-                nameSize = _client.myReceive(2);
-                roomName = _client.myReceive(Int32.Parse(nameSize));
-                _roomNametoId.Add(roomName, roomId);
-            }
-            return code;
         }
 
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
         {
             createRoomAsync();
+        }
+
+        public void handleCreateRoomResponse()
+        {
+            string roomId;
+            int roomIdLength = Int32.Parse(_client.myReceive(1));
+            if (roomIdLength == 0)
+            {
+                lblStatus.Content = "room creation failed";
+            }
+            else
+            {
+                roomId = _client.myReceive(roomIdLength);
+                //success
+                Hide();
+                roomInterfaceMaster roomIn = new roomInterfaceMaster(_client, Int32.Parse(questionTime), roomId);
+                roomIn.ShowDialog();
+                lblStatus.Content = "success";
+                Show();
+            }
         }
 
         private async void createRoomAsync()
@@ -117,44 +155,20 @@ namespace client
                 lblStatus.Content = "got input for createRoom";
                 //send create room message and get answer
                 //string response = await Task.Factory.StartNew(() => requestCreateRoom());
-                string response = requestCreateRoom();
-                string code = response.Substring(0, 3);
-                if (code == "114")
-                {
-                    lblStatus.Content = "Correct code detected";//open roomInterfaceMaster
-                    if (response[3] == '0')
-                    {
-                        //success
-                        Hide();
-                        roomInterfaceMaster roomIn = new roomInterfaceMaster(_client, Int32.Parse(questionTime));
-                        roomIn.ShowDialog();
-                        lblStatus.Content = "success";
-                        Show();
-                    }
-                    else if (response[3] == '1')
-                    {
-                        lblStatus.Content = "Error - fail";
-                    }
-                    else
-                    {
-                        lblStatus.Content = "Error - unknown";
-                    }
-                }
-                else
-                {
-                    lblStatus.Content = "Error - wrong code detected";
-                }
+                requestCreateRoom();
+                //string code = response.Substring(0, 3);
+                //int roomIdLength = response[3];
+
+                
             }
         }
 
-        private string requestCreateRoom()
+        private void requestCreateRoom()
         {
             string sendString = "213" + roomName.Length.ToString().PadLeft(2, '0') +roomName +
                     playerNo + questionNo.ToString().PadLeft(2, '0') +
                     questionTime.ToString().PadLeft(2, '0');
             _client.mySend(sendString);
-            string ans = _client.myReceive(4);
-            return ans;
         }
 
         private void btnJoinRoom_Click(object sender, RoutedEventArgs e)
