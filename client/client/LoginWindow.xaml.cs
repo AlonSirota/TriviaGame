@@ -4,14 +4,14 @@ using System.Windows.Controls;
 namespace client
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for LoginWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class LoginWindow : Window
     {
         myTcpClient _client;
         string username;
         string password;
-        public MainWindow()
+        public LoginWindow()
         {
             InitializeComponent();
             _client = new myTcpClient("127.0.0.1", 8820);
