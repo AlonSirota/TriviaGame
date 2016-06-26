@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 //TODO combine this with normal room interface (using inheritance).
 namespace client
@@ -19,37 +21,40 @@ namespace client
 
         public void listenToReplies()
         {
-            bool exists = true;
-            string responseCode;
-
-            do /*while (exists)*/
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () => 
             {
-                //response = await Task.Factory.StartNew(() => requestUserList());
-                responseCode = _client.myReceive(3);
+                bool exists = true;
+                string responseCode;
 
-                switch (responseCode)
+                do /*while (exists)*/
                 {
-                    case "108":
-                        lblStatus.Content = "recieved user list.";
-                        readUserList();
-                        break;
-                    case "116":
-                        lblStatus.Content = "Room Closed By Admin";
-                        Close();
-                        break;
-                    case "118":
-                        //game begun
-                        Hide();
-                        Game s = new Game(_client, _time);
-                        s.ShowDialog();
-                        Close();
-                        exists = false;
-                        break;
-                    default:
-                        lblStatus.Content = "Error - wrong code detected";
-                        break;
-                }
-            } while (exists);
+                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
+                    //responseCode = _client.myReceive(3);
+
+                    switch (responseCode)
+                    {
+                        case "108":
+                            lblStatus.Content = "recieved user list.";
+                            readUserList();
+                            break;
+                        case "116":
+                            lblStatus.Content = "Room Closed By Admin";
+                            Close();
+                            break;
+                        case "118":
+                            //game begun
+                            Hide();
+                            Game s = new Game(_client, _time);
+                            s.ShowDialog();
+                            Close();
+                            exists = false;
+                            break;
+                        default:
+                            lblStatus.Content = "Error - wrong code detected";
+                            break;
+                    }
+                } while (exists);
+            })); //end of beginInvoke.
         }
 
         public roomInterfaceMaster()
@@ -63,7 +68,7 @@ namespace client
             _client = newClient;
             requestGetUserListAsync();
             _time = time;
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));//TODO this crushes because it alters labels before the constructor is done.
+            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
             listenThread.Start();
         }
 
