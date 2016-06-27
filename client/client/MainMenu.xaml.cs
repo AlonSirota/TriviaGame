@@ -27,12 +27,6 @@ namespace client
         public static string questionTime { get; set; }
         public static bool gotInfo { get; set; }
 
-
-        //joinRoom variables
-        string _joinRoomQuestionsNo;
-        string _joinRoomQuestionTime;
-        string _roomName;
-
         public MainMenu()
         {
             InitializeComponent();
@@ -188,9 +182,11 @@ namespace client
 
             if (successCode == 0)
             {
+                int numberOfQuestions = Int32.Parse(_client.myReceive(2));
+                int timePerQuestion = Int32.Parse(_client.myReceive(2));
                 //success
                 Hide();
-                roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime), _roomNametoId[_roomName]);
+                roomInterface room = new roomInterface(_client, timePerQuestion, numberOfQuestions, _roomNametoId[(string)listViewRooms.SelectedItem]);
                 room.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
@@ -215,13 +211,14 @@ namespace client
 
         private /*async*/ void joinRoomAsync()
         {
-            if (_roomName == null)
+            string roomName = (string)listViewRooms.SelectedItem;
+            if (roomName == null)
             {
                 lblStatus.Content = "Choose a room";
             }
             else
             {
-                string roomID = _roomNametoId[_roomName]; //get room id
+                string roomID = _roomNametoId[roomName]; //get room id
                 //string response = await Task.Factory.StartNew(() => requestJoinRoom(roomID));
                 requestJoinRoom(roomID);
             }            
@@ -231,11 +228,6 @@ namespace client
         private void requestJoinRoom(string roomID)
         {
             _client.mySend("209"+roomID);
-        }
-
-        private void listViewRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _roomName = (string)listViewRooms.SelectedItem;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
