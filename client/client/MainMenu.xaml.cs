@@ -122,7 +122,6 @@ namespace client
 
         public bool handleCreateRoomReply()
         {
-            string roomId;
             string success = _client.myReceive(1);
             if (success == "1")
             {
@@ -133,7 +132,7 @@ namespace client
             {
                 //success
                 Hide();
-                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), Int32.Parse(_createRoomNumberOfQuestions), roomId);
+                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), Int32.Parse(_createRoomNumberOfQuestions), _roomNametoId[_createRoomName]);
                 roomIn.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
@@ -153,7 +152,7 @@ namespace client
                 _createRoomName = room.txtbRoomName.Text;
                 _createRoomNumberOfPlayers = room.txtbPlayerNo.Text;
                 _createRoomNumberOfQuestions = room.txtbQuestionsNo.Text;
-                _createRoomTimePerQuestion = room.txtbQuestionTime;
+                _createRoomTimePerQuestion = room.txtbQuestionTime.Text;
                 lblStatus.Content = "got input for createRoom";
                 requestCreateRoom();
             }
@@ -161,14 +160,14 @@ namespace client
         }
 
         //213##roomName playersNumber questionsNumber questionTimeInSec
-        private void requestCreateRoom(string roomName, string numberOfPlayers, string numberOfQuestions, string timePerQuestion)
+        private void requestCreateRoom()
         {
             string sendString = "213" +
-                roomName.Length.ToString().PadLeft(2, '0') +
-                roomName +
-                numberOfPlayers +
-                numberOfQuestions.PadLeft(2, '0') +
-                timePerQuestion.PadLeft(2, '0');
+                _createRoomName.Length.ToString().PadLeft(2, '0') +
+                _createRoomName +
+                _createRoomNumberOfPlayers +
+                _createRoomNumberOfQuestions.PadLeft(2, '0') +
+                _createRoomTimePerQuestion.PadLeft(2, '0');
 
             _client.mySend(sendString);
         }
