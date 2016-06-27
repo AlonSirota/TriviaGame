@@ -15,6 +15,7 @@ namespace client
     {
         myTcpClient _client;
         List<string> _userList = new List<string>();
+        int _numberOfQuestions;
         int _timePerQuestion;
         string _roomId;
         
@@ -23,9 +24,9 @@ namespace client
             InitializeComponent();
         }
 
-        public roomInterface(myTcpClient newClient,int time, string roomId)
+        public roomInterface(myTcpClient newClient, int timePerQuestion, int numberOfQuestions, string roomId)
         {
-            _timePerQuestion = time;
+            _timePerQuestion = timePerQuestion;
             _roomId = roomId;
             InitializeComponent();
             _client = newClient;
@@ -60,7 +61,7 @@ namespace client
                         case "118":
                             //game begun
                             Hide();
-                            Game s = new Game(_client, _timePerQuestion);
+                            Game s = new Game(_client, _timePerQuestion, _numberOfQuestions);
                             s.ShowDialog();
                             Close();
                             exists = false;
