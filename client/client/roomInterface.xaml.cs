@@ -15,8 +15,7 @@ namespace client
     {
         myTcpClient _client;
         List<string> _userList = new List<string>();
-        int _userNo;
-        int _time;
+        int _timePerQuestion;
         string _roomId;
         
         public roomInterface()
@@ -26,7 +25,7 @@ namespace client
 
         public roomInterface(myTcpClient newClient,int time, string roomId)
         {
-            _time = time;
+            _timePerQuestion = time;
             _roomId = roomId;
             InitializeComponent();
             _client = newClient;
@@ -61,7 +60,7 @@ namespace client
                         case "118":
                             //game begun
                             Hide();
-                            Game s = new Game(_client, _time);
+                            Game s = new Game(_client, _timePerQuestion);
                             s.ShowDialog();
                             Close();
                             exists = false;
@@ -116,12 +115,12 @@ namespace client
         //after recieved 108
         private void readUserList()
         {
-            _userNo = Int32.Parse(_client.myReceive(1));
+            int numberOfUsers = Int32.Parse(_client.myReceive(1));
             string nameSize = "";
             string userName = "";
             _userList.Clear();
 
-            for (int i = 0; i < _userNo; i++)
+            for (int i = 0; i < numberOfUsers; i++)
             {
                 nameSize = _client.myReceive(2);
                 userName = _client.myReceive(Int32.Parse(nameSize));
