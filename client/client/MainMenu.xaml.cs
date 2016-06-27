@@ -63,7 +63,10 @@ namespace client
                             handleRoomList();
                             break;
                         case "114":
-                            handleCreateRoomResponse();
+                            exists = !handleCreateRoomReply();
+                            break;
+                        case "110":
+                            exists = !handleJoinRoomReply();
                             break;
                         default:
                             lblStatus.Content = "Error - wrong code detected";
@@ -123,13 +126,14 @@ namespace client
             createRoomAsync();
         }
 
-        public void handleCreateRoomResponse()
+        public bool handleCreateRoomReply()
         {
             string roomId;
             int roomIdLength = Int32.Parse(_client.myReceive(1));
             if (roomIdLength == 0)
             {
                 lblStatus.Content = "room creation failed";
+                return false;
             }
             else
             {
@@ -140,6 +144,7 @@ namespace client
                 roomIn.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
+                return true;
             }
         }
 
@@ -177,6 +182,37 @@ namespace client
             joinRoomAsync();
         }
 
+        private bool handleJoinRoomReply()
+        {
+            int successCode = Int32.Parse(_client.myReceive(1));
+
+            if (successCode == 0)
+            {
+                //success
+                Hide();
+                roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime), _roomNametoId[_roomName]);
+                room.ShowDialog();
+                lblStatus.Content = "success";
+                Show();
+                return true;
+            }
+            else if (successCode == 1)
+            {
+                lblStatus.Content = "Error - room is full";
+                return false;
+            }
+            else if (successCode == 2)
+            {
+                lblStatus.Content = "Error - room doesnt exist";
+                return false;
+            }
+            else
+            {
+                lblStatus.Content = "Error - unexpected protocol code recieved";
+                return false;
+            }
+        }
+
         private /*async*/ void joinRoomAsync()
         {
             if (_roomName == null)
@@ -187,50 +223,14 @@ namespace client
             {
                 string roomID = _roomNametoId[_roomName]; //get room id
                 //string response = await Task.Factory.StartNew(() => requestJoinRoom(roomID));
-                string response = requestJoinRoom(roomID);
-                string code = response.Substring(0, 3);
-                if (code == "110")
-                {
-                    lblStatus.Content = "Correct code detected";//open roomInterface
-                    if (response[3] == '0')
-                    {
-                        //success
-                        Hide();
-                        roomInterface room = new roomInterface(_client, Int32.Parse(_joinRoomQuestionTime), roomID);
-                        room.ShowDialog();
-                        lblStatus.Content = "success";
-                        Show();
-                    }
-                    else if (response[3] == '1')
-                    {
-                        lblStatus.Content = "Error - room is full";
-                    }
-                    else if (response[3] == '2')
-                    {
-                        lblStatus.Content = "Error - room doesnt exist";
-                    }
-                    else
-                    {
-                        lblStatus.Content = "Error - unknown";
-                    }
-                }
-                else
-                {
-                    lblStatus.Content = "Error - wrong code detected";
-                }
+                requestJoinRoom(roomID);
             }            
         }
-        private string requestJoinRoom(string roomID)
+
+        //TODO change protocol to 208<idLength><id>
+        private void requestJoinRoom(string roomID)
         {
-            _client.mySend("209"+roomID); //send code
-            string code = _client.myReceive(3);
-            string ans = _client.myReceive(1);
-            if(ans == "0" && code == "110")
-            {
-                _joinRoomQuestionsNo = _client.myReceive(2);
-                _joinRoomQuestionTime = _client.myReceive(2);
-            }
-            return code+ans;
+            _client.mySend("209"+roomID);
         }
 
         private void listViewRooms_SelectionChanged(object sender, SelectionChangedEventArgs e)
