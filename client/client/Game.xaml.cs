@@ -24,6 +24,7 @@ namespace client
 
         int _correctAnswerIndex = 0;
         int _currentQuestionIndex = 0;
+        int _totalNumberOfQuestions; //TODO start using finals.
         //for score
         List<string> _userList = new List<string>();
         List<int> _scores = new List<int>();
@@ -33,11 +34,15 @@ namespace client
         {
             InitializeComponent();
         }
-        public Game(myTcpClient newClient,int time)
+
+        public Game(myTcpClient newClient, int timePerQuestion, int numberOfQuestions)
         {
             InitializeComponent();
+
             _client = newClient;
-            _timePerQuestion = time;
+            _timePerQuestion = timePerQuestion;
+            _totalNumberOfQuestions = numberOfQuestions;
+
             setUpTimer();
             getQuestionFirst();
             asignAnswers();
