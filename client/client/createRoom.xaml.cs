@@ -33,18 +33,18 @@ namespace client
             }
             else
             {
-                MainMenu.questionNo = this.txtbQuestionsNo.Text;
-                MainMenu.questionTime = this.txtbQuestionTime.Text;
-                MainMenu.roomName = this.txtbRoomName.Text;
-                MainMenu.playerNo = this.txtbPlayerNo.Text;
-                MainMenu.gotInfo = true;
+                MainMenu._createRoomNumberOfQuestions = this.txtbQuestionsNo.Text;
+                MainMenu._createRoomTimePerQuestion = this.txtbQuestionTime.Text;
+                MainMenu._createRoomName = this.txtbRoomName.Text;
+                MainMenu._createRoomNumberOfPlayers = this.txtbPlayerNo.Text;
+                MainMenu._createRoomGotInfo = true;
                 Close();
             }
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            MainMenu.gotInfo = false;
+            MainMenu._createRoomGotInfo = false;
             Close();
         }
     }

@@ -21,11 +21,11 @@ namespace client
         int _numberOfRooms;
         //for creating new room.
         //TODO there has got to be a better solution than this:
-        public static string roomName { get; set; }
-        public static string playerNo { get; set; }
-        public static string questionNo { get; set; }
-        public static string questionTime { get; set; }
-        public static bool gotInfo { get; set; }
+        public static string _createRoomName { get; set; }
+        public static string _createRoomNumberOfPlayers { get; set; }
+        public static string _createRoomNumberOfQuestions { get; set; }
+        public static string _createRoomTimePerQuestion { get; set; }
+        public static bool _createRoomGotInfo { get; set; }
 
         public MainMenu()
         {
@@ -134,7 +134,7 @@ namespace client
                 roomId = _client.myReceive(roomIdLength);
                 //success
                 Hide();
-                roomInterface roomIn = new roomInterface(_client, Int32.Parse(questionTime), roomId);
+                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), num);
                 roomIn.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
@@ -149,7 +149,7 @@ namespace client
             createRoom room = new createRoom();
             room.ShowDialog();
             Show();
-            if (gotInfo) //if user entered values in the 4 text boxes.
+            if (_createRoomGotInfo) //if user entered values in the 4 text boxes.
             {
                 lblStatus.Content = "got input for createRoom";
                 //send create room message and get answer
@@ -164,9 +164,9 @@ namespace client
 
         private void requestCreateRoom()
         {
-            string sendString = "213" + roomName.Length.ToString().PadLeft(2, '0') +roomName +
-                    playerNo + questionNo.ToString().PadLeft(2, '0') +
-                    questionTime.ToString().PadLeft(2, '0');
+            string sendString = "213" + _createRoomName.Length.ToString().PadLeft(2, '0') +_createRoomName +
+                    _createRoomNumberOfPlayers + _createRoomNumberOfQuestions.ToString().PadLeft(2, '0') +
+                    _createRoomTimePerQuestion.ToString().PadLeft(2, '0');
             _client.mySend(sendString);
         }
 
