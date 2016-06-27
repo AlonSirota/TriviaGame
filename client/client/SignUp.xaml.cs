@@ -41,7 +41,14 @@ namespace client
         //TODO crashes if email is empty
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
-            requestSignUpAsync();
+            if(_email == "" || _username == "" || _password == "")
+            {
+                MessageBox.Show("Fill All Fields");
+            }
+            else
+            {
+                requestSignUpAsync();
+            }
             lblStatus.Content = "trying to sign up";
         }
 
