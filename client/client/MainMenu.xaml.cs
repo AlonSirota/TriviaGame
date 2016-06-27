@@ -25,7 +25,6 @@ namespace client
         string _createRoomNumberOfPlayers;
         string _createRoomNumberOfQuestions;
         string _createRoomTimePerQuestion;
-        static bool _createRoomGotInfo;
 
         public MainMenu()
         {
@@ -152,7 +151,7 @@ namespace client
             createRoom room = new createRoom();
             room.ShowDialog();
             Show();
-            if (_createRoomGotInfo) //if user entered values in the 4 text boxes.
+            if (room._gotParameters) //if user entered values in the 4 text boxes.
             {
                 _createRoomName = room.txtbRoomName.Text;
                 _createRoomNumberOfPlayers = room.txtbPlayerNo.Text;

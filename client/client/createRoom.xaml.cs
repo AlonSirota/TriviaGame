@@ -19,7 +19,7 @@ namespace client
     /// </summary>
     public partial class createRoom : Window
     {
-        bool _gotParameters = false;
+        public bool _gotParameters;
         public createRoom()
         {
             InitializeComponent();
