@@ -108,9 +108,6 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	case CREATE_ROOM_REQUEST: //debugged
 		handleCreateRoom(msg);
 		break;
-	case CLOSE_ROOM_REQUEST: //debugged
-		handleCloseRoom(msg, false);
-		break;
 	case START_GAME_REQUEST: //debugged
 		handleStartGame(msg);
 		break;
@@ -251,14 +248,11 @@ int TriviaServer::closeRoom(std::shared_ptr<User>  user, bool startGame)
 	}
 }
 
-bool TriviaServer::isUserAdminOfRoom(std::shared_ptr<User> user)
+bool TriviaServer::isUserAdminOfRoom(const std::shared_ptr<User> &user)
 {
-	if (user != nullptr)
+	if (_roomList.count(user->_currRoomID)) //and if room exist
 	{
-		if (!_roomList.count(user->_currRoomID)) //and if room exist
-		{
-			return user == _roomList[user->_currRoomID]->_admin;
-		}
+		return user == _roomList[user->_currRoomID]->_admin;
 	}
 	else
 	{
@@ -475,19 +469,19 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 	return ans;
 }
 //done
-bool TriviaServer::handleLeaveRoom(recievedMessage& message)
+void TriviaServer::handleLeaveRoom(recievedMessage& message)
 {
 	std::shared_ptr<User> user = message._user;
-	if (_roomList.count(user->_currRoomID))
+
+	if (isUserAdminOfRoom(user))
+	{
+		handleCloseRoom(message, false);
+	}
+	else if (_roomList.count(user->_currRoomID))
 	{
 		std::shared_ptr<Room> room = getRoomById(user->_currRoomID);
 		user->leaveRoom();
 		room->leaveRoom(user);
-		return true;
-	}
-	else
-	{
-		return false;
 	}
 }
 //done

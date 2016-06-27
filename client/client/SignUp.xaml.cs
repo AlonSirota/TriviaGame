@@ -38,6 +38,7 @@ namespace client
             this.Close();
         }
 
+        //TODO crashes if email is empty
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
             requestSignUpAsync();

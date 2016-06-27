@@ -51,7 +51,7 @@ private:
 	bool handleCreateRoom(recievedMessage&);
 	bool handleCloseRoom(recievedMessage & message, bool startGame);
 	bool handleJoinRoom(recievedMessage&);
-	bool handleLeaveRoom(recievedMessage&);
+	void handleLeaveRoom(recievedMessage&);
 	void handleGetUsersInRoom(recievedMessage&);
 	void handleGetRooms(recievedMessage&);
 
@@ -66,5 +66,5 @@ private:
 	std::shared_ptr<User> getUserBySocket(std::shared_ptr<tcp::socket>);
 	bool userExists(std::string);
 	int closeRoom(std::shared_ptr<User> user, bool startGame);
-	bool isUserAdminOfRoom(std::shared_ptr<User> user);
+	bool TriviaServer::isUserAdminOfRoom(const std::shared_ptr<User> &user);
 };

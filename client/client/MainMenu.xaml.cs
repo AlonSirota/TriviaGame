@@ -171,6 +171,7 @@ namespace client
             _client.mySend(sendString);
         }
 
+        //TODO not joining properly. potential problem in server
         private void btnJoinRoom_Click(object sender, RoutedEventArgs e)
         {
             joinRoomAsync();
