@@ -138,6 +138,11 @@ namespace client
                 Show();
                 return true;
             }
+            else
+            {
+                lblStatus.Content = "Error: unexepected code recieved";
+                return false;
+            }
         }
 
         private async void createRoomAsync()

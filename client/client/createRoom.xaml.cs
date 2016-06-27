@@ -19,6 +19,7 @@ namespace client
     /// </summary>
     public partial class createRoom : Window
     {
+        bool _gotParameters = false;
         public createRoom()
         {
             InitializeComponent();
@@ -26,25 +27,21 @@ namespace client
 
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
         {
-            //move values to Main menu
+            //TODO make sure fields are filled properly (no minuses, second max 99 and such).
             if(this.txtbRoomName.Text == "" || this.txtbPlayerNo.Text == "" || this.txtbQuestionsNo.Text == "" || this.txtbQuestionTime.Text == "")
             {
                 MessageBox.Show("Complete all fields");
             }
             else
             {
-                MainMenu._createRoomNumberOfQuestions = this.txtbQuestionsNo.Text;
-                MainMenu._createRoomTimePerQuestion = this.txtbQuestionTime.Text;
-                MainMenu._createRoomName = this.txtbRoomName.Text;
-                MainMenu._createRoomNumberOfPlayers = this.txtbPlayerNo.Text;
-                MainMenu._createRoomGotInfo = true;
+                _gotParameters = true;
                 Close();
             }
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            MainMenu._createRoomGotInfo = false;
+            _gotParameters = false;
             Close();
         }
     }
