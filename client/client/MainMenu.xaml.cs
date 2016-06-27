@@ -20,12 +20,12 @@ namespace client
         Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
         int _numberOfRooms;
         //for creating new room.
-        //TODO there has got to be a better solution than this:
-        public static string _createRoomName { get; set; }
-        public static string _createRoomNumberOfPlayers { get; set; }
-        public static string _createRoomNumberOfQuestions { get; set; }
-        public static string _createRoomTimePerQuestion { get; set; }
-        public static bool _createRoomGotInfo { get; set; }
+        //TODO there has got to be a better solution than this:}
+        string _createRoomName;
+        string _createRoomNumberOfPlayers;
+        string _createRoomNumberOfQuestions;
+        string _createRoomTimePerQuestion;
+        static bool _createRoomGotInfo;
 
         public MainMenu()
         {
@@ -123,18 +123,17 @@ namespace client
         public bool handleCreateRoomReply()
         {
             string roomId;
-            int roomIdLength = Int32.Parse(_client.myReceive(1));
-            if (roomIdLength == 0)
+            string success = _client.myReceive(1);
+            if (success == "1")
             {
                 lblStatus.Content = "room creation failed";
                 return false;
             }
-            else
+            else if (success == "0")
             {
-                roomId = _client.myReceive(roomIdLength);
                 //success
                 Hide();
-                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), num);
+                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), Int32.Parse(_createRoomNumberOfQuestions), roomId);
                 roomIn.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
@@ -151,22 +150,26 @@ namespace client
             Show();
             if (_createRoomGotInfo) //if user entered values in the 4 text boxes.
             {
+                _createRoomName = room.txtbRoomName.Text;
+                _createRoomNumberOfPlayers = room.txtbPlayerNo.Text;
+                _createRoomNumberOfQuestions = room.txtbQuestionsNo.Text;
+                _createRoomTimePerQuestion = room.txtbQuestionTime;
                 lblStatus.Content = "got input for createRoom";
-                //send create room message and get answer
-                //string response = await Task.Factory.StartNew(() => requestCreateRoom());
                 requestCreateRoom();
-                //string code = response.Substring(0, 3);
-                //int roomIdLength = response[3];
-
-                
             }
+            room.Close();
         }
 
-        private void requestCreateRoom()
+        //213##roomName playersNumber questionsNumber questionTimeInSec
+        private void requestCreateRoom(string roomName, string numberOfPlayers, string numberOfQuestions, string timePerQuestion)
         {
-            string sendString = "213" + _createRoomName.Length.ToString().PadLeft(2, '0') +_createRoomName +
-                    _createRoomNumberOfPlayers + _createRoomNumberOfQuestions.ToString().PadLeft(2, '0') +
-                    _createRoomTimePerQuestion.ToString().PadLeft(2, '0');
+            string sendString = "213" +
+                roomName.Length.ToString().PadLeft(2, '0') +
+                roomName +
+                numberOfPlayers +
+                numberOfQuestions.PadLeft(2, '0') +
+                timePerQuestion.PadLeft(2, '0');
+
             _client.mySend(sendString);
         }
 

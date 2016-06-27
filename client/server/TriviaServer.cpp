@@ -424,13 +424,13 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 			roomIdStr = std::to_string(roomIdTemp),
 			roomIdStrLength = std::to_string(roomIdStr.length());
 
-		Helper::sendData(message._socket, messageCode + roomIdStrLength + roomIdStr);
+		Helper::sendData(message._socket, messageCode + '0'/* + roomIdStrLength + roomIdStr*/);
 		currentRoom.sendMessage(currentRoom.getUsersListMessage());
 		return(true);
 	}
 	else
 	{
-		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_REPLY) + std::to_string(0));
+		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_REPLY) + '1'/*std::to_string(0)*/);
 		return false;
 	}
 }
