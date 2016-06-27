@@ -165,7 +165,14 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 			break;
 		}
 		case USERS_IN_ROOM_REQUEST:
-
+		{
+			int roomIdLength = Helper::getIntPartFromSocket(socket, 1);
+			if (roomIdLength != 0)
+			{
+				info.push_back(Helper::getPartFromSocket(socket, roomIdLength).data());
+			}
+			break;
+		}			
 		case JOIN_ROOM_REQUEST:
 		{
 			info.push_back(Helper::getPartFromSocket(socket, 4).data());
@@ -487,7 +494,16 @@ void TriviaServer::handleLeaveRoom(recievedMessage& message)
 //done
 void TriviaServer::handleGetUsersInRoom(recievedMessage& message)
 {
-	int roomId = stoi(message._values[0]);
+	int roomId;
+	if (message._values.size() == 0) //meaning user didn't send id.
+	{
+		roomId = message._user->_currRoomID;
+	}
+	else
+	{
+		roomId = stoi(message._values[0]);
+	}
+	
 	if (_roomList.count(roomId))
 	{
 		std::shared_ptr<Room> room = getRoomById(roomId);

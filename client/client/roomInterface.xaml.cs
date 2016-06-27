@@ -17,17 +17,15 @@ namespace client
         List<string> _userList = new List<string>();
         int _numberOfQuestions;
         int _timePerQuestion;
-        string _roomId;
         
         public roomInterface()
         {
             InitializeComponent();
         }
 
-        public roomInterface(myTcpClient newClient, int timePerQuestion, int numberOfQuestions, string roomId)
+        public roomInterface(myTcpClient newClient, int timePerQuestion, int numberOfQuestions)
         {
             _timePerQuestion = timePerQuestion;
-            _roomId = roomId;
             InitializeComponent();
             _client = newClient;
             //TODO? send a join request
@@ -76,7 +74,7 @@ namespace client
 
         private async void requestGetUserListAsync()
         {
-            _client.mySend("207" + _roomId); //TODO make this async
+            _client.mySend("2070"); //TODO make this async
         }
 
         private void btnLeaveRoom_Click(object sender, RoutedEventArgs e)

@@ -131,7 +131,7 @@ namespace client
             {
                 //success
                 Hide();
-                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), Int32.Parse(_createRoomNumberOfQuestions), _roomNametoId[_createRoomName]);
+                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), Int32.Parse(_createRoomNumberOfQuestions));
                 roomIn.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
@@ -192,7 +192,7 @@ namespace client
                 int timePerQuestion = Int32.Parse(_client.myReceive(2));
                 //success
                 Hide();
-                roomInterface room = new roomInterface(_client, timePerQuestion, numberOfQuestions, _roomNametoId[(string)listViewRooms.SelectedItem]);
+                roomInterface room = new roomInterface(_client, timePerQuestion, numberOfQuestions);
                 room.ShowDialog();
                 lblStatus.Content = "success";
                 Show();
