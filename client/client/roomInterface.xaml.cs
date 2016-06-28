@@ -29,7 +29,6 @@ namespace client
             InitializeComponent();
             _client = newClient;
             //TODO? send a join request
-            requestGetUserListAsync();
             Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
             listenThread.Start();
         }
@@ -43,7 +42,7 @@ namespace client
 
                 do /*while (exists)*/
                 {
-                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
+                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3)); //TODO wait, using async in a thread is pointless, right? (so we can either stop calling this function on a different thread, or use a non async call to the recieve)
                     //responseCode = _client.myReceive(3);
 
                     switch (responseCode)
@@ -55,6 +54,7 @@ namespace client
                         case "116":
                             lblStatus.Content = "Room Closed By Admin";
                             Close();
+                            exists = false;
                             break;
                         case "118":
                             //game begun
@@ -70,11 +70,6 @@ namespace client
                     }
                 } while (exists);
             })); //end of beginInvoke.
-        }
-
-        private async void requestGetUserListAsync()
-        {
-            _client.mySend("2070"); //TODO make this async
         }
 
         private void btnLeaveRoom_Click(object sender, RoutedEventArgs e)
