@@ -159,7 +159,7 @@ namespace client
                 _createRoomNumberOfQuestions = room.txtbQuestionsNo.Text;
                 _createRoomTimePerQuestion = room.txtbQuestionTime.Text;
                 lblStatus.Content = "got input for createRoom";
-                requestCreateRoom();
+                requestCreateRoom(); //the 4 values above aren't local variables because they are needed for handling the reply.
             }
             room.Close();
         }

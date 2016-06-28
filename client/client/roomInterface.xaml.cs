@@ -44,14 +44,17 @@ namespace client
                 switch (responseCode)
                 {
                     case "108":
-                        executeOnMain(new Action(() => 
-                        {
+                        //executeOnMain(new Action(() => 
+                        //{
                             lblStatus.Content = "recieved user list.";     
-                        }));
+                        //}));
                         readUserList();
                         break;
                     case "116":
-                        executeOnMain(new Action(() => { lblStatus.Content = "Room Closed By Admin"; }));
+                        //executeOnMain(new Action(() => 
+                        //{
+                            lblStatus.Content = "Room Closed By Admin";
+                        //}));
                         Close();
                         exists = false;
                         break;
@@ -68,7 +71,9 @@ namespace client
                         Close();
                         break;
                     default:
-                        executeOnMain(new Action(() => { lblStatus.Content = "Error - wrong code detected"; }));
+                        //executeOnMain(new Action(() => {
+                            lblStatus.Content = "Error - wrong code detected";
+                        //}));
                         break;
                 }
             } while (exists);
@@ -114,17 +119,22 @@ namespace client
             string nameSize = "";
             string userName = "";
 
-            executeOnMain(new Action(() => { _userList.Clear(); }));
+            //executeOnMain(new Action(() =>
+            //{
+                _userList.Clear();
+            //}));
 
             for (int i = 0; i < numberOfUsers; i++)
             {
                 nameSize = _client.myReceive(2);
                 userName = _client.myReceive(Int32.Parse(nameSize));
-                executeOnMain(new Action(() => { _userList.Add(userName); }));
+                //executeOnMain(new Action(() => {
+                    _userList.Add(userName);
+                //}));
             }
 
-            executeOnMain(new Action(() =>
-            {
+            //executeOnMain(new Action(() =>
+            //{
                 if (_userList.Count() == 0)
                 {
                     lblStatus.Content = "Error - room doesn't exist";
@@ -135,9 +145,9 @@ namespace client
                     {
                         listViewUsers.Items.Add(item);
                     }
-                    listViewUsers.Items.Clear();
+                    //listViewUsers.Items.Clear();
                 }
-            }));
+            //}));
         }
     }
 }
