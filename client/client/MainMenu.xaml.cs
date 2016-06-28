@@ -17,7 +17,7 @@ namespace client
     {
         myTcpClient _client;
         //for getting existing rooms
-        Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
+        Dictionary<string, string> _roomNametoId;
         int _numberOfRooms;
         //for creating new room.
         //TODO there has got to be a better solution than this:}
@@ -35,8 +35,9 @@ namespace client
         {
             InitializeComponent();
             _client = newClient;
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            listenThread.Start();
+            _roomNametoId = new Dictionary<string, string>();
+            _listenThread = new Thread(new ThreadStart(this.listenToReplies));
+            _listenThread.Start();
         }
 
         public void listenToReplies()
@@ -62,7 +63,7 @@ namespace client
                             handleJoinRoomReply();
                             break;
                         default:
-                            lblStatus.Content = "Error - wrong code detected";
+                                lblStatus.Content = "Error - wrong code detected";
                             break;
                     }
                 } while (_exists);
@@ -148,8 +149,8 @@ namespace client
         {
             //get information from createRoom window
             Hide();
-            createRoom room = new createRoom();
-            room.ShowDialog();
+            createRoom room = new createRoom(_client);
+            room.ShowDialog();    
             Show();
             if (room._gotParameters) //if user entered values in the 4 text boxes.
             {

@@ -17,7 +17,7 @@ namespace client
         List<string> _userList = new List<string>();
         int _numberOfQuestions;
         int _timePerQuestion;
-        
+
         public roomInterface()
         {
             InitializeComponent();
@@ -29,51 +29,54 @@ namespace client
             InitializeComponent();
             _client = newClient;
             //TODO? send a join request
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            listenThread.Start();
+            listenToReplies();
         }
 
-        public void listenToReplies()
+        public async void listenToReplies()
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
+            bool exists = true;
+            string responseCode;
+
+            do /*while (exists)*/
             {
-                bool exists = true;
-                string responseCode;
+                responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
 
-                do /*while (exists)*/
+                switch (responseCode)
                 {
-                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3)); //TODO wait, using async in a thread is pointless, right? (so we can either stop calling this function on a different thread, or use a non async call to the recieve)
-                    //responseCode = _client.myReceive(3);
+                    case "108":
+                        executeOnMain(new Action(() => 
+                        {
+                            lblStatus.Content = "recieved user list.";     
+                        }));
+                        readUserList();
+                        break;
+                    case "116":
+                        executeOnMain(new Action(() => { lblStatus.Content = "Room Closed By Admin"; }));
+                        Close();
+                        exists = false;
+                        break;
+                    case "118":
+                        //game begun
+                        Hide();
+                        Game s = new Game(_client, _timePerQuestion, _numberOfQuestions);
+                        s.ShowDialog();
+                        Close();
+                        exists = false;
+                        break;
+                    case "112":
+                        exists = false;
+                        Close();
+                        break;
+                    default:
+                        executeOnMain(new Action(() => { lblStatus.Content = "Error - wrong code detected"; }));
+                        break;
+                }
+            } while (exists);
+        }
 
-                    switch (responseCode)
-                    {
-                        case "108":
-                            lblStatus.Content = "recieved user list.";
-                            readUserList();
-                            break;
-                        case "116":
-                            lblStatus.Content = "Room Closed By Admin";
-                            Close();
-                            exists = false;
-                            break;
-                        case "118":
-                            //game begun
-                            Hide();
-                            Game s = new Game(_client, _timePerQuestion, _numberOfQuestions);
-                            s.ShowDialog();
-                            Close();
-                            exists = false;
-                            break;
-                        case "112":
-                            exists = false;
-                            Close();
-                            break;
-                        default:
-                            lblStatus.Content = "Error - wrong code detected";
-                            break;
-                    }
-                } while (exists);
-            })); //end of beginInvoke.
+        public void executeOnMain(Action commands)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, commands);
         }
 
         private void btnLeaveRoom_Click(object sender, RoutedEventArgs e)
@@ -110,27 +113,31 @@ namespace client
             int numberOfUsers = Int32.Parse(_client.myReceive(1));
             string nameSize = "";
             string userName = "";
-            _userList.Clear();
+
+            executeOnMain(new Action(() => { _userList.Clear(); }));
 
             for (int i = 0; i < numberOfUsers; i++)
             {
                 nameSize = _client.myReceive(2);
                 userName = _client.myReceive(Int32.Parse(nameSize));
-                _userList.Add(userName);
+                executeOnMain(new Action(() => { _userList.Add(userName); }));
             }
 
-            if (_userList.Count() == 0)
+            executeOnMain(new Action(() =>
             {
-                lblStatus.Content = "Error - room doesn't exist";
-            }
-            else
-            {
-                listViewUsers.Items.Clear();
-                foreach (var item in _userList)
+                if (_userList.Count() == 0)
                 {
-                    listViewUsers.Items.Add(item);
+                    lblStatus.Content = "Error - room doesn't exist";
                 }
-            }
+                else
+                {
+                    foreach (var item in _userList)
+                    {
+                        listViewUsers.Items.Add(item);
+                    }
+                    listViewUsers.Items.Clear();
+                }
+            }));
         }
     }
 }
