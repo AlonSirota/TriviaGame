@@ -29,18 +29,17 @@ namespace client
             InitializeComponent();
             _client = newClient;
             //TODO? send a join request
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            listenThread.Start();
+            listenToReplies();
         }
 
-        public void listenToReplies()
+        public async void listenToReplies()
         {
             bool exists = true;
             string responseCode;
 
             do /*while (exists)*/
             {
-                responseCode = _client.myReceive(3);
+                responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
 
                 switch (responseCode)
                 {
