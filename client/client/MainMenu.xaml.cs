@@ -25,6 +25,7 @@ namespace client
         string _createRoomNumberOfPlayers;
         string _createRoomNumberOfQuestions;
         string _createRoomTimePerQuestion;
+        bool _exists = true; //flag for breaking listen-thread's loop
 
         public MainMenu()
         {
@@ -42,7 +43,6 @@ namespace client
         {
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () => 
             {
-                bool exists = true;
                 string responseCode;
 
                 do /*while (exists)*/
@@ -59,13 +59,13 @@ namespace client
                             handleCreateRoomReply();
                             break;
                         case "110":
-                            exists = !handleJoinRoomReply();
+                            handleJoinRoomReply();
                             break;
                         default:
                             lblStatus.Content = "Error - wrong code detected";
                             break;
                     }
-                } while (exists);
+                } while (_exists);
             })); //end of beginInvoke.
         }
 
