@@ -56,7 +56,7 @@ namespace client
                             handleRoomList();
                             break;
                         case "114":
-                            exists = !handleCreateRoomReply();
+                            handleCreateRoomReply();
                             break;
                         case "110":
                             exists = !handleJoinRoomReply();
