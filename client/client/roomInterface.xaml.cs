@@ -47,9 +47,9 @@ namespace client
                     case "108":
                         executeOnMain(new Action(() => 
                         {
-                            lblStatus.Content = "recieved user list.";
-                            readUserList();
-                        }));                        
+                            lblStatus.Content = "recieved user list.";     
+                        }));
+                        readUserList();
                         break;
                     case "116":
                         executeOnMain(new Action(() => { lblStatus.Content = "Room Closed By Admin"; }));
@@ -119,27 +119,31 @@ namespace client
             int numberOfUsers = Int32.Parse(_client.myReceive(1));
             string nameSize = "";
             string userName = "";
-            _userList.Clear();
+
+            executeOnMain(new Action(() => { _userList.Clear(); }));
 
             for (int i = 0; i < numberOfUsers; i++)
             {
                 nameSize = _client.myReceive(2);
                 userName = _client.myReceive(Int32.Parse(nameSize));
-                _userList.Add(userName);
+                executeOnMain(new Action(() => { _userList.Add(userName); }));
             }
 
-            if (_userList.Count() == 0)
+            executeOnMain(new Action(() =>
             {
-                lblStatus.Content = "Error - room doesn't exist";
-            }
-            else
-            {
-                listViewUsers.Items.Clear();
-                foreach (var item in _userList)
+                if (_userList.Count() == 0)
                 {
-                    listViewUsers.Items.Add(item);
+                    lblStatus.Content = "Error - room doesn't exist";
                 }
-            }
+                else
+                {
+                    foreach (var item in _userList)
+                    {
+                        listViewUsers.Items.Add(item);
+                    }
+                    listViewUsers.Items.Clear();
+                }
+            }));
         }
     }
 }
