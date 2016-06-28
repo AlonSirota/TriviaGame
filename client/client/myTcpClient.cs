@@ -44,5 +44,10 @@ namespace client
             string decoded = new ASCIIEncoding().GetString(buffer); //seperated lines for debugging. TODO (make this a one-liner)
             return decoded;            
         }
+
+        public bool isDataAvailable()
+        {
+            return clientStream.DataAvailable;
+        }
     }
 }
