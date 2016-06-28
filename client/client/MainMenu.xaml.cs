@@ -19,6 +19,7 @@ namespace client
         //for getting existing rooms
         Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
         int _numberOfRooms;
+        Thread _listenThread;
 
         public MainMenu()
         {
@@ -28,8 +29,8 @@ namespace client
         {
             InitializeComponent();
             _client = newClient;
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            listenThread.Start();
+            _listenThread = new Thread(new ThreadStart(this.listenToReplies));
+            _listenThread.Start();
         }
 
         public void listenToReplies()
