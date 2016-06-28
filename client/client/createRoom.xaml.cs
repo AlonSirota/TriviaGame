@@ -12,12 +12,13 @@ namespace client
     public partial class createRoom : Window
     {
         myTcpClient _client;
+        Thread _listenThread;
         public createRoom(myTcpClient client)
         {
             InitializeComponent();
             _client = client;
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            listenThread.Start();
+            _listenThread = new Thread(new ThreadStart(this.listenToReplies));
+            _listenThread.Start();
         }
 
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
@@ -35,6 +36,7 @@ namespace client
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
+            _listenThread.Join();
             Close();
         }
 
