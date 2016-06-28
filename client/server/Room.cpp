@@ -30,9 +30,8 @@ void Room::leaveRoom(std::shared_ptr<User> user)
 		if ((*i)->_username == user->_username)
 		{
 			_users.erase(i);
-			user->send(std::to_string(LEAVE_ROOM_REPLY_SUCCESS));
-			this->sendMessage(this->getUsersListMessage());
-			return;
+			user->send(std::to_string(LEAVE_ROOM_REPLY));
+			this->sendMessage(this->getUsersListMessage()); //sends after user was delted from user vector - so the leaving user wont get the message.
 		}
 	}
 }
