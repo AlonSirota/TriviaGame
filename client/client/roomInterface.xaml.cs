@@ -40,14 +40,16 @@ namespace client
 
             do /*while (exists)*/
             {
-                //responseCode = await Task.Factory.StartNew(() => _client.myReceive(3)); //TODO wait, using async in a thread is pointless, right? (so we can either stop calling this function on a different thread, or use a non async call to the recieve)
                 responseCode = _client.myReceive(3);
 
                 switch (responseCode)
                 {
                     case "108":
-                        executeOnMain(new Action(() => { lblStatus.Content = "recieved user list."; }));
-                        readUserList();
+                        executeOnMain(new Action(() => 
+                        {
+                            lblStatus.Content = "recieved user list.";
+                            readUserList();
+                        }));                        
                         break;
                     case "116":
                         executeOnMain(new Action(() => { lblStatus.Content = "Room Closed By Admin"; }));
