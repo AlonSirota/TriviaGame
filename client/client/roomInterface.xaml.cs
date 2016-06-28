@@ -64,6 +64,10 @@ namespace client
                             Close();
                             exists = false;
                             break;
+                        case "112":
+                            exists = false;
+                            Close();
+                            break;
                         default:
                             lblStatus.Content = "Error - wrong code detected";
                             break;
@@ -79,7 +83,6 @@ namespace client
 
         private void requestLeaveRoom()
         {
-            //TODO in trivia server, change it so if the admin leaves the room, it closes it instead
             _client.mySend("211"); //send code
         }
 
