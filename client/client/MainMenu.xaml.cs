@@ -17,9 +17,10 @@ namespace client
     {
         myTcpClient _client;
         //for getting existing rooms
-        Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
+        Dictionary<string, string> _roomNametoId;
         int _numberOfRooms;
         Thread _listenThread;
+        Object _recieveLock;
 
         public MainMenu()
         {
@@ -28,41 +29,38 @@ namespace client
         public MainMenu(myTcpClient newClient)
         {
             InitializeComponent();
+            _recieveLock = new Object();
             _client = newClient;
+            _roomNametoId = new Dictionary<string, string>();
             _listenThread = new Thread(new ThreadStart(this.listenToReplies));
             _listenThread.Start();
         }
 
         public void listenToReplies()
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () => 
-            {
-                bool exists = true;
-                string responseCode;
+            bool exists = true;
+            string responseCode;
 
-                do /*while (exists)*/
+            do /*while (exists)*/
+            {
+                lock (_recieveLock)
                 {
-                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
-                    //responseCode = _client.myReceive(3);
+                    responseCode = _client.myReceive(3);
 
                     switch (responseCode)
                     {
                         case "106":
                             handleRoomList();
                             break;
-                            /*
-                        case "114":
-                            exists = !handleCreateRoomReply();
-                            break;*/
                         case "110":
                             exists = !handleJoinRoomReply();
                             break;
                         default:
-                            lblStatus.Content = "Error - wrong code detected";
+                            lblStatus.Content = "Error - wrong code detected"; //TODO need dispatcher to execute.
                             break;
                     }
-                } while (exists);
-            })); //end of beginInvoke.
+                }
+            } while (exists);
         }
 
         public void handleRoomList()
@@ -113,16 +111,17 @@ namespace client
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
         {
             createRoomAsync();
-        }
-
-        
+        }        
 
         private async void createRoomAsync()
         {
             //get information from createRoom window
             Hide();
-            createRoom room = new createRoom(_client);
-            room.ShowDialog();
+            lock(_recieveLock)
+            {
+                createRoom room = new createRoom(_client);
+                room.ShowDialog();
+            }            
             Show();
         }
 
