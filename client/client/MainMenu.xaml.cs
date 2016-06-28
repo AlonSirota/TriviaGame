@@ -45,20 +45,23 @@ namespace client
             {
                 lock (_recieveLock)
                 {
-                    responseCode = _client.myReceive(3);
-
-                    switch (responseCode)
+                    if (_client.isDataAvailable())
                     {
-                        case "106":
-                            handleRoomList();
-                            break;
-                        case "110":
-                            exists = !handleJoinRoomReply();
-                            break;
-                        default:
-                            lblStatus.Content = "Error - wrong code detected"; //TODO need dispatcher to execute.
-                            break;
-                    }
+                        responseCode = _client.myReceive(3);
+
+                        switch (responseCode)
+                        {
+                            case "106":
+                                handleRoomList();
+                                break;
+                            case "110":
+                                exists = !handleJoinRoomReply();
+                                break;
+                            default:
+                                lblStatus.Content = "Error - wrong code detected"; //TODO need dispatcher to execute.
+                                break;
+                        }
+                    }                    
                 }
             } while (exists);
         }
