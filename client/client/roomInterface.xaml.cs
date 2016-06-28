@@ -81,12 +81,7 @@ namespace client
 
         private void btnLeaveRoom_Click(object sender, RoutedEventArgs e)
         {
-            requestLeaveRoom();
-        }
-
-        private void requestLeaveRoom()
-        {
-            _client.mySend("211"); //send code
+            _client.mySend("211");
         }
 
         private void btnStartGame_Click(object sender, RoutedEventArgs e)

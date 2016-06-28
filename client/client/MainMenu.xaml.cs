@@ -19,8 +19,13 @@ namespace client
         //for getting existing rooms
         Dictionary<string, string> _roomNametoId;
         int _numberOfRooms;
-        Thread _listenThread;
-        Object _recieveLock;
+        //for creating new room.
+        //TODO there has got to be a better solution than this:}
+        string _createRoomName;
+        string _createRoomNumberOfPlayers;
+        string _createRoomNumberOfQuestions;
+        string _createRoomTimePerQuestion;
+        bool _exists = true; //flag for breaking listen-thread's loop
 
         public MainMenu()
         {
@@ -29,7 +34,6 @@ namespace client
         public MainMenu(myTcpClient newClient)
         {
             InitializeComponent();
-            _recieveLock = new Object();
             _client = newClient;
             _roomNametoId = new Dictionary<string, string>();
             _listenThread = new Thread(new ThreadStart(this.listenToReplies));
@@ -38,32 +42,32 @@ namespace client
 
         public void listenToReplies()
         {
-            bool exists = true;
-            string responseCode;
-
-            do /*while (exists)*/
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () => 
             {
-                lock (_recieveLock)
-                {
-                    if (_client.isDataAvailable())
-                    {
-                        responseCode = _client.myReceive(3);
+                string responseCode;
 
-                        switch (responseCode)
-                        {
-                            case "106":
-                                handleRoomList();
-                                break;
-                            case "110":
-                                exists = !handleJoinRoomReply();
-                                break;
-                            default:
-                                lblStatus.Content = "Error - wrong code detected"; //TODO need dispatcher to execute.
-                                break;
-                        }
-                    }                    
-                }
-            } while (exists);
+                do /*while (exists)*/
+                {
+                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
+                    //responseCode = _client.myReceive(3);
+
+                    switch (responseCode)
+                    {
+                        case "106":
+                            handleRoomList();
+                            break;
+                        case "114":
+                            handleCreateRoomReply();
+                            break;
+                        case "110":
+                            handleJoinRoomReply();
+                            break;
+                        default:
+                                lblStatus.Content = "Error - wrong code detected";
+                            break;
+                    }
+                } while (_exists);
+            })); //end of beginInvoke.
         }
 
         public void handleRoomList()
@@ -114,21 +118,64 @@ namespace client
         private void btnCreateRoom_Click(object sender, RoutedEventArgs e)
         {
             createRoomAsync();
-        }        
+        }
+
+        public bool handleCreateRoomReply()
+        {
+            string success = _client.myReceive(1);
+            if (success == "1")
+            {
+                lblStatus.Content = "room creation failed";
+                return false;
+            }
+            else if (success == "0")
+            {
+                //success
+                Hide();
+                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), Int32.Parse(_createRoomNumberOfQuestions));
+                roomIn.ShowDialog();
+                lblStatus.Content = "success";
+                Show();
+                return true;
+            }
+            else
+            {
+                lblStatus.Content = "Error: unexepected code recieved";
+                return false;
+            }
+        }
 
         private async void createRoomAsync()
         {
             //get information from createRoom window
             Hide();
-            lock(_recieveLock)
-            {
-                createRoom room = new createRoom(_client);
-                room.ShowDialog();
-            }            
+            createRoom room = new createRoom(_client);
+            room.ShowDialog();    
             Show();
+            if (room._gotParameters) //if user entered values in the 4 text boxes.
+            {
+                _createRoomName = room.txtbRoomName.Text;
+                _createRoomNumberOfPlayers = room.txtbPlayerNo.Text;
+                _createRoomNumberOfQuestions = room.txtbQuestionsNo.Text;
+                _createRoomTimePerQuestion = room.txtbQuestionTime.Text;
+                lblStatus.Content = "got input for createRoom";
+                requestCreateRoom();
+            }
+            room.Close();
         }
 
+        //213##roomName playersNumber questionsNumber questionTimeInSec
+        private void requestCreateRoom()
+        {
+            string sendString = "213" +
+                _createRoomName.Length.ToString().PadLeft(2, '0') +
+                _createRoomName +
+                _createRoomNumberOfPlayers +
+                _createRoomNumberOfQuestions.PadLeft(2, '0') +
+                _createRoomTimePerQuestion.PadLeft(2, '0');
 
+            _client.mySend(sendString);
+        }
 
         //TODO not joining properly. potential problem in server
         private void btnJoinRoom_Click(object sender, RoutedEventArgs e)
