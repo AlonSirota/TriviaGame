@@ -19,12 +19,6 @@ namespace client
         //for getting existing rooms
         Dictionary<string, string> _roomNametoId = new Dictionary<string, string>();
         int _numberOfRooms;
-        //for creating new room.
-        //TODO there has got to be a better solution than this:}
-        string _createRoomName;
-        string _createRoomNumberOfPlayers;
-        string _createRoomNumberOfQuestions;
-        string _createRoomTimePerQuestion;
 
         public MainMenu()
         {
@@ -55,9 +49,10 @@ namespace client
                         case "106":
                             handleRoomList();
                             break;
+                            /*
                         case "114":
                             exists = !handleCreateRoomReply();
-                            break;
+                            break;*/
                         case "110":
                             exists = !handleJoinRoomReply();
                             break;
@@ -119,62 +114,18 @@ namespace client
             createRoomAsync();
         }
 
-        public bool handleCreateRoomReply()
-        {
-            string success = _client.myReceive(1);
-            if (success == "1")
-            {
-                lblStatus.Content = "room creation failed";
-                return false;
-            }
-            else if (success == "0")
-            {
-                //success
-                Hide();
-                roomInterface roomIn = new roomInterface(_client, Int32.Parse(_createRoomTimePerQuestion), Int32.Parse(_createRoomNumberOfQuestions));
-                roomIn.ShowDialog();
-                lblStatus.Content = "success";
-                Show();
-                return true;
-            }
-            else
-            {
-                lblStatus.Content = "Error: unexepected code recieved";
-                return false;
-            }
-        }
+        
 
         private async void createRoomAsync()
         {
             //get information from createRoom window
             Hide();
-            createRoom room = new createRoom();
+            createRoom room = new createRoom(_client);
             room.ShowDialog();
             Show();
-            if (room._gotParameters) //if user entered values in the 4 text boxes.
-            {
-                _createRoomName = room.txtbRoomName.Text;
-                _createRoomNumberOfPlayers = room.txtbPlayerNo.Text;
-                _createRoomNumberOfQuestions = room.txtbQuestionsNo.Text;
-                _createRoomTimePerQuestion = room.txtbQuestionTime.Text;
-                lblStatus.Content = "got input for createRoom";
-                requestCreateRoom();
-            }
-            room.Close();
         }
 
-        //213##roomName playersNumber questionsNumber questionTimeInSec
-        private void requestCreateRoom()
-        {
-            string sendString = "213" +
-                _createRoomName.Length.ToString().PadLeft(2, '0') +
-                _createRoomName +
-                _createRoomNumberOfPlayers +
-                _createRoomNumberOfQuestions.PadLeft(2, '0') +
-                _createRoomTimePerQuestion.PadLeft(2, '0');
 
-            _client.mySend(sendString);
-        }
 
         //TODO not joining properly. potential problem in server
         private void btnJoinRoom_Click(object sender, RoutedEventArgs e)
