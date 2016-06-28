@@ -494,16 +494,7 @@ void TriviaServer::handleLeaveRoom(recievedMessage& message)
 //done
 void TriviaServer::handleGetUsersInRoom(recievedMessage& message)
 {
-	int roomId;
-	if (message._values.size() == 0) //meaning user didn't send id.
-	{
-		roomId = message._user->_currRoomID;
-	}
-	else
-	{
-		roomId = stoi(message._values[0]);
-	}
-	
+	int roomId = stoi(message._values[0]);	
 	if (_roomList.count(roomId))
 	{
 		std::shared_ptr<Room> room = getRoomById(roomId);
