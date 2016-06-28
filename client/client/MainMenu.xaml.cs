@@ -36,8 +36,8 @@ namespace client
             InitializeComponent();
             _client = newClient;
             _roomNametoId = new Dictionary<string, string>();
-            _listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            _listenThread.Start();
+            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
+            listenThread.Start();
         }
 
         public void listenToReplies()
