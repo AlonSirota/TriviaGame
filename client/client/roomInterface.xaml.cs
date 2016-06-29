@@ -46,14 +46,14 @@ namespace client
                     case "108":
                         //executeOnMain(new Action(() => 
                         //{
-                            lblStatus.Content = "recieved user list.";     
+                        lblStatus.Content = "recieved user list.";
                         //}));
                         readUserList();
                         break;
                     case "116":
                         //executeOnMain(new Action(() => 
                         //{
-                            lblStatus.Content = "Room Closed By Admin";
+                        lblStatus.Content = "Room Closed By Admin";
                         //}));
                         Close();
                         exists = false;
@@ -72,7 +72,7 @@ namespace client
                         break;
                     default:
                         //executeOnMain(new Action(() => {
-                            lblStatus.Content = "Error - wrong code detected";
+                        lblStatus.Content = "Error - wrong code detected";
                         //}));
                         break;
                 }
@@ -121,7 +121,7 @@ namespace client
 
             //executeOnMain(new Action(() =>
             //{
-                _userList.Clear();
+            _userList.Clear();
             //}));
 
             for (int i = 0; i < numberOfUsers; i++)
@@ -129,24 +129,24 @@ namespace client
                 nameSize = _client.myReceive(2);
                 userName = _client.myReceive(Int32.Parse(nameSize));
                 //executeOnMain(new Action(() => {
-                    _userList.Add(userName);
+                _userList.Add(userName);
                 //}));
             }
 
             //executeOnMain(new Action(() =>
             //{
-                if (_userList.Count() == 0)
+            if (_userList.Count() == 0)
+            {
+                lblStatus.Content = "Error - room doesn't exist";
+            }
+            else
+            {
+                listViewUsers.Items.Clear();
+                foreach (var item in _userList)
                 {
-                    lblStatus.Content = "Error - room doesn't exist";
+                    listViewUsers.Items.Add(item);
                 }
-                else
-                {
-                    foreach (var item in _userList)
-                    {
-                        listViewUsers.Items.Add(item);
-                    }
-                    //listViewUsers.Items.Clear();
-                }
+            }
             //}));
         }
     }

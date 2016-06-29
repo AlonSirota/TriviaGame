@@ -50,7 +50,7 @@ private:
 
 	bool handleCreateRoom(recievedMessage&);
 	bool handleCloseRoom(recievedMessage & message, bool startGame);
-	bool handleJoinRoom(recievedMessage&);
+	void handleJoinRoom(recievedMessage&);
 	void handleLeaveRoom(recievedMessage&);
 	void handleGetUsersInRoom(recievedMessage&);
 	void handleGetRooms(recievedMessage&);

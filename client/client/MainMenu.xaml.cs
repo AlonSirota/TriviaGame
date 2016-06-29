@@ -234,7 +234,7 @@ namespace client
         //TODO change protocol to 208<idLength><id>
         private void requestJoinRoom(string roomID)
         {
-            _client.mySend("209"+roomID);
+            _client.mySend("209" + roomID);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

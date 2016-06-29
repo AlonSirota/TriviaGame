@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System;
 
 namespace client
 {
@@ -28,7 +29,7 @@ namespace client
         {
             byte[] buffer = new ASCIIEncoding().GetBytes(text);
             clientStream.Write(buffer, 0, buffer.Length);
-            clientStream.Flush();
+            clientStream.Flush();    
 
             //secure
             //secureStream.Write(buffer);

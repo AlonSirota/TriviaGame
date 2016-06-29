@@ -275,7 +275,7 @@ std::shared_ptr<Room> TriviaServer::getRoomById(int id)
 	{
 		return(it->second);
 	}
-	return(it->second);
+	return nullptr;
 }
 
 std::shared_ptr<Game> TriviaServer::getGamebyId(int id)
@@ -462,7 +462,7 @@ bool TriviaServer::handleCloseRoom(recievedMessage& message, bool startGame)
 	}
 }
 //done
-bool TriviaServer::handleJoinRoom(recievedMessage& message)
+void TriviaServer::handleJoinRoom(recievedMessage& message)
 {
 	int roomId = atoi(message._values[0].c_str());
 	if (!_roomList.count(roomId))
@@ -470,10 +470,12 @@ bool TriviaServer::handleJoinRoom(recievedMessage& message)
 		//send failed message to user code 1102
 		Helper::sendData(std::move(message._socket), std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
 	}
-	std::shared_ptr<Room> room = getRoomById(roomId);
-	bool ans = message._user->joinRoom(roomId);
-	room->joinRoom(message._user);//message if failed or succeeded is sent in Room::joinRoom
-	return ans;
+	else
+	{
+		std::shared_ptr<Room> room = getRoomById(roomId);
+		message._user->joinRoom(roomId);
+		room->joinRoom(message._user);//message if failed or succeeded is sent in Room::joinRoom
+	}	
 }
 //done
 void TriviaServer::handleLeaveRoom(recievedMessage& message)
