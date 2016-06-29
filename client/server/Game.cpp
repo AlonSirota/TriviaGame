@@ -121,17 +121,13 @@ bool Game::leaveGame(std::shared_ptr<User> user)
 	return true;
 }
 
-void Game::sendQuestionToAllUsers()
+void Game::sendStartGameMessageToAllUsers()
 {
-	std::string message = std::to_string(SEND_QUESTION);
-	message += Helper::getPaddedNumber((_questions[_currQuestionIndex])->getQuestion().length(), 3);
-	message += (_questions[_currQuestionIndex])->getQuestion();
-	for (int i = 0; i < _questions[_currQuestionIndex]->getAnswers().size(); i++)
-	{
-		message += Helper::getPaddedNumber((_questions[_currQuestionIndex])->getAnswers()[i].length(), 3);
-		message += (_questions[_currQuestionIndex])->getAnswers()[i];
-	}
-	_currentTurnAnswers = 0;
+	sendMessageToAllUsers(std::to_string(START_GAME_REPLY_SUCCESS));
+}
+
+void Game::sendMessageToAllUsers(std::string message)
+{
 	for (std::vector<std::shared_ptr<User>>::iterator it = _users.begin(); it != _users.end(); it++)
 	{
 		try
@@ -143,4 +139,18 @@ void Game::sendQuestionToAllUsers()
 
 		}
 	}
+}
+
+void Game::sendQuestionToAllUsers()
+{
+	std::string message = std::to_string(SEND_QUESTION);
+	message += Helper::getPaddedNumber((_questions[_currQuestionIndex])->getQuestion().length(), 3);
+	message += (_questions[_currQuestionIndex])->getQuestion();
+	for (int i = 0; i < _questions[_currQuestionIndex]->getAnswers().size(); i++)
+	{
+		message += Helper::getPaddedNumber((_questions[_currQuestionIndex])->getAnswers()[i].length(), 3);
+		message += (_questions[_currQuestionIndex])->getAnswers()[i];
+	}
+	_currentTurnAnswers = 0;
+	sendMessageToAllUsers(message);
 }

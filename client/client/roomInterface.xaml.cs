@@ -58,13 +58,25 @@ namespace client
                         Close();
                         exists = false;
                         break;
-                    case "118":
+                    case "117":
                         //game begun
-                        Hide();
-                        Game s = new Game(_client, _timePerQuestion, _numberOfQuestions);
-                        s.ShowDialog();
-                        Close();
-                        exists = false;
+                        string code = await Task.Factory.StartNew(() => _client.myReceive(1));
+                        if (code == "0")//success
+                        {
+                            Hide();
+                            Game s = new Game(_client, _timePerQuestion, _numberOfQuestions);
+                            s.ShowDialog();
+                            Close();
+                            exists = false;
+                        }
+                        else if (code == "1")
+                        {
+                            lblStatus.Content = "game creation failed because you are not admin";
+                        }
+                        else if (code =="2")
+                        {
+                            lblStatus.Content = "game creation failed because server doesn't have enough questions";
+                        }
                         break;
                     case "112":
                         exists = false;

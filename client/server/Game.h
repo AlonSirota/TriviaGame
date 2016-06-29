@@ -13,6 +13,8 @@ public:
 	bool handleAnswerFromUser(std::shared_ptr<User>, int, int);
 	bool leaveGame(std::shared_ptr<User>);
 	void sendQuestionToAllUsers();
+	void sendStartGameMessageToAllUsers();
+	void sendMessageToAllUsers(std::string message);
 
 	int _questionsNo;
 	std::vector<std::shared_ptr<Question>> _questions;

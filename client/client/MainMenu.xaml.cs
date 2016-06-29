@@ -63,7 +63,7 @@ namespace client
                             handleJoinRoomReply();
                             break;
                         default:
-                                lblStatus.Content = "Error - wrong code detected";
+                            lblStatus.Content = "Error - wrong code detected";
                             break;
                     }
                 } while (_exists);

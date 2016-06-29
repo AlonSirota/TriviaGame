@@ -389,18 +389,23 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 		std::shared_ptr<Room> room = _roomList[msg._user->_currRoomID];
 		try
 		{
-			Game currentGame(room->_users, room->_questionsNo, _db); //this may throw
-																	 //room->_admin->send(std::to_string(START_GAME_REPLY_SUCCESS)); //WHAT IS THIS MESSAGE???
+			Game currentGame(room->_users, room->_questionsNo, _db); //if this didn't throw, it means that there ARE enough questions.
 			_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
+			
+			currentGame.sendStartGameMessageToAllUsers();
 			currentGame.sendQuestionToAllUsers();
 			handleCloseRoom(msg, true);
 		}
 		catch (SQLite::Exception & e)
 		{
-			//room->_admin->send(std::to_string(START_GAME_REPLY_FAILED));
+			room->_admin->send(std::to_string(START_GAME_REPLY_FAILED_NOT_ENOUGH_QUESTIONS));
 			std::cout << "handleStartGame failed: " << e.what() << "\n";
 		}
-	}	
+	}
+	else
+	{
+		msg._user->send(std::to_string(START_GAME_REPLY_FAILED_USER_NOT_ADMIN));
+	}
 }
 
 void TriviaServer::handleUserAnswer(recievedMessage &msg)
