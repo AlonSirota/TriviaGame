@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows;
+using System.Threading;
 
 namespace client
 {
@@ -12,7 +13,7 @@ namespace client
     public partial class Game : Window
     {
         myTcpClient _client;
-        int _ansIndex = 0;
+        int _ansIndex = 0; //TODO try to get rid of this member. could be a local variable.
         int _time;
         string _question;
         string _ans1;
@@ -21,6 +22,7 @@ namespace client
         string _ans4;
         int _timePerQuestion;
         DispatcherTimer _dispatcherTimer;
+        bool _exists;
 
         int _correctAnswerIndex = 0;
         int _currentQuestionIndex = 0;
@@ -35,6 +37,63 @@ namespace client
             InitializeComponent();
         }
 
+        public void listenToReplies()
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
+            {
+                string responseCode;
+
+                do /*while (exists)*/
+                {
+                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
+                    //responseCode = _client.myReceive(3);
+
+                    switch (responseCode)
+                    {
+                        case "120":
+                            _currentQuestionIndex++;
+                            bool correctAnswer = (await Task.Factory.StartNew(() => _client.myReceive(1))) == "1";
+                            if (correctAnswer)
+                            {
+                                _correctAnswerIndex++;
+                            }
+                            lblScore.Content = _correctAnswerIndex.ToString() + "/" + _currentQuestionIndex.ToString(); //updates GUI to show status.
+                            break;
+                        case "118": //TODO use a loop for this mess
+                            handleAnswers();
+                            break;
+                        case "121":
+                            _userNo = Int32.Parse(_client.myReceive(1));
+                            string nameSize = "";
+                            string userName = "";
+                            for (int i = 0; i < _userNo; i++)
+                            {
+                                nameSize = _client.myReceive(2);
+                                userName = _client.myReceive(Int32.Parse(nameSize));
+                                _userList.Add(userName);
+                                _scores.Add(Int32.Parse(_client.myReceive(2)));
+                            }
+                            lblStatus.Content = "Game Ended";
+                            //display scores
+                            string msg = "";
+                            for (int i = 0; i < _userNo; i++)
+                            {
+                                msg += _userList[i];
+                                msg += " : ";
+                                msg += _scores[i].ToString();
+                                msg += "\n";
+                            }
+                            MessageBox.Show(msg, "Scores");
+                            Close();
+                            break;
+                        default:
+                            lblStatus.Content = "Error - wrong code detected";
+                            break;
+                    }
+                } while (_exists);
+            })); //end of beginInvoke.
+        }
+
         public Game(myTcpClient newClient, int timePerQuestion, int numberOfQuestions)
         {
             InitializeComponent();
@@ -43,9 +102,9 @@ namespace client
             _timePerQuestion = timePerQuestion;
             _totalNumberOfQuestions = numberOfQuestions;
 
+            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
+            listenThread.Start();
             setUpTimer();
-            getQuestionFirst();
-            asignAnswers();
         }
 
         public void setUpTimer()
@@ -59,103 +118,23 @@ namespace client
         {
             _ansIndex = 1;
             _dispatcherTimer.Stop();
-            sendAns();
-        }
-        private async void sendAns()
-        {
-            string response = await Task.Factory.StartNew(() => sendAnswer());
-            string code = response.Substring(0, 3);
-            if (code == "120")
-            {
-                lblStatus.Content = "Correct code detected";
-                //indicate if correct
-                _currentQuestionIndex++;
-                if (response[3] == '1')
-                {
-                    _correctAnswerIndex++;
-                }
-                lblScore.Content = _correctAnswerIndex.ToString() + "/" + _currentQuestionIndex.ToString();
-                //get question
-                response = await Task.Factory.StartNew(() => getQuestion());
-                code = response.Substring(0, 3);
-                if (code == "118")
-                {
-                    //got question
-                    asignAnswers();
-                }
-                else if (code == "121")
-                {
-                    lblStatus.Content = "Game Ended";
-                    //display scores
-                    string msg = "";
-                    for(int i = 0; i < _userNo; i++)
-                    {
-                        msg += _userList[i];
-                        msg += " : ";
-                        msg += _scores[i].ToString();
-                        msg += "\n";
-                    }
-                    MessageBox.Show(msg,"Scores");
-                    Close();
-                }
-                else
-                {
-                    lblStatus.Content = "Error - wrong code detected";
-                }
-            }
-            else
-            {
-                lblStatus.Content = "Error - expected '120' but recieved: " + code;
-            }
+            sendAnswer();
         }
 
-        private string sendAnswer()
+        private void sendAnswer()
         {
             string message = "219" + _ansIndex.ToString() + ((int)_time).ToString().PadLeft(2, '0');
             _client.mySend(message);
-            string code = _client.myReceive(3);
-            string ans = "";
-            if(code == "120")
-            {
-                ans = _client.myReceive(1);
-            }
-            return code + ans;
         }
 
-        private string getQuestion()
+        private void handleAnswers()
         {
-            string code = _client.myReceive(3);
-            if(code == "118")
-            {
-                int stringSize = Int32.Parse(_client.myReceive(3));
-                _question = _client.myReceive(stringSize);
-                stringSize = Int32.Parse(_client.myReceive(3));
-                _ans1 = _client.myReceive(stringSize);
-                stringSize = Int32.Parse(_client.myReceive(3));
-                _ans2 = _client.myReceive(stringSize);
-                stringSize = Int32.Parse(_client.myReceive(3));
-                _ans3 = _client.myReceive(stringSize);
-                stringSize = Int32.Parse(_client.myReceive(3));
-                _ans4 = _client.myReceive(stringSize);
-            }
-            else if(code == "121")
-            {
-                _userNo = Int32.Parse(_client.myReceive(1));
-                string nameSize = "";
-                string userName = "";
-                for (int i = 0; i < _userNo; i++)
-                {
-                    nameSize = _client.myReceive(2);
-                    userName = _client.myReceive(Int32.Parse(nameSize));
-                    _userList.Add(userName);
-                    _scores.Add(Int32.Parse(_client.myReceive(2)));
-                }
-            }
-            return (code);
+            getAnswers();
+            asignAnswers();
         }
-        private void getQuestionFirst()
+
+        private void getAnswers()
         {
-    
             int stringSize = Int32.Parse(_client.myReceive(3));
             _question = _client.myReceive(stringSize);
             stringSize = Int32.Parse(_client.myReceive(3));
@@ -189,7 +168,7 @@ namespace client
             else
             {
                 _ansIndex = 5;
-                sendAns();
+                sendAnswer();
             }
         }
 
@@ -197,21 +176,21 @@ namespace client
         {
             _ansIndex = 2;
             _dispatcherTimer.Stop();
-            sendAns();
+            sendAnswer();
         }
 
         private void btnAns3_Click(object sender, RoutedEventArgs e)
         {
             _ansIndex = 3;
             _dispatcherTimer.Stop();
-            sendAns();
+            sendAnswer();
         }
 
         private void btnAns4_Click(object sender, RoutedEventArgs e)
         {
             _ansIndex = 4;
             _dispatcherTimer.Stop();
-            sendAns();
+            sendAnswer();
         }
 
         private void btnLeaveGame_Click(object sender, RoutedEventArgs e)
