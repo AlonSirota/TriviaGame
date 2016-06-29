@@ -32,6 +32,7 @@ namespace client
             listenToReplies();
         }
 
+        //ROOMINTERFACE
         public async void listenToReplies()
         {
             bool exists = true;
@@ -44,17 +45,11 @@ namespace client
                 switch (responseCode)
                 {
                     case "108":
-                        //executeOnMain(new Action(() => 
-                        //{
                         lblStatus.Content = "recieved user list.";
-                        //}));
                         readUserList();
                         break;
                     case "116":
-                        //executeOnMain(new Action(() => 
-                        //{
                         lblStatus.Content = "Room Closed By Admin";
-                        //}));
                         Close();
                         exists = false;
                         break;
@@ -65,9 +60,12 @@ namespace client
                         {
                             Hide();
                             Game s = new Game(_client, _timePerQuestion, _numberOfQuestions);
+                            s.listenToReplies();
                             s.ShowDialog();
-                            Close();
+
+                            //after game ends, returns to main menu instead of roomInterface
                             exists = false;
+                            Close();
                         }
                         else if (code == "1")
                         {
@@ -83,9 +81,7 @@ namespace client
                         Close();
                         break;
                     default:
-                        //executeOnMain(new Action(() => {
                         lblStatus.Content = "Error - wrong code detected";
-                        //}));
                         break;
                 }
             } while (exists);

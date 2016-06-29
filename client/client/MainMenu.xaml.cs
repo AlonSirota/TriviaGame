@@ -40,6 +40,7 @@ namespace client
             listenThread.Start();
         }
 
+        //MAINMENU
         public void listenToReplies()
         {
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () => 
@@ -125,7 +126,7 @@ namespace client
             string success = _client.myReceive(1);
             if (success == "1")
             {
-                lblStatus.Content = "room creation failed";
+                lblStatus.Content = "room creation failed"; //server thinks user is still in a room
                 return false;
             }
             else if (success == "0")
