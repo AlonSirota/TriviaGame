@@ -85,6 +85,7 @@ namespace client
                             }
                             MessageBox.Show(msg, "Scores");
                             Close();
+                            _exists = false;
                             break;
                         default:
                             lblStatus.Content = "Error - wrong code detected";
@@ -98,6 +99,7 @@ namespace client
         {
             InitializeComponent();
 
+            _exists = true;
             _client = newClient;
             _timePerQuestion = timePerQuestion;
             _totalNumberOfQuestions = numberOfQuestions;
