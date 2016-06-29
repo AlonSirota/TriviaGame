@@ -37,10 +37,10 @@ namespace client
             InitializeComponent();
         }
 
-        public void listenToReplies()
+        public async void listenToReplies()
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
-            {
+            //Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(async () =>
+            //{
                 string responseCode;
 
                 do /*while (exists)*/
@@ -92,7 +92,7 @@ namespace client
                             break;
                     }
                 } while (_exists);
-            })); //end of beginInvoke.
+            //})); //end of beginInvoke.
         }
 
         public Game(myTcpClient newClient, int timePerQuestion, int numberOfQuestions)
@@ -104,8 +104,7 @@ namespace client
             _timePerQuestion = timePerQuestion;
             _totalNumberOfQuestions = numberOfQuestions;
 
-            Thread listenThread = new Thread(new ThreadStart(this.listenToReplies));
-            listenThread.Start();
+            //listenToReplies();
             setUpTimer();
         }
 
@@ -199,6 +198,10 @@ namespace client
         {
             leaveGame();
             Close();
+            _exists = false;
+            /*This is ok because even in the worst case scenerio:
+            breaks the listen loop but a pending message from server regarding the game is sent,
+            the message will be recieved in a different listen thread and will be automatically ignored.*/
         }
         
         private async void leaveGame()
