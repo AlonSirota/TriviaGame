@@ -3,33 +3,52 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System;
+using System.Windows;
 
 namespace client
 {
     public class myTcpClient
     {
-        TcpClient client;
-        IPEndPoint serverEndPoint;
-        NetworkStream clientStream;
+        TcpClient _client;
+        IPEndPoint _serverEndPoint;
+        NetworkStream _clientStream;
         //SslStream secureStream;
 
-        public myTcpClient(string ipAddress, int port)
+        public myTcpClient()
         {
-            client = new TcpClient();
-            serverEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
-
-            client.Connect(serverEndPoint);
-            clientStream = client.GetStream();
+            _client = new TcpClient();
+            _serverEndPoint = null;
+            _clientStream = null;
             //secure
             //secureStream = new SslStream(client.GetStream());
             //client.Close();
         }
 
+        public bool connect(string ipAddress, int port)
+        {
+            _serverEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port); ;
+
+            do
+            {
+                try
+                {
+                    _client.Connect(_serverEndPoint);
+                    _clientStream = _client.GetStream();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    if (MessageBox.Show("server is offline, try again?", "error connecting to server", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                        return false;
+                }
+            } while (true);
+        }
+
         public void mySend(string text)
         {
             byte[] buffer = new ASCIIEncoding().GetBytes(text);
-            clientStream.Write(buffer, 0, buffer.Length);
-            clientStream.Flush();    
+            _clientStream.Write(buffer, 0, buffer.Length);
+            _clientStream.Flush();    
 
             //secure
             //secureStream.Write(buffer);
@@ -43,7 +62,7 @@ namespace client
             int totalBytesRecieved = 0;
             while (totalBytesRecieved < size)
             {
-                totalBytesRecieved += clientStream.Read(buffer, totalBytesRecieved, 1);
+                totalBytesRecieved += _clientStream.Read(buffer, totalBytesRecieved, 1);
             }
             //int count = clientStream.Read(buffer, 0, size);
 
@@ -57,7 +76,7 @@ namespace client
 
         public bool isDataAvailable()
         {
-            return clientStream.DataAvailable;
+            return _clientStream.DataAvailable;
         }
     }
 }

@@ -12,7 +12,8 @@ namespace client
         public LoginWindow()
         {
             InitializeComponent();
-            _client = new myTcpClient("127.0.0.1", 8820);
+            _client = new myTcpClient();
+            if (!_client.connect("127.0.0.1", 8820)) Close();
         }
 
         /*
