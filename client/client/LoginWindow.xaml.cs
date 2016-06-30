@@ -12,7 +12,8 @@ namespace client
         public LoginWindow()
         {
             InitializeComponent();
-            _client = new myTcpClient();
+            bool isSecured = false;
+            _client = new myTcpClient(isSecured);
             if (!_client.connect("127.0.0.1", 8820)) Close();
         }
 

@@ -1,6 +1,14 @@
 #pragma once
-
+#include <cstdlib>
+#include <deque>
+#include <iostream>
+#include <list>
+#include <memory>
+#include <set>
+#include <utility>
+#include <iomanip>
 #include <boost\asio.hpp>
+//#include <boost\asio\ssl.hpp>
 using boost::asio::ip::tcp;
 class Helper
 {
