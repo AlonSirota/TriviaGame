@@ -46,23 +46,17 @@ namespace client
             lblAvgTime.Content = "Average time per question : " + avgTime.ToString();
         }
 
+        //this is after recieved the 126 code
         private void requestGetStatus()
         {
-            _client.mySend("225"); //send code
-            string code = _client.myReceive(3);
-            if(code == "126")
+            gameNo = Int32.Parse(_client.myReceive(4));
+            if (gameNo != 0)
             {
-                gameNo = Int32.Parse(_client.myReceive(4));
-                if(gameNo == 0)
-                {
-                    //no games
-                    return;
-                }
                 correctAnsNo = Int32.Parse(_client.myReceive(6));
                 wrongAnsNo = Int32.Parse(_client.myReceive(6));
                 avgTime = Int32.Parse(_client.myReceive(2));
-                avgTime += Double.Parse(_client.myReceive(2))/100;
-            }
+                avgTime += Double.Parse(_client.myReceive(2)) / 100;
+            }            
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
