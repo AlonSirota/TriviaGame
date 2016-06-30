@@ -36,14 +36,24 @@ void TriviaServer::serve()
 
 void TriviaServer::handleGetBestScores(recievedMessage& message)
 {
+	int amountOfBestScores = 3;
 	std::cout << "handleGetBestScores was called but is yet to be implemented.\n";
-	std::vector<std::pair<std::string,std::string>> ansVector = _db->getBestScores(3);
+	std::vector<std::pair<std::string,std::string>> ansVector = _db->getBestScores(amountOfBestScores);
 	std::string sendMessage = "124";
-	for (int i = 0; i < ansVector.size(); i++)
+	for (int i = 0; i < amountOfBestScores; i++)
 	{
-		sendMessage += Helper::getPaddedNumber(ansVector[i].first.length(), 2);
-		sendMessage += ansVector[i].first;
-		sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[i].second.c_str()), 6);
+		if (i < ansVector.size())
+		{
+			sendMessage += Helper::getPaddedNumber(ansVector[i].first.length(), 2);
+			sendMessage += ansVector[i].first;
+			sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[i].second.c_str()), 6);
+		}
+		else
+		{
+			sendMessage += "00";
+			sendMessage += "";
+			sendMessage += "000000";
+		}
 	}
 	message._user->send(sendMessage);
 }
