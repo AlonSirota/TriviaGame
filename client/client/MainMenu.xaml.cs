@@ -65,8 +65,15 @@ namespace client
                             break;
                         case "124":
                             Hide();
-                            bestScores statusWin = new bestScores(_client);
-                            statusWin.ShowDialog();
+                            bestScores bestScoresWindow = new bestScores(_client);
+                            bestScoresWindow.ShowDialog();
+                            lblStatus.Content = "success";
+                            Show();
+                            break;
+                        case "126":
+                            Hide();
+                            status statusWindow = new status(_client);
+                            statusWindow.ShowDialog();
                             lblStatus.Content = "success";
                             Show();
                             break;
@@ -262,11 +269,13 @@ namespace client
 
         private void btnMyStatus_Click(object sender, RoutedEventArgs e)
         {
+            _client.mySend("225");
+            /*
             Hide();
             status statusWin = new status(_client);
             statusWin.ShowDialog();
             lblStatus.Content = "success";
-            Show();
+            Show();*/
         }
     }
 }
