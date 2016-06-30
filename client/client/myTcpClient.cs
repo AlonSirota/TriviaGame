@@ -41,10 +41,10 @@ namespace client
             byte[] buffer = new byte[size];
    
             int totalBytesRecieved = 0;
-            do
+            while (totalBytesRecieved < size)
             {
                 totalBytesRecieved += clientStream.Read(buffer, totalBytesRecieved, 1);
-            } while (totalBytesRecieved < size);
+            }
             //int count = clientStream.Read(buffer, 0, size);
 
             //secure
