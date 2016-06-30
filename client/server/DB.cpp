@@ -133,15 +133,15 @@ std::vector<std::pair<std::string, std::string>> DB::getBestScores(int amount)
 	SQLite::Statement query(_db, "SELECT username, SUM(is_correct) FROM t_players_answers GROUP BY username ORDER BY SUM(is_correct) DESC LIMIT ?");
 	query.bind(1, amount); //binds the limit value
 
-		while (query.executeStep())
-		{
+	while (query.executeStep())
+	{
 		std::string username = query.getColumn(0);
 		std::string score = query.getColumn(1);
 		scores.push_back(std::pair<std::string, std::string>(username, score));
 	}
 
 	return scores;
-		}
+}
 
 //see enum in DB.h. THE MESSAGE ISN'T PREPARED YET - need more parsing.
 std::vector<std::string> DB::getPersonalStatus(std::string username)

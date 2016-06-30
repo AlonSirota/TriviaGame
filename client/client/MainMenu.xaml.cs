@@ -63,6 +63,13 @@ namespace client
                         case "110":
                             handleJoinRoomReply();
                             break;
+                        case "124":
+                            Hide();
+                            bestScores statusWin = new bestScores(_client);
+                            statusWin.ShowDialog();
+                            lblStatus.Content = "success";
+                            Show();
+                            break;
                         default:
                             lblStatus.Content = "Error - wrong code detected";
                             break;
@@ -250,11 +257,7 @@ namespace client
         }
         private void btnBestScores_Click(object sender, RoutedEventArgs e)
         {
-            Hide();
-            bestScores statusWin = new bestScores(_client);
-            statusWin.ShowDialog();
-            lblStatus.Content = "success";
-            Show();
+            _client.mySend("223"); //send code
         }
 
         private void btnMyStatus_Click(object sender, RoutedEventArgs e)
