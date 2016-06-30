@@ -380,6 +380,7 @@ void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged
 	_gameList[msg._user->_currGameID]->leaveGame(msg._user);
 	handleLeaveRoom(msg);
 	msg._user->_currGameID = 0;
+	msg._user->send(std::to_string(LEAVE_GAME_RESPONSE));
 }
 
 void TriviaServer::handleStartGame(recievedMessage &msg)//debugged

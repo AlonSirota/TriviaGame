@@ -50,7 +50,8 @@ namespace client
             //secure
             //secureStream.Read(buffer, 0, size);
             string decoded = new ASCIIEncoding().GetString(buffer); //seperated lines for debugging. TODO (make this a one-liner)
-            if (decoded.Contains("\0")) throw new Exception("bytes not recieved properly");
+            if (decoded.Contains("\0"))
+                throw new Exception("bytes not recieved properly");
             return decoded;            
         }
 

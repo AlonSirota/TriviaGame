@@ -43,55 +43,59 @@ namespace client
             //{
                 string responseCode;
 
-                do /*while (exists)*/
-                {
-                    responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
-                    //responseCode = _client.myReceive(3);
+            while (_exists)
+            {
+                responseCode = await Task.Factory.StartNew(() => _client.myReceive(3));
+                //responseCode = _client.myReceive(3);
 
-                    switch (responseCode)
-                    {
-                        case "120":
-                            _currentQuestionIndex++;
-                            bool correctAnswer = (await Task.Factory.StartNew(() => _client.myReceive(1))) == "1";
-                            if (correctAnswer)
-                            {
-                                _correctAnswerIndex++;
-                            }
-                            lblScore.Content = _correctAnswerIndex.ToString() + "/" + _currentQuestionIndex.ToString(); //updates GUI to show status.
-                            break;
-                        case "118": //TODO use a loop for this mess
-                            handleAnswers();
-                            break;
-                        case "121":
-                            _userNo = Int32.Parse(_client.myReceive(1));
-                            string nameSize = "";
-                            string userName = "";
-                            for (int i = 0; i < _userNo; i++)
-                            {
-                                nameSize = _client.myReceive(2);
-                                userName = _client.myReceive(Int32.Parse(nameSize));
-                                _userList.Add(userName);
-                                _scores.Add(Int32.Parse(_client.myReceive(2)));
-                            }
-                            lblStatus.Content = "Game Ended";
-                            //display scores
-                            string msg = "";
-                            for (int i = 0; i < _userNo; i++)
-                            {
-                                msg += _userList[i];
-                                msg += " : ";
-                                msg += _scores[i].ToString();
-                                msg += "\n";
-                            }
-                            MessageBox.Show(msg, "Scores");
-                            Close();
-                            _exists = false;
-                            break;
-                        default:
-                            lblStatus.Content = "Error - wrong code detected";
-                            break;
-                    }
-                } while (_exists);
+                switch (responseCode)
+                {
+                    case "120":
+                        _currentQuestionIndex++;
+                        bool correctAnswer = (await Task.Factory.StartNew(() => _client.myReceive(1))) == "1";
+                        if (correctAnswer)
+                        {
+                            _correctAnswerIndex++;
+                        }
+                        lblScore.Content = _correctAnswerIndex.ToString() + "/" + _currentQuestionIndex.ToString(); //updates GUI to show status.
+                        break;
+                    case "118": //TODO use a loop for this mess
+                        handleAnswers();
+                        break;
+                    case "121":
+                        _userNo = Int32.Parse(_client.myReceive(1));
+                        string nameSize = "";
+                        string userName = "";
+                        for (int i = 0; i < _userNo; i++)
+                        {
+                            nameSize = _client.myReceive(2);
+                            userName = _client.myReceive(Int32.Parse(nameSize));
+                            _userList.Add(userName);
+                            _scores.Add(Int32.Parse(_client.myReceive(2)));
+                        }
+                        lblStatus.Content = "Game Ended";
+                        //display scores
+                        string msg = "";
+                        for (int i = 0; i < _userNo; i++)
+                        {
+                            msg += _userList[i];
+                            msg += " : ";
+                            msg += _scores[i].ToString();
+                            msg += "\n";
+                        }
+                        MessageBox.Show(msg, "Scores");
+                        Close();
+                        _exists = false;
+                        break;
+                    case "122": //leave game response
+                        _exists = false;
+                        Close();
+                        break;
+                    default:
+                        lblStatus.Content = "Error - wrong code detected";
+                        break;
+                }
+            }
             //})); //end of beginInvoke.
         }
 
@@ -197,11 +201,12 @@ namespace client
         private void btnLeaveGame_Click(object sender, RoutedEventArgs e)
         {
             leaveGame();
-            Close();
             _exists = false;
             /*This is ok because even in the worst case scenerio:
             breaks the listen loop but a pending message from server regarding the game is sent,
-            the message will be recieved in a different listen thread and will be automatically ignored.*/
+            the message will be recieved in a different listen thread and will be automatically ignored.
+            threre is a potential problem though, if the bytes sent accidently contain a message code - to prevent that we should add to the protocol
+            a non ascii starter byte*/
         }
         
         private async void leaveGame()
