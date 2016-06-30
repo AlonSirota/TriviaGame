@@ -11,6 +11,7 @@
         <Label x:Name="lblScore2" Content="" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="292" Margin="0,50,0,0" FontSize="22"/>
         <Label x:Name="lblScore3" Content="" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="292" Margin="0,100,0,0" FontSize="22"/>
         <Button x:Name="btnClose" Content="OK" HorizontalAlignment="Left" Height="50" Margin="97,209,0,0" VerticalAlignment="Top" Width="185" Click="btnClose_Click"/>
+        <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="28,178,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

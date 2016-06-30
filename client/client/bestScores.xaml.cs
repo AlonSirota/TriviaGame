@@ -44,26 +44,14 @@ namespace client
 
         private void requestGetBestScores()
         {
-            _client.mySend("223"); //send code
-            string code = _client.myReceive(3);
-            if (code == "124")
+            int nameSize = 0;
+            string username = "";
+            for (int i = 0; i < 3; i++)
             {
-                int nameSize = 0;
-                string username = "";
-                for (int i = 0; i < 3; i++)
-                {
-                    nameSize = Int32.Parse(_client.myReceive(2));
-                    if (nameSize != 0)
-                    {
-                        username = _client.myReceive(nameSize);
-                        _users.Add(username);
-                        _scores.Add(Int32.Parse(_client.myReceive(6)));
-                    }
-                    else
-                    {
-                        _client.myReceive(1);
-                    }
-                }
+                nameSize = Int32.Parse(_client.myReceive(2));
+                username = _client.myReceive(nameSize);
+                _users.Add(username);
+                _scores.Add(Int32.Parse(_client.myReceive(6)));
             }
         }
 
