@@ -39,10 +39,18 @@ namespace client
         public string myReceive(int size)
         {
             byte[] buffer = new byte[size];
-            clientStream.Read(buffer, 0, size);
+   
+            int totalBytesRecieved = 0;
+            do
+            {
+                totalBytesRecieved += clientStream.Read(buffer, totalBytesRecieved, 1);
+            } while (totalBytesRecieved < size);
+            //int count = clientStream.Read(buffer, 0, size);
+
             //secure
             //secureStream.Read(buffer, 0, size);
             string decoded = new ASCIIEncoding().GetString(buffer); //seperated lines for debugging. TODO (make this a one-liner)
+            if (decoded.Contains("\0")) throw new Exception("bytes not recieved properly");
             return decoded;            
         }
 
