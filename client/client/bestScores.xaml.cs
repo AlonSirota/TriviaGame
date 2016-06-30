@@ -37,9 +37,18 @@ namespace client
         {
             //await Task.Factory.StartNew(() => requestGetBestScores());
             requestGetBestScores();
-            lblScore1.Content = _users[0] + " : " + _scores[0];
-            lblScore2.Content = _users[1] + " : " + _scores[1];
-            lblScore3.Content = _users[2] + " : " + _scores[2];
+            if ((string)lblScore1.Content != "")
+            {
+                lblScore1.Content = _users[0] + " : " + _scores[0];
+            }
+            if ((string)lblScore2.Content != "")
+            {
+                lblScore2.Content = _users[1] + " : " + _scores[1];
+            }
+            if ((string)lblScore3.Content != "")
+            {
+                lblScore3.Content = _users[2] + " : " + _scores[2];
+            }
         }
 
         private void requestGetBestScores()
