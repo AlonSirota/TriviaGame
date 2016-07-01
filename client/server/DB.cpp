@@ -7,9 +7,7 @@ DB::DB() : _db("serverDatabase.db", SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) 
 	_db.exec("create table IF NOT EXISTS t_games (game_id integer primary key autoincrement not null, status int not null, start_time datetime not null, end_time datetime)");
 	_db.exec("create table IF NOT EXISTS t_questions (question_id integer primary key autoincrement not null, question string not null, correct_ans string not null, ans2 string not null, ans3 string not null, ans4 string not null)");
 	_db.exec("create table IF NOT EXISTS t_players_answers (game_id integer not null, username string not null, question_id integer not null, player_answer string not null, is_correct integer not null, answer_time integer not null, primary key(game_id, username, question_id), foreign key(game_id) references t_games(game_id), foreign key(username) references t_users(username), foreign key(question_id) references t_questions(question_id))");
-	//insertQuestion("what is the color of the sky?", "blue", "green", "red", "yellow");
-	//insertQuestion("3+7=...", "10", "9", "11", "420");
-	//insertQuestion("8:2=...", "4", "3", "2", "425");
+	//addTestQuestions();
 }
 
 //TODO prevent SQL injections.
@@ -64,6 +62,13 @@ std::string DB::columnToString(SQLite::Column c)
 {
 	std::string temp = c;
 	return temp;
+}
+
+void DB::addTestQuestions()
+{
+	insertQuestion("what is the color of the sky?", "blue", "green", "red", "yellow");
+	insertQuestion("3+7=...", "10", "9", "11", "420");
+	insertQuestion("8:2=...", "4", "3", "2", "425");
 }
 
 //helper class for easier DB management, maybe use for a new feature?

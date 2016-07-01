@@ -20,6 +20,7 @@ public:
 	bool updateGameStatus(int);
 	bool addAnswerToUser(int gameId, std::string username, int questionId, std::string answer, bool isCorrect ,int answerTime_seconds);
 	static std::string columnToString(SQLite::Column c);
+	void addTestQuestions();
 
 	void insertQuestion(std::string question, std::string correctAns, std::string ans1, std::string ans2, std::string ans3);
 
