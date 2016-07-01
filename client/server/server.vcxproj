@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\include;.\include\sqlite3;C:\Program Files (x86)\boostRoot\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\OpenSSL-Win32\include;.\include;.\include\sqlite3;C:\Program Files (x86)\boostRoot\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

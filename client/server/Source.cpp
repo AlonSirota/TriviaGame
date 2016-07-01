@@ -5,7 +5,7 @@
 
 int main()
 {
-	TriviaServer server;
+	TriviaServer server(true);
 	server.serve();
 
 	system("pause");

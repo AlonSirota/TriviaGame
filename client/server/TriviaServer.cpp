@@ -1,6 +1,6 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer() : _cvMessages(), _context(_io_service, boost::asio::ssl::context::sslv23_server)
+TriviaServer::TriviaServer(bool encrypted) : _cvMessages(), _context(_io_service, boost::asio::ssl::context::sslv23_server)
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
@@ -16,7 +16,10 @@ TriviaServer::TriviaServer() : _cvMessages(), _context(_io_service, boost::asio:
 	//_context.use_certificate_chain_file("server.pem");
 	//_context.use_private_key_file("server.pem", boost::asio::ssl::context::pem);
 	//_context.use_tmp_dh_file("dh512.pem");
+	_encrypted = encrypted;
 }
+
+typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
 
 void TriviaServer::serve()
 {
@@ -26,20 +29,43 @@ void TriviaServer::serve()
 	while (true)
 	{
 		std::cout << "Listening..." << std::endl;
-		tcp::socket newSocket(_io_service);
-		boost::system::error_code ec;
-		acceptor.accept(newSocket, ep, ec);
-		if (ec)
+		if (_encrypted)
 		{
-			std::cout << "accept failed: " << ec.value();
+			ssl_socket newSocket(_io_service, _context);
+			boost::system::error_code ec;
+			acceptor.accept(newSocket.lowest_layer(), ep, ec);
+			if (ec)
+			{
+				std::cout << "accept failed: " << ec.value();
+			}
+			else
+			{
+				std::cout << "accepted connection\n";
+				newSocket.handshake(boost::asio::ssl::stream_base::server);
+				std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
+				std::thread t(&TriviaServer::clientHandler, this, ptr);
+				t.detach();
+			}
 		}
 		else
 		{
-			std::cout << "accepted connection\n";
-			std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
-			std::thread t(&TriviaServer::clientHandler, this, ptr);
-			t.detach();
+			tcp::socket newSocket(_io_service);
+			boost::system::error_code ec;
+			acceptor.accept(newSocket, ep, ec);
+			if (ec)
+			{
+				std::cout << "accept failed: " << ec.value();
+			}
+			else
+			{
+				std::cout << "accepted connection\n";
+				std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
+				std::thread t(&TriviaServer::clientHandler, this, ptr);
+				t.detach();
+			}
 		}
+		
+		
 	}
 }
 
