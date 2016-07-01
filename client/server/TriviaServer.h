@@ -18,7 +18,7 @@ using boost::asio::ip::tcp;
 class TriviaServer
 {
 public:
-	TriviaServer();
+	TriviaServer(bool);
 	void serve();
 
 	std::shared_ptr<Room> getRoomById(int);
@@ -37,6 +37,7 @@ private:
 	std::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
 	int _tempUserSequence;
+	bool _encrypted;
 
 	void clientHandler(std::shared_ptr<tcp::socket>);
 

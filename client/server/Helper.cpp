@@ -2,8 +2,12 @@
 
 
 
-void Helper::sendData(std::shared_ptr<tcp::socket> socket, std::string bufTemp)
+void Helper::sendData(std::shared_ptr<tcp::socket> socket, std::string bufTemp, bool encrypted)
 {
+	if (encrypted)
+	{
+
+	}
 	//boost::asio::ssl
 	std::cout << "sending: " << bufTemp << "\n";
 	/*
@@ -18,9 +22,9 @@ void Helper::sendData(std::shared_ptr<tcp::socket> socket, std::string bufTemp)
 	//will send exception automaticly
 }
 
-int Helper::getMessageTypeCode(std::shared_ptr<tcp::socket> socket)
+int Helper::getMessageTypeCode(std::shared_ptr<tcp::socket> socket, bool encrypted)
 {
-	std::vector<char> s = getPartFromSocket(socket, 3);
+	std::vector<char> s = getPartFromSocket(socket, 3, encrypted);
 	std::string msg(s.data());
 
 	if (msg == "")
@@ -29,16 +33,16 @@ int Helper::getMessageTypeCode(std::shared_ptr<tcp::socket> socket)
 	return  atoi(data.c_str());
 }
 
-int Helper::getIntPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum)
+int Helper::getIntPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum, bool encrypted)
 {
-	std::vector<char> data(getPartFromSocket(socket, bytesNum));
+	std::vector<char> data(getPartFromSocket(socket, bytesNum, encrypted));
 	//char* s = data.data();
 	return atoi(data.data());
 }
 
-std::string Helper::getStringPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum)
+std::string Helper::getStringPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum, bool encrypted)
 {
-	std::vector<char> s = getPartFromSocket(socket, bytesNum);
+	std::vector<char> s = getPartFromSocket(socket, bytesNum,encrypted);
 	std::string res(s.data());
 	return res;
 }
@@ -50,7 +54,7 @@ std::string Helper::getPaddedNumber(int num, int digits)
 	return ostr.str();
 }
 
-std::vector<char> Helper::getPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum)
+std::vector<char> Helper::getPartFromSocket(std::shared_ptr<tcp::socket> socket, int bytesNum, bool encrypted)
 {
 	if (bytesNum == 0)
 	{
