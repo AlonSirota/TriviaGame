@@ -77,7 +77,7 @@ bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerIndex, int
 		isCorrect = true;
 	}
 	
-	if (answerIndex == 5)
+	if (answerIndex == 4)
 	{
 		_db->addAnswerToUser(_id,
 			user->_username,

@@ -101,6 +101,7 @@ namespace client
                 _roomNametoId.Add(roomName, roomId);
             }
 
+            //the list is cleared when the request room list button is pressed.
             if (_roomNametoId.Count() == 0)
             {
                 lblStatus.Content = "Error - no rooms";
