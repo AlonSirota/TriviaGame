@@ -19,8 +19,6 @@ TriviaServer::TriviaServer(bool encrypted) : _cvMessages(), _context(_io_service
 	_encrypted = encrypted;
 }
 
-typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
-
 void TriviaServer::serve()
 {
 	tcp::endpoint ep(tcp::v4(), 8820);
@@ -31,7 +29,7 @@ void TriviaServer::serve()
 		std::cout << "Listening..." << std::endl;
 		if (_encrypted)
 		{
-			ssl_socket newSocket(_io_service, _context);
+			boost::asio::ssl::stream<boost::asio::ip::tcp::socket> newSocket(_io_service, _context);
 			boost::system::error_code ec;
 			acceptor.accept(newSocket.lowest_layer(), ep, ec);
 			if (ec)
@@ -41,8 +39,8 @@ void TriviaServer::serve()
 			else
 			{
 				std::cout << "accepted connection\n";
-				newSocket.handshake(boost::asio::ssl::stream_base::server);
-				std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
+				//newSocket.handshake(boost::asio::ssl::stream_base::server);
+				std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket.next_layer()));
 				std::thread t(&TriviaServer::clientHandler, this, ptr);
 				t.detach();
 			}
