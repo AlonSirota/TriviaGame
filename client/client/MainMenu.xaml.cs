@@ -101,7 +101,6 @@ namespace client
                 _roomNametoId.Add(roomName, roomId);
             }
 
-            lvwRooms.Items.Clear();
             if (_roomNametoId.Count() == 0)
             {
                 lblStatus.Content = "Error - no rooms";
@@ -128,6 +127,7 @@ namespace client
         //205
         private void requestRoomList()
         {
+            lvwRooms.Items.Clear();
             _client.mySend("205"); //send code
         }
 
