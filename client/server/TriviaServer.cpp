@@ -1,19 +1,28 @@
 #include "TriviaServer.h"
 //done
-TriviaServer::TriviaServer() : _cvMessages()
+TriviaServer::TriviaServer() : _cvMessages(), _context(_io_service, boost::asio::ssl::context::sslv23_server)
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
 	_roomIdSequence = 1;
 	_tempUserSequence = 1;
 	_db = std::make_shared<DB>();
+	//ssl
+	_context.set_options(
+		boost::asio::ssl::context::default_workarounds
+		| boost::asio::ssl::context::no_sslv2
+		| boost::asio::ssl::context::single_dh_use);
+	//_context.set_password_callback(boost::bind(&server::get_password, this)); //do we need this?
+	//_context.use_certificate_chain_file("server.pem");
+	//_context.use_private_key_file("server.pem", boost::asio::ssl::context::pem);
+	//_context.use_tmp_dh_file("dh512.pem");
 }
 
 void TriviaServer::serve()
 {
 	tcp::endpoint ep(tcp::v4(), 8820);
 	tcp::acceptor acceptor(_io_service, ep);
-
+	
 	while (true)
 	{
 		std::cout << "Listening..." << std::endl;
