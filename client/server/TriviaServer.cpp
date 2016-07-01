@@ -407,7 +407,7 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 			currentGame.sendQuestionToAllUsers();
 			handleCloseRoom(msg, true);
 		}
-		catch (SQLite::Exception & e)
+		catch (std::exception & e)
 		{
 			room->_admin->send(std::to_string(START_GAME_REPLY_FAILED_NOT_ENOUGH_QUESTIONS));
 			std::cout << "handleStartGame failed: " << e.what() << "\n";
