@@ -19,14 +19,14 @@ public:
 	int _questionsNo;
 	std::vector<std::shared_ptr<Question>> _questions;
 	std::vector<std::shared_ptr<User>> _users;
-	int _currQuestionIndex;
+
 	std::shared_ptr<DB> _db;
 	std::map<std::string, int> _results;
-	int _currentTurnAnswers;
+	int _answersRegisteredThisTurnCount;
 	int _id;
 
 private:
 	bool insertGameToDB();
 	void initQuestionFromDB();
-	
+	int _currQuestionIndex;	
 };

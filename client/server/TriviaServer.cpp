@@ -400,11 +400,11 @@ void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
 		std::shared_ptr<Room> room = _roomList[msg._user->_currRoomID];
 		try
 		{
-			Game currentGame(room->_users, room->_questionsNo, _db); //if this didn't throw, it means that there ARE enough questions.
-			_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame._id, std::make_shared<Game>(currentGame)));
+			std::shared_ptr<Game> currentGame = std::make_shared<Game>(room->_users, room->_questionsNo, _db); //if this didn't throw, it means that there ARE enough questions.
+			_gameList.insert(std::pair<int, std::shared_ptr<Game>>(currentGame->_id, currentGame));
 			
-			currentGame.sendStartGameMessageToAllUsers();
-			currentGame.sendQuestionToAllUsers();
+			currentGame->sendStartGameMessageToAllUsers();
+			currentGame->sendQuestionToAllUsers();
 			handleCloseRoom(msg, true);
 		}
 		catch (std::exception & e)
