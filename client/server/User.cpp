@@ -1,9 +1,10 @@
 #include "User.h"
 //done
-User::User(std::string username, std::shared_ptr<tcp::socket> socket) : _username(username), _socket(socket)
+User::User(std::string username, std::shared_ptr<tcp::socket> socket, bool encrypted) : _username(username), _socket(socket)
 {
 	_currGameID = 0;
 	_currRoomID = 0;
+	_encrypted = encrypted;
 }
 
 User::User(User &&other) : _socket(other._socket), _username(other._username)
@@ -20,7 +21,7 @@ User::User(const User &other) : _username(other._username), _socket(other._socke
 
 void User::send(std::string& buffer)
 {
-	Helper::sendData(_socket, buffer);
+	Helper::sendData(_socket, buffer,_encrypted);
 }
 std::string User::getUsername() const
 {

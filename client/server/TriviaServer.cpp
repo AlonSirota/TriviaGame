@@ -1,4 +1,5 @@
 #include "TriviaServer.h"
+typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
 //done
 TriviaServer::TriviaServer(bool encrypted) : _cvMessages(), _context(_io_service, boost::asio::ssl::context::sslv23_server)
 {
@@ -12,6 +13,7 @@ TriviaServer::TriviaServer(bool encrypted) : _cvMessages(), _context(_io_service
 		boost::asio::ssl::context::default_workarounds
 		| boost::asio::ssl::context::no_sslv2
 		| boost::asio::ssl::context::single_dh_use);
+	_encrypted = encrypted;
 	//_context.set_password_callback(boost::bind(&server::get_password, this)); //do we need this?
 	//_context.use_certificate_chain_file("server.pem");
 	//_context.use_private_key_file("server.pem", boost::asio::ssl::context::pem);
@@ -193,51 +195,51 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	{
 		case SIGNIN_REQUEST:
 		{
-			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, usernameLength).data());
-			int passLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, passLength).data());
+			int usernameLength = Helper::getIntPartFromSocket(socket, 2, _encrypted);
+			info.push_back(Helper::getPartFromSocket(socket, usernameLength, _encrypted).data());
+			int passLength = Helper::getIntPartFromSocket(socket, 2, _encrypted);
+			info.push_back(Helper::getPartFromSocket(socket, passLength, _encrypted).data());
 			break;
 		}
 		case SIGNUP_REQUEST:
 		{
-			int usernameLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, usernameLength).data());
-			int passLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, passLength).data());
-			int emailLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, emailLength).data());
+			int usernameLength = Helper::getIntPartFromSocket(socket, 2, _encrypted);
+			info.push_back(Helper::getPartFromSocket(socket, usernameLength, _encrypted).data());
+			int passLength = Helper::getIntPartFromSocket(socket, 2, _encrypted);
+			info.push_back(Helper::getPartFromSocket(socket, passLength, _encrypted).data());
+			int emailLength = Helper::getIntPartFromSocket(socket, 2, _encrypted);
+			info.push_back(Helper::getPartFromSocket(socket, emailLength, _encrypted).data());
 			break;
 		}
 		case USERS_IN_ROOM_REQUEST:
 		{
-			int roomIdLength = Helper::getIntPartFromSocket(socket, 1);
+			int roomIdLength = Helper::getIntPartFromSocket(socket, 1, _encrypted);
 			if (roomIdLength != 0)
 			{
-				info.push_back(Helper::getPartFromSocket(socket, roomIdLength).data());
+				info.push_back(Helper::getPartFromSocket(socket, roomIdLength, _encrypted).data());
 			}
 			break;
 		}			
 		case JOIN_ROOM_REQUEST:
 		{
-			info.push_back(Helper::getPartFromSocket(socket, 4).data());
+			info.push_back(Helper::getPartFromSocket(socket, 4, _encrypted).data());
 			break;
 		}
 		case CREATE_ROOM_REQUEST:
 		{
-			int rommNameLength = Helper::getIntPartFromSocket(socket, 2);
-			info.push_back(Helper::getPartFromSocket(socket, rommNameLength).data());
-			info.push_back(Helper::getPartFromSocket(socket, 1).data());
-			info.push_back(Helper::getPartFromSocket(socket, 2).data());
-			info.push_back(Helper::getPartFromSocket(socket, 2).data());
+			int rommNameLength = Helper::getIntPartFromSocket(socket, 2, _encrypted);
+			info.push_back(Helper::getPartFromSocket(socket, rommNameLength, _encrypted).data());
+			info.push_back(Helper::getPartFromSocket(socket, 1, _encrypted).data());
+			info.push_back(Helper::getPartFromSocket(socket, 2, _encrypted).data());
+			info.push_back(Helper::getPartFromSocket(socket, 2, _encrypted).data());
 			break;
 		}
 		case START_GAME_REQUEST://not in current version
 			break;
 		case CLIENT_ANSWER:
 		{
-			info.push_back(Helper::getPartFromSocket(socket, 1).data()); //answer index
-			info.push_back(Helper::getPartFromSocket(socket, 2).data()); //answer time
+			info.push_back(Helper::getPartFromSocket(socket, 1, _encrypted).data()); //answer index
+			info.push_back(Helper::getPartFromSocket(socket, 2, _encrypted).data()); //answer time
 			break;
 		}
 		case LEAVE_GAME_REQUEST://not in current version
@@ -335,11 +337,11 @@ std::shared_ptr<Game> TriviaServer::getGamebyId(int id)
 
 void TriviaServer::clientHandler(std::shared_ptr<tcp::socket> s)
 {
-	int msgCode = Helper::getMessageTypeCode(s);
+	int msgCode = Helper::getMessageTypeCode(s, _encrypted);
 	while (msgCode != 0 && msgCode != EXIT)
 	{
 		addRecievedMessage(buildRecievedMessage(s, msgCode));
-		msgCode = Helper::getMessageTypeCode(s);
+		msgCode = Helper::getMessageTypeCode(s, _encrypted);
 	}
 	addRecievedMessage(buildRecievedMessage(s, EXIT));
 }
@@ -366,19 +368,19 @@ bool TriviaServer::handleSignin(recievedMessage& message)//debugged
 		if (!userExists(message._values[0]))
 		{
 			//success connecting
-			_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), message._socket));
-			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0)); //success
+			_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket,_encrypted)), message._socket));
+			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0), _encrypted); //success
 			return(true);
 		}
 		else
 		{
-			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2)); //user alread connected
+			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(2), _encrypted); //user alread connected
 			return false;
 		}
 	}
 	else
 	{
-		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(1)); //wrong detailes
+		Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(1), _encrypted); //wrong detailes
 		return false;
 	}
 }
@@ -389,24 +391,24 @@ bool TriviaServer::handleSignup(recievedMessage& message)
 	if (!Validator::isUsernameValid(message._values[0]))
 	{
 		//fail - username not valid	
-		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(3));
+		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(3), _encrypted);
 		return(false);
 	}
 	else if (!Validator::isPasswordValid(message._values[1]))
 	{
 		//fail - password not valid
-		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(1));
+		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(1), _encrypted);
 		return(false);
 	}
 	else if (userExists(message._values[0]))
 	{
 		//fail - user already exists
-		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(2));
+		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(2), _encrypted);
 		return(false);
 	}
 	//success
 	_db->addNewUser(message._values[0], message._values[1], message._values[2]);
-	Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(0));
+	Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(0), _encrypted);
 	return(true);
 }
 //done
@@ -479,13 +481,13 @@ bool TriviaServer::handleCreateRoom(recievedMessage& message) // check this
 
 		std::string messageCode = std::to_string(CREATE_ROOM_REPLY);
 
-		Helper::sendData(message._socket, messageCode + '0'/* + roomIdStrLength + roomIdStr*/);
+		Helper::sendData(message._socket, messageCode + '0'/* + roomIdStrLength + roomIdStr*/, _encrypted);
 		currentRoom.sendMessage(currentRoom.getUsersListMessage());
 		return(true);
 	}
 	else
 	{
-		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_REPLY) + '1'/*std::to_string(0)*/);
+		Helper::sendData(message._socket, std::to_string(CREATE_ROOM_REPLY) + '1'/*std::to_string(0)*/, _encrypted);
 		return false;
 	}
 }
@@ -516,7 +518,7 @@ void TriviaServer::handleJoinRoom(recievedMessage& message)
 	if (!_roomList.count(roomId))
 	{
 		//send failed message to user code 1102
-		Helper::sendData(std::move(message._socket), std::to_string(JOIN_ROOM_REPLY) + std::to_string(2));
+		Helper::sendData(std::move(message._socket), std::to_string(JOIN_ROOM_REPLY) + std::to_string(2), _encrypted);
 	}
 	else
 	{
@@ -549,12 +551,12 @@ void TriviaServer::handleGetUsersInRoom(recievedMessage& message)
 	{
 		std::shared_ptr<Room> room = getRoomById(roomId);
 		std::string sendString = room->getUsersListMessage();
-		Helper::sendData(message._socket, sendString);
+		Helper::sendData(message._socket, sendString, _encrypted);
 	}
 	else
 	{
 		//fail - no room has this id
-		Helper::sendData(std::move(message._socket), std::to_string(USERS_IN_ROOM_REPLY) + std::to_string(0));
+		Helper::sendData(std::move(message._socket), std::to_string(USERS_IN_ROOM_REPLY) + std::to_string(0), _encrypted);
 	}
 }
 //done
@@ -570,5 +572,5 @@ void TriviaServer::handleGetRooms(recievedMessage& message)
 		sendString += it->second->_name;
 		it++;
 	}
-	Helper::sendData(std::move(message._socket), sendString);
+	Helper::sendData(std::move(message._socket), sendString, _encrypted);
 }

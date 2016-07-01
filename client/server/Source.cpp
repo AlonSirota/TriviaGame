@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "TriviaServer.h"
-
 int main()
 {
 	TriviaServer server(true);

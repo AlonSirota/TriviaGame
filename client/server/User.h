@@ -13,7 +13,7 @@ using boost::asio::ip::tcp;
 class User
 {
 public:
-	User(std::string, std::shared_ptr<tcp::socket>);
+	User(std::string, std::shared_ptr<tcp::socket>,bool encrypted);
 	User(User&&);
 	User(const User&);
 	void send(std::string&);
@@ -31,4 +31,5 @@ public:
 	int _currGameID;
 	std::string _username;
 	std::shared_ptr<tcp::socket> _socket;	
+	bool _encrypted;
 };
