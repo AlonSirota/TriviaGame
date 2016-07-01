@@ -68,9 +68,10 @@ bool Game::handleNextTurn()
 
 bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerIndex, int time)
 {
+	answerIndex--; //synchronizes answerIndex's index with correctAnswer's index (starts at 0, unlike the original state, which starts at 1)
 	_currentTurnAnswers++;
 	bool isCorrect = false;
-	if (answerIndex - 1 == _questions[_currQuestionIndex]->getCorrectAnswerIndex()) //the -1 is there because answerIndex index starts at 1, but the index of correct answer starts at 0.
+	if (answerIndex == _questions[_currQuestionIndex]->getCorrectAnswerIndex()) 
 	{
 		_results[user->_username]++;
 		isCorrect = true;
