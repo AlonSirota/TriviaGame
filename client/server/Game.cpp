@@ -4,7 +4,7 @@ Game::Game(std::vector<std::shared_ptr<User>> players, int questionsNo, std::sha
 {
 	_questionsNo = questionsNo;
 	_id = _db->insertNewGame();//need to check if failed
-
+	_currQuestionIndex = 0;
 	_questions = _db->questionInit(questionsNo); //this may throw. should catch in whoever created the Game.
 
 	//this code will only be invoked if no exception was thrown.
@@ -45,13 +45,12 @@ void Game::handleFinishGame()
 
 bool Game::handleNextTurn()
 {
-	_currQuestionIndex++;
 	if (_users.size() == 0)
 	{
 		handleFinishGame();
 		return false;
 	}
-	if (_users.size() == _currentTurnAnswers)
+	if (_users.size() == _answersRegisteredThisTurnCount) //if everyone answered this turn
 	{
 		if (_questionsNo == _currQuestionIndex)
 		{
@@ -59,7 +58,6 @@ bool Game::handleNextTurn()
 		}
 		else
 		{
-			//_currQuestionIndex++;
 			sendQuestionToAllUsers();
 		}
 	}
@@ -69,7 +67,7 @@ bool Game::handleNextTurn()
 bool Game::handleAnswerFromUser(std::shared_ptr<User> user, int answerIndex, int time)
 {
 	answerIndex--; //synchronizes answerIndex's index with correctAnswer's index (starts at 0, unlike the original state, which starts at 1)
-	_currentTurnAnswers++;
+	_answersRegisteredThisTurnCount++;
 	bool isCorrect = false;
 	if (answerIndex == _questions[_currQuestionIndex]->getCorrectAnswerIndex()) 
 	{
@@ -152,6 +150,7 @@ void Game::sendQuestionToAllUsers()
 		message += Helper::getPaddedNumber((_questions[_currQuestionIndex])->getAnswers()[i].length(), 3);
 		message += (_questions[_currQuestionIndex])->getAnswers()[i];
 	}
-	_currentTurnAnswers = 0;
+	_answersRegisteredThisTurnCount = 0;
 	sendMessageToAllUsers(message);
+	_currQuestionIndex++;
 }
