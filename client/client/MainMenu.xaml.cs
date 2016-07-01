@@ -58,6 +58,7 @@ namespace client
                             handleRoomList();
                             break;
                         case "114":
+                            //list
                             handleCreateRoomReply();
                             break;
                         case "110":
@@ -100,16 +101,16 @@ namespace client
                 _roomNametoId.Add(roomName, roomId);
             }
 
+            lvwRooms.Items.Clear();
             if (_roomNametoId.Count() == 0)
             {
                 lblStatus.Content = "Error - no rooms";
             }
             else
-            {
-                listViewRooms.Items.Clear();
+            {                
                 foreach (var item in _roomNametoId.Keys)
                 {
-                    listViewRooms.Items.Add(item);
+                    lvwRooms.Items.Add(item);
                 }
             }
         }
@@ -233,7 +234,7 @@ namespace client
 
         private /*async*/ void joinRoomAsync()
         {
-            string roomName = (string)listViewRooms.SelectedItem;
+            string roomName = (string)lvwRooms.SelectedItem;
             if (roomName == null)
             {
                 lblStatus.Content = "Choose a room";
