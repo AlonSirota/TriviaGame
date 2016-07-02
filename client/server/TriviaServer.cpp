@@ -2,24 +2,34 @@
 
 TriviaServer::TriviaServer() : _cvMessages()
 {
+	//starts handeling of messages.
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
 	handleRecievedMessagesThread.detach();
+
+	//we chose to start count from 1
 	_roomIdSequence = 1;
 	_tempUserSequence = 1;
+
 	_db = std::make_shared<DB>();
 }
 
+/*
+	sets up the server
+	starts accepting clients and assigning them listen threads
+*/
 void TriviaServer::serve()
 {
+	//setting up server
 	tcp::endpoint endPoint(tcp::v4(), 8820);
 	tcp::acceptor acceptor(_io_service, endPoint);
 
+	//every loop accepts a new client
+	std::cout << "Listening..." << std::endl;
 	while (true)
-	{
-		std::cout << "Listening..." << std::endl;
-		std::shared_ptr<tcp::socket> newSocket = std::make_shared<tcp::socket>(_io_service);
+	{		
+		std::shared_ptr<tcp::socket> newSocket = std::make_shared<tcp::socket>(_io_service); //client socket
 		boost::system::error_code ec;
-		acceptor.accept(*newSocket, endPoint, ec);
+		acceptor.accept(*newSocket, endPoint, ec); //initializes connection (binds it to the client socket)
 		if (ec)
 		{
 			std::cout << "accept failed: " << ec.value();
@@ -27,40 +37,50 @@ void TriviaServer::serve()
 		else
 		{
 			std::cout << "accepted connection\n";
+			//starts the thread that listens to the client
 			std::thread t(&TriviaServer::clientHandler, this, newSocket);
 			t.detach();
 		}
 	}
 }
 
+/*
+	sends the user 3 best scores according to the protocol:
+		<2 bytes: username length><x bytes: username><6 bytes score> x3
+*/
 void TriviaServer::handleGetBestScores(recievedMessage& message)
 {
-	int amountOfBestScores = 3;
-	std::cout << "handleGetBestScores was called but is yet to be implemented.\n";
+	const int amountOfBestScores = 3;
 	std::vector<std::pair<std::string,std::string>> ansVector = _db->getBestScores(amountOfBestScores);
-	std::string sendMessage = "124";
+	std::string sendMessage = std::to_string(BEST_SCORE_REPLY);
 	for (int i = 0; i < amountOfBestScores; i++)
 	{
 		if (i < ansVector.size())
 		{
-			sendMessage += Helper::getPaddedNumber(ansVector[i].first.length(), 2);
-			sendMessage += ansVector[i].first;
-			sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[i].second.c_str()), 6);
+			sendMessage += Helper::getPaddedNumber(ansVector[i].first.length(), 2); //username length
+			sendMessage += ansVector[i].first; //usuername
+			sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[i].second.c_str()), 6); //best score
 		}
 		else
 		{
-			sendMessage += "00";
-			sendMessage += "";
-			sendMessage += "000000";
+			sendMessage += "00"; //username length
+			//username field empty
+			sendMessage += "000000"; //best score
 		}
 	}
 	message._user->send(sendMessage);
 }
 
+/*
+	sends the user 3 best scores according to the protocol:
+		[126 numberOfGames numberOfRightAns numerOfWrongAns avgTimeForAns]
+*/
 void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//debugged
 {
 	std::vector<std::string> ansVector = _db->getPersonalStatus(message._user->getUsername());
-	std::string sendMessage = "126";
+	std::string sendMessage = std::to_string(PERSONAL_STATE_REPLY);
+
+	//builds the content
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[0].c_str()), 4);
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[1].c_str()), 6);
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[2].c_str()), 6);
@@ -68,27 +88,39 @@ void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//debugged
 	std::string temp = ansVector[3].substr(pos+1, 2);
 	sendMessage += Helper::getPaddedNumber(std::atoi(ansVector[3].substr(0, pos).c_str()),2);
 	sendMessage += Helper::getPaddedNumber(std::atoi(temp.c_str()), 2);
+
 	message._user->send(sendMessage);
 }
 
+/*
+	this function works on a thread, and loops until program is over.
+	Every loop it extracts a message from the message queue and handles it.
+*/
 void TriviaServer::handleRecievedMessages()
 {
-	std::unique_lock<std::mutex> messageQueueLock(_mtxMessagesRecieved);
+	std::unique_lock<std::mutex> messageQueueUniqueLock(_mtxMessagesRecieved);
 	while (true)
 	{
 		if (_queRcvMessages.empty())
 		{
-			_cvMessages.wait(messageQueueLock); //waits for a message to be entered.
+			/*
+				waits for a message to be entered.
+				this n
+			*/
+			_cvMessages.wait(messageQueueUniqueLock); //TODO this crashes after handeling a user logout
 		}
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
 		std::cout << msg.toString();
 		
-		callHandler(msg);
+		callHandler(msg); //handles the message
 	}
 }
 
+/*
+	this function gets a message and invokes the right function to handle it.
+*/
 void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 {
 	switch (msg._messageCode)
@@ -137,14 +169,16 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 		break;
 	default:
 		std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
-		//case 299 and 0 is already handled in clientHandler()
 	}
 }
 
+/*
+	adds input (just-recieved) message into the pending message queue.
+*/
 void TriviaServer::addRecievedMessage(recievedMessage& message)
 {
 	_mtxMessagesRecieved.lock();
-	_queRcvMessages.push(message);
+	_queRcvMessages.push(message); //this has to be atomic, explained in the
 	_mtxMessagesRecieved.unlock();
 	_cvMessages.notify_one();
 }
