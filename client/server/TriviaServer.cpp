@@ -188,7 +188,7 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 		handleUserAnswer(msg);
 		break;
 	case EXIT:
-		std::cout << (msg._user == nullptr ? "unkown user" : msg._user->_username) << " exited\n";
+		handleExit(msg);
 		break;
 	default:
 		std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
@@ -335,7 +335,6 @@ bool TriviaServer::isUserAdminOfRoom(const std::shared_ptr<User> &user)
 	}
 }
 
-//done
 std::shared_ptr<Room> TriviaServer::getRoomById(int id)
 {
 	std::map<int, std::shared_ptr<Room>>::iterator it = _roomList.find(id);
@@ -356,19 +355,21 @@ std::shared_ptr<Game> TriviaServer::getGamebyId(int id)
 	return(_gameList.end()->second);
 }
 
+/*
+	note: there will be a thread running this function with each client.
+	gets messages from client, adds them to the pending-messsages-queue.
+*/
 void TriviaServer::clientHandler(std::shared_ptr<tcp::socket> s)
 {
-	int msgCode = Helper::getMessageTypeCode(s);
-	while (msgCode != 0 && msgCode != EXIT)
+	int msgCode;
+	do
 	{
-		addRecievedMessage(buildRecievedMessage(s, msgCode));
 		msgCode = Helper::getMessageTypeCode(s);
-	}
-	addRecievedMessage(buildRecievedMessage(s, EXIT));
+		addRecievedMessage(buildRecievedMessage(s, msgCode));
+	} while (msgCode != EXIT);
 }
 
-//done
-void TriviaServer::safeDeleteUser(recievedMessage& message)
+void TriviaServer::handleExit(recievedMessage& message)
 {
 	try
 	{
@@ -380,6 +381,7 @@ void TriviaServer::safeDeleteUser(recievedMessage& message)
 	{
 		std::cout << "exeption caught in safeDeleteUser:" << ex.what() << std::endl;
 	}
+	std::cout << (message._user == nullptr ? "unkown user" : message._user->_username) << " exited\n";
 }
 //done
 bool TriviaServer::handleSignin(recievedMessage& message)//debugged

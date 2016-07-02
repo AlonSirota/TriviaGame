@@ -38,7 +38,7 @@ private:
 
 	void clientHandler(std::shared_ptr<tcp::socket>);
 
-	void safeDeleteUser(recievedMessage&);
+	void handleExit(recievedMessage&);
 
 	bool handleSignin(recievedMessage&); //DEBUGGED
 	bool handleSignup(recievedMessage&);
