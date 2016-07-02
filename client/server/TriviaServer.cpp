@@ -93,22 +93,44 @@ void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//debugged
 }
 
 /*
+adds input (just-recieved) message into the pending message queue.
+*/
+void TriviaServer::addRecievedMessage(recievedMessage& message)
+{
+	//ATOMIC START
+	_mtxMessagesRecieved.lock();
+	_queRcvMessages.push(message); //this has to be atomic, explained in the	
+	_cvMessages.notify_one();
+	_mtxMessagesRecieved.unlock();
+	//ATOMIC END
+}
+
+/*
 	this function works on a thread, and loops until program is over.
 	Every loop it extracts a message from the message queue and handles it.
 */
 void TriviaServer::handleRecievedMessages()
-{
-	std::unique_lock<std::mutex> messageQueueUniqueLock(_mtxMessagesRecieved);
+{	
 	while (true)
 	{
+		//ATOMIC START
+		std::unique_lock<std::mutex> messageQueueUniqueLock(_mtxMessagesRecieved);
 		if (_queRcvMessages.empty())
 		{
 			/*
 				waits for a message to be entered.
-				this n
+				this is atomic (mutex connected to addRecievedMessage)
+				because otherwise theres a chance that the last message on the queue wouldn't be handled until another one is sent.
+				this is the 'bad' scenerio that causes this bag: (as if the atomic lines werent atomic at all)
+					if clauses checks and sees the queue is empty,
+					addRecievedMessage starts running: pushes new message AND notifies the conditional variable
+					handleRecievedMessages continues: starts waiting (waits AFTER it was notified, so the cv will have to wait to the next notify).
 			*/
 			_cvMessages.wait(messageQueueUniqueLock); //TODO this crashes after handeling a user logout
 		}
+		messageQueueUniqueLock.unlock();
+		//ATOMIC END
+
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
@@ -170,17 +192,6 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	default:
 		std::cout << "callHandler recieved an unknown message number: " << msg._messageCode << "\n";
 	}
-}
-
-/*
-	adds input (just-recieved) message into the pending message queue.
-*/
-void TriviaServer::addRecievedMessage(recievedMessage& message)
-{
-	_mtxMessagesRecieved.lock();
-	_queRcvMessages.push(message); //this has to be atomic, explained in the
-	_mtxMessagesRecieved.unlock();
-	_cvMessages.notify_one();
 }
 
 //done
