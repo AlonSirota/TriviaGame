@@ -381,6 +381,7 @@ void TriviaServer::handleSignout(recievedMessage& message)
 	handleLeaveRoom(message);
 	//handleLeaveGame - only in later version
 	_connectedUsers.erase(_connectedUsers.find(message._user));
+	message._user->send(std::to_string(SIGNOUT_REPLY));
 }
 
 void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged

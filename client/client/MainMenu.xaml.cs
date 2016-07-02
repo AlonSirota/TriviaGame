@@ -78,6 +78,10 @@ namespace client
                             lblStatus.Content = "success";
                             Show();
                             break;
+                        case "103":
+                            Close();
+                            _exists = false;
+                            break;
                         default:
                             lblStatus.Content = "Error - wrong code detected";
                             break;
@@ -254,16 +258,6 @@ namespace client
             _client.mySend("209" + roomID);
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            //sign out
-            signout();
-        }
-        private async void signout()
-        {
-            //await Task.Factory.StartNew(() => _client.mySend("201"));
-            _client.mySend("201");
-        }
         private void btnBestScores_Click(object sender, RoutedEventArgs e)
         {
             _client.mySend("223"); //send code
@@ -278,6 +272,11 @@ namespace client
             statusWin.ShowDialog();
             lblStatus.Content = "success";
             Show();*/
+        }
+
+        private void btnLogOut_Click(object sender, RoutedEventArgs e)
+        {
+            _client.mySend("201");
         }
     }
 }

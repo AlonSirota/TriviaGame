@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:client"
         mc:Ignorable="d"
-        Title="MainMenu" Height="700" Width="250" Closing="Window_Closing">
+        Title="MainMenu" Height="700" Width="250">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
@@ -20,9 +20,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Height="122" Margin="10,547,0,0" VerticalAlignment="Top" Width="211" Grid.ColumnSpan="2"/>
+        <Label x:Name="lblStatus" HorizontalAlignment="Left" Height="61" Margin="10,598,0,0" VerticalAlignment="Top" Width="211" Grid.ColumnSpan="2"/>
         <Button x:Name="btnJoinRoom" Content="Join Room" HorizontalAlignment="Left" Height="50" Margin="10,100,0,0" VerticalAlignment="Top" Width="211" Click="btnJoinRoom_Click" Grid.ColumnSpan="2"/>
         <Button x:Name="btnMyStatus" Content="My Status" HorizontalAlignment="Left" Height="50" Margin="10,442,0,0" VerticalAlignment="Top" Width="211" Click="btnMyStatus_Click" Grid.ColumnSpan="2"/>
         <Button x:Name="btnBestScores" Content="Best Scores" HorizontalAlignment="Left" Height="50" Margin="10,492,0,0" VerticalAlignment="Top" Width="211" Click="btnBestScores_Click" Grid.ColumnSpan="2"/>
+        <Button x:Name="btnLogOut" Content="Log Out" HorizontalAlignment="Left" Margin="10,542,0,0" VerticalAlignment="Top" Width="211" Grid.ColumnSpan="2" Height="51" Click="btnLogOut_Click"/>
     </Grid>
 </Window>
