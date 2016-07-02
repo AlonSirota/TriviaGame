@@ -25,6 +25,7 @@ namespace client
             _clientStream = null;
             _secured = secured;
             _secureStream = null;
+            //_client.Close();
         }
 
         public bool connect(string ipAddress, int port)

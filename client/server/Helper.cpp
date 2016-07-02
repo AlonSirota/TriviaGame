@@ -6,7 +6,6 @@ void Helper::sendData(std::shared_ptr<tcp::socket> socket, std::string bufTemp)
 {
 	//boost::asio::ssl
 	std::cout << "sending: " << bufTemp << "\n";
-	
 	/*
 	boost::asio::async_write(*socket, boost::asio::buffer(bufTemp.c_str(), bufTemp.size), [](boost::system::error_code ec, std::size_t )
 	{

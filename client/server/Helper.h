@@ -8,7 +8,7 @@
 #include <utility>
 #include <iomanip>
 #include <boost\asio.hpp>
-#include <boost\asio\ssl.hpp>
+//#include <boost\asio\ssl.hpp>
 using boost::asio::ip::tcp;
 class Helper
 {

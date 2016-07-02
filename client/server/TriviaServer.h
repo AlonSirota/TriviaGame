@@ -11,14 +11,13 @@
 #include "Validator.h"
 #include "Game.h"
 #include <boost\bind.hpp>
-#include <boost\asio\ssl.hpp>
 
 using boost::asio::ip::tcp;
 
 class TriviaServer
 {
 public:
-	TriviaServer(bool);
+	TriviaServer();
 	void serve();
 
 	std::shared_ptr<Room> getRoomById(int);
@@ -27,7 +26,6 @@ public:
 	std::map<int, std::shared_ptr<Game>> getGameList() { return(_gameList); }
 private:
 	boost::asio::io_service _io_service;
-	boost::asio::ssl::context _context;
 	std::map<std::shared_ptr<User>, std::shared_ptr<tcp::socket>> _connectedUsers;
 	std::shared_ptr<DB> _db; //TODO make this a non-pointer
 	std::map<int, std::shared_ptr<Room>> _roomList;
@@ -37,7 +35,6 @@ private:
 	std::queue<recievedMessage> _queRcvMessages;
 	int _roomIdSequence;
 	int _tempUserSequence;
-	bool _encrypted;
 
 	void clientHandler(std::shared_ptr<tcp::socket>);
 
