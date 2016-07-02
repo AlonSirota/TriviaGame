@@ -131,6 +131,7 @@ void TriviaServer::handleRecievedMessages()
 		messageQueueUniqueLock.unlock();
 		//ATOMIC END
 
+		//extracts message
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
 
@@ -194,10 +195,15 @@ void TriviaServer::callHandler(recievedMessage &msg) //next function to debug
 	}
 }
 
-//done
+/*
+	recieves the rest of the message - parses the data. (adds it to the message values vector)
+	//TODO add defining of the index of each value for every type of message
+*/
 recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> socket, int messCode)
 {
 	std::vector<std::string> info;
+	
+
 	switch (messCode) //parses the string to the string vector _values.
 	{
 		case SIGNIN_REQUEST:
@@ -260,7 +266,6 @@ recievedMessage TriviaServer::buildRecievedMessage(std::shared_ptr<tcp::socket> 
 	return recievedMessage(socket, messCode, info, getUserBySocket(socket));
 }
 
-//done
 std::shared_ptr<User> TriviaServer::getUserBySocket(std::shared_ptr<tcp::socket> socket)
 {
 	std::map<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>::iterator it = _connectedUsers.begin();
@@ -285,6 +290,15 @@ bool TriviaServer::userExists(std::string username)
 	return false;
 }
 
+/*
+	note: this function's logic is kind of ugly, we are aware - should be changed.
+	functionality:
+		closes the room the user is in (only if he is the admin).
+		sends that user a response accordingly.
+
+	Input: user that tries to close room, bool that contains whether or not a game should start.
+	Output: -1 if failed, closed room id if succeeded.
+*/
 int TriviaServer::closeRoom(std::shared_ptr<User>  user, bool startGame)
 {
 	bool found = false;

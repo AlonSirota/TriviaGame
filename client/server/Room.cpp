@@ -25,15 +25,9 @@ void Room::joinRoom(std::shared_ptr<User> user)
 
 void Room::leaveRoom(std::shared_ptr<User> user)
 {
-	for (std::vector<std::shared_ptr<User>>::iterator i = _users.begin(); i != _users.end(); i++)
-	{
-		if ((*i)->_username == user->_username)
-		{
-			_users.erase(i);
+			_users.erase(std::find(_users.begin(), _users.end(), user));
 			user->send(std::to_string(LEAVE_ROOM_REPLY));
 			this->sendMessage(this->getUsersListMessage()); //sends after user was delted from user vector - so the leaving user wont get the message.
-		}
-	}
 }
 
 int Room::closeRoom(std::shared_ptr<User> caller, bool startGame)
