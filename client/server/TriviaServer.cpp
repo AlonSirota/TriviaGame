@@ -73,12 +73,12 @@ void TriviaServer::handlegetPersonalStatus(recievedMessage& message)//debugged
 
 void TriviaServer::handleRecievedMessages()
 {
-	std::unique_lock<std::mutex> _ulMessagesReceived(_mtxMessagesRecieved);
+	std::unique_lock<std::mutex> messageQueueLock(_mtxMessagesRecieved);
 	while (true)
 	{
 		if (_queRcvMessages.empty())
 		{
-			_cvMessages.wait(_ulMessagesReceived); //waits for a message to be entered.
+			_cvMessages.wait(messageQueueLock); //waits for a message to be entered.
 		}
 		recievedMessage msg = _queRcvMessages.front();
 		_queRcvMessages.pop();
