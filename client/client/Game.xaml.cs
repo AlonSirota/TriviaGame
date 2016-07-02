@@ -32,6 +32,24 @@ namespace client
         List<int> _scores = new List<int>();
         int _userNo;
 
+        public void modifyAnsButtonIsEnabled(bool isEnabled)
+        {
+            btnAns1.IsEnabled = isEnabled;
+            btnAns2.IsEnabled = isEnabled;
+            btnAns3.IsEnabled = isEnabled;
+            btnAns4.IsEnabled = isEnabled;
+        }
+
+        public void freezeAnswerButtons()
+        {
+            modifyAnsButtonIsEnabled(false);
+        }
+
+        public void unfreezeAnswerButtons()
+        {
+            modifyAnsButtonIsEnabled(true);
+        }
+
         public Game()
         {
             InitializeComponent();
@@ -57,7 +75,7 @@ namespace client
                         {
                             _correctAnswerIndex++;
                         }
-                        lblScore.Content = _correctAnswerIndex.ToString() + "/" + _currentQuestionIndex.ToString(); //updates GUI to show status.
+                        lblScore.Content = _correctAnswerIndex.ToString() + "/" + _currentQuestionIndex.ToString(); //updates GUI to show status.w
                         break;
                     case "118": //TODO use a loop for this mess
                         handleAnswers();
@@ -124,6 +142,7 @@ namespace client
             _ansIndex = 1;
             _dispatcherTimer.Stop();
             sendAnswer();
+            freezeAnswerButtons();
         }
 
         private void sendAnswer()
@@ -134,6 +153,7 @@ namespace client
 
         private void handleAnswers()
         {
+            unfreezeAnswerButtons();
             getAnswers();
             asignAnswers();
         }
@@ -182,6 +202,7 @@ namespace client
             _ansIndex = 2;
             _dispatcherTimer.Stop();
             sendAnswer();
+            freezeAnswerButtons();
         }
 
         private void btnAns3_Click(object sender, RoutedEventArgs e)
@@ -189,6 +210,7 @@ namespace client
             _ansIndex = 3;
             _dispatcherTimer.Stop();
             sendAnswer();
+            freezeAnswerButtons();
         }
 
         private void btnAns4_Click(object sender, RoutedEventArgs e)
@@ -196,6 +218,7 @@ namespace client
             _ansIndex = 4;
             _dispatcherTimer.Stop();
             sendAnswer();
+            freezeAnswerButtons();
         }
 
         private void btnLeaveGame_Click(object sender, RoutedEventArgs e)
