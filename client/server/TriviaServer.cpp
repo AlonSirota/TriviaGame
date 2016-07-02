@@ -1,5 +1,5 @@
 #include "TriviaServer.h"
-//done
+
 TriviaServer::TriviaServer() : _cvMessages()
 {
 	std::thread handleRecievedMessagesThread(&TriviaServer::handleRecievedMessages, this);
@@ -11,15 +11,15 @@ TriviaServer::TriviaServer() : _cvMessages()
 
 void TriviaServer::serve()
 {
-	tcp::endpoint ep(tcp::v4(), 8820);
-	tcp::acceptor acceptor(_io_service, ep);
+	tcp::endpoint endPoint(tcp::v4(), 8820);
+	tcp::acceptor acceptor(_io_service, endPoint);
 
 	while (true)
 	{
 		std::cout << "Listening..." << std::endl;
-		tcp::socket newSocket(_io_service);
+		std::shared_ptr<tcp::socket> newSocket = std::make_shared<tcp::socket>(_io_service);
 		boost::system::error_code ec;
-		acceptor.accept(newSocket, ep, ec);
+		acceptor.accept(*newSocket, endPoint, ec);
 		if (ec)
 		{
 			std::cout << "accept failed: " << ec.value();
@@ -27,8 +27,7 @@ void TriviaServer::serve()
 		else
 		{
 			std::cout << "accepted connection\n";
-			std::shared_ptr<tcp::socket> ptr = std::make_shared<tcp::socket>(std::move(newSocket));
-			std::thread t(&TriviaServer::clientHandler, this, ptr);
+			std::thread t(&TriviaServer::clientHandler, this, newSocket);
 			t.detach();
 		}
 	}
