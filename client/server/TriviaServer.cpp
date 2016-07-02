@@ -457,11 +457,13 @@ void TriviaServer::handleSignout(recievedMessage& message)
 
 void TriviaServer::handleLeaveGame(recievedMessage &msg) // not debugged
 {
-	//std::cout << "handleLeaveGame was called but isn't implemented yet\n";
-	_gameList[msg._user->_currGameID]->leaveGame(msg._user);
-	handleLeaveRoom(msg);
-	msg._user->_currGameID = 0;
-	msg._user->send(std::to_string(LEAVE_GAME_RESPONSE));
+	if (_gameList.count(msg._user->_currGameID))
+	{
+		_gameList[msg._user->_currGameID]->leaveGame(msg._user);
+		msg._user->_currGameID = 0;
+		msg._user->send(std::to_string(LEAVE_GAME_RESPONSE));
+	}	
+	handleLeaveRoom(msg);	
 }
 
 void TriviaServer::handleStartGame(recievedMessage &msg)//debugged
