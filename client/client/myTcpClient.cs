@@ -61,16 +61,25 @@ namespace client
         {
             byte[] buffer = new ASCIIEncoding().GetBytes(text);
 
-            if (_secured)
+            try
             {
-                _secureStream.Write(buffer, 0, buffer.Length);
-                _secureStream.Flush();
+                if (_secured)
+                {
+                    _secureStream.Write(buffer, 0, buffer.Length);
+                    _secureStream.Flush();
+                }
+                else
+                {
+                    _clientStream.Write(buffer, 0, buffer.Length);
+                    _clientStream.Flush();
+                }
             }
-            else
+            catch (Exception e)
             {
-                _clientStream.Write(buffer, 0, buffer.Length);
-                _clientStream.Flush();
-            }            
+                string errorMessage = "server closed unexpectedly";
+                MessageBox.Show(errorMessage);
+                throw new Exception(errorMessage);
+            }                  
         }
 
         public string myReceive(int size)
@@ -80,10 +89,19 @@ namespace client
             int totalBytesRecieved = 0;
             while (totalBytesRecieved < size)
             {
-                if (_secured)
-                    totalBytesRecieved += _secureStream.Read(buffer, totalBytesRecieved, size - totalBytesRecieved);
-                else
-                    totalBytesRecieved += _clientStream.Read(buffer, totalBytesRecieved, size - totalBytesRecieved);
+                try
+                {
+                    if (_secured)
+                        totalBytesRecieved += _secureStream.Read(buffer, totalBytesRecieved, size - totalBytesRecieved);
+                    else
+                        totalBytesRecieved += _clientStream.Read(buffer, totalBytesRecieved, size - totalBytesRecieved);
+                }
+                catch(Exception)
+                { 
+                    string errorMessage = "server closed unexpectedly";
+                    MessageBox.Show(errorMessage);
+                    throw new Exception(errorMessage);
+                }                
             }
 
             string decoded = new ASCIIEncoding().GetString(buffer); //seperated lines for debugging. TODO (make this a one-liner)
