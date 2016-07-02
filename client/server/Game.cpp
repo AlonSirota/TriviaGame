@@ -52,6 +52,7 @@ bool Game::handleNextTurn()
 	}
 	if (_users.size() == _answersRegisteredThisTurnCount) //if everyone answered this turn
 	{
+		_currQuestionIndex++;
 		if (_questionsNo == _currQuestionIndex)
 		{
 			handleFinishGame();
@@ -152,5 +153,5 @@ void Game::sendQuestionToAllUsers()
 	}
 	_answersRegisteredThisTurnCount = 0;
 	sendMessageToAllUsers(message);
-	_currQuestionIndex++;
+	//_currQuestionIndex++;
 }
