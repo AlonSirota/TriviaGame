@@ -379,19 +379,25 @@ void TriviaServer::handleExit(recievedMessage& message)
 	}
 	catch (const std::exception& ex)
 	{
-		std::cout << "exeption caught in safeDeleteUser:" << ex.what() << std::endl;
+		std::cout << "exeption caught in handleExit:" << ex.what() << std::endl;
 	}
 	std::cout << (message._user == nullptr ? "unkown user" : message._user->_username) << " exited\n";
 }
-//done
-bool TriviaServer::handleSignin(recievedMessage& message)//debugged
+
+/*
+	checks if username and password match according to database.
+	checks if username already connected (currently).
+
+*/
+bool TriviaServer::handleSignin(recievedMessage& message)
 {
-	if(_db->isUserAndPassMatch(message._values[0], message._values[1]))
+	const int USERNAME_INDEX = 0, PASSWORD_INDEX = 1;
+	if(_db->isUserAndPassMatch(message._values[USERNAME_INDEX], message._values[PASSWORD_INDEX]))
 	{
-		if (!userExists(message._values[0]))
+		if (!userExists(message._values[USERNAME_INDEX]))
 		{
 			//success connecting
-			_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[0], message._socket)), message._socket));
+			_connectedUsers.insert(std::pair<std::shared_ptr<User>, std::shared_ptr<tcp::socket>>(std::make_shared<User>(User(message._values[USERNAME_INDEX], message._socket)), message._socket));
 			Helper::sendData(message._socket, std::to_string(SIGNIN_REPLY) + std::to_string(0)); //success
 			return(true);
 		}
@@ -407,40 +413,44 @@ bool TriviaServer::handleSignin(recievedMessage& message)//debugged
 		return false;
 	}
 }
-//done for first stage
 
 bool TriviaServer::handleSignup(recievedMessage& message)
 {
-	if (!Validator::isUsernameValid(message._values[0]))
+	const int USERNAME_INDEX = 0, PASSWORD_INDEX = 1, EMAIL_INDEX = 2;
+	if (!Validator::isUsernameValid(message._values[USERNAME_INDEX]))
 	{
 		//fail - username not valid	
 		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(3));
 		return(false);
 	}
-	else if (!Validator::isPasswordValid(message._values[1]))
+	else if (!Validator::isPasswordValid(message._values[PASSWORD_INDEX]))
 	{
 		//fail - password not valid
 		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(1));
 		return(false);
 	}
-	else if (userExists(message._values[0]))
+	else if (userExists(message._values[USERNAME_INDEX]))
 	{
 		//fail - user already exists
 		Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(2));
 		return(false);
 	}
 	//success
-	_db->addNewUser(message._values[0], message._values[1], message._values[2]);
+	_db->addNewUser(message._values[USERNAME_INDEX], message._values[PASSWORD_INDEX], message._values[EMAIL_INDEX]);
 	Helper::sendData(std::move(message._socket), std::to_string(SIGNUP_REPLY) + std::to_string(0));
 	return(true);
 }
-//done
+
+/*
+	handles user signing out:
+		leaves room and game as well.
+		removes from connected user list
+		sends him sign out reply
+*/
 void TriviaServer::handleSignout(recievedMessage& message)
 {
-	//std::shared_ptr<User> user = message._user;
-	//handleCloseRoom(message);
 	handleLeaveRoom(message);
-	//handleLeaveGame - only in later version
+	handleLeaveGame(message);
 	_connectedUsers.erase(_connectedUsers.find(message._user));
 	message._user->send(std::to_string(SIGNOUT_REPLY));
 }
