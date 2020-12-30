@@ -12,3 +12,9 @@ assigned to teach us working with servers, SQL, GUI and more.
 
 Source code for front-end on client/client (.cs files),
 for the back-end, checkout client/server (.cpp andd .h files).
+
+# UML
+![](UML.png)
+
+# Logic flow diagram
+![Logic flow](flow_diagram.png)
